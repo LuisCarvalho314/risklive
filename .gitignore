@@ -1,6 +1,6 @@
 # Environments
 .env
-
+.venv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -61,3 +61,6 @@ coverage.xml
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Results files are too large
+results/
