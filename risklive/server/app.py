@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
-from .tasks import save_trending_news, save_regular_news, llm_info_extraction, compute_save_topic_model
+from .tasks import save_trending_news, save_regular_news, llm_info_extraction, compute_save_topic_model, generate_report
 from .data_maintenance import clean_old_data
 from ..config import CLEANUP_DAYS_TO_KEEP
 import logging
@@ -45,8 +45,9 @@ def start_scheduler():
     logger.info("Starting scheduler")
     scheduler = BackgroundScheduler()
     scheduler.add_job(hourly_task, 'cron', hour='0-7,9-23')    
-    scheduler.add_job(daily_task, 'cron', hour=8)
-    scheduler.add_job(clean_old_data, 'cron', hour=7, minute=30, args=[CLEANUP_DAYS_TO_KEEP])
+    scheduler.add_job(daily_task, 'cron', hour=7)
+    scheduler.add_job(generate_report, 'cron', hour=7, minute=30)
+    scheduler.add_job(clean_old_data, 'cron', hour=6, minute=30, args=[CLEANUP_DAYS_TO_KEEP])
     scheduler.start()
     logger.info("Scheduler started successfully")
 
@@ -84,6 +85,17 @@ def trigger_cleanup():
     except Exception as e:
         logger.error(f"Error during manual data cleanup: {str(e)}", exc_info=True)
         return jsonify({"status": "Error during data cleanup", "error": str(e)}), 500
+
+@app.route('/trigger/generate_report')
+def trigger_generate_report():
+    logger.info("Manual trigger for report generation initiated")
+    generate_report()
+    logger.info("Manual report generation completed")
+    return jsonify({"status": "Report generation triggered"})
+
+@app.route('/health')
+def health():
+    return {'status': 'healthy'}, 200
 
 def main():
     logger.info("Starting the application")

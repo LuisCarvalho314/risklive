@@ -1,6 +1,6 @@
 import json
 import webbrowser
-
+from collections import Counter
 import numpy as np
 import pandas as pd
 from typing import Callable, List, Union
@@ -380,62 +380,160 @@ def create_hyperlink(url):
     return f'<a href="{url}" style="cursor: pointer" target="_blank" rel="noopener noreferrer">🔗</a>'
 
 
-def create_three_treemaps(data):
-    data = data[data.topic!=-1]
+# def create_three_treemaps(data):
+#     data = data[data.topic!=-1]
+#     data['NewsCategory'] = data.apply(map_nuclear, axis=1)
+#     data['URL'] = data['URL'].apply(create_hyperlink)
+#     # Ensure data is a DataFrame
+#     if not isinstance(data, pd.DataFrame):
+#         data = pd.DataFrame(data)
+    
+#     # Create separate dataframes for each alert level
+#     alert_levels = ['Red', 'Yellow', 'Green']
+#     dataframes = {level: data[data['AlertFlag'] == level] for level in alert_levels}
+    
+#     # Create a FigureWidget with 1 row and 3 columns
+#     fig = go.FigureWidget(make_subplots(rows=1, cols=3, 
+#                         column_widths=[0.5, 0.30, 0.20], 
+#                         specs=[[{'type': 'treemap'}, {'type': 'treemap'}, {'type': 'treemap'}]],
+#                         subplot_titles=("High Risk", "Medium Risk", "Low Risk"),
+#                         horizontal_spacing=0.01))
+    
+#     # Create and add each treemap to the subplot
+#     for i, (level, df) in enumerate(dataframes.items(), start=1):
+#         treemap = px.treemap(
+#             df,
+#             path=['AlertFlag', 'NewsCategory', 'topic', 'RelevantKeywords', 'URL', 'Title'],
+#             color='AlertFlag',
+#             color_discrete_map={'Red': 'red', 'Yellow': 'yellow', 'Green': 'green'},
+#             custom_data=['URL']
+#         )
+        
+#         treemap.update_traces(
+#             hovertemplate='<span style="font-size: 20px;"><b>%{label}</b><br>Count: %{value}<br>',
+#             marker=dict(cornerradius=5),
+#             textfont=dict(size=15)
+#         )
+        
+#         # Add the treemap to the main figure
+#         for trace in treemap.data:
+#             fig.add_trace(trace, row=1, col=i)
+
+#     def on_click(trace, points, state):
+#         if points.point_inds:
+#             ind = points.point_inds[0]
+#             url = trace.customdata[ind][0]
+#             if url and url != 'nan':  # Check if URL is not empty or NaN
+#                 webbrowser.open_new_tab(url)
+
+#     for trace in fig.data:
+#         trace.on_click(on_click)
+    
+#     # Update the layout of the main figure
+#     fig.update_layout(
+#         height=600,
+#         margin=dict(t=80, l=25, r=25, b=25),
+#         title={
+#             'text': '<b>News Article Risk Assessment</b><br><sup>Categorized by Alert Level, News Category, Topic, and Keywords</sup>',
+#             'y': 0.95,
+#             'x': 0.5,
+#             'xanchor': 'center',
+#             'yanchor': 'top',
+#             'font': {'size': 24, 'color': 'black'}
+#         },
+#         clickmode='event+select'
+#     )
+    
+#     # Update subplot titles
+#     for annotation in fig.layout.annotations:
+#         annotation.font.update(size=14)
+    
+#     return fig
+
+def make_topic_keyword_column(df):
+    df['RelevantKeywords_new'] = df['RelevantKeywords'].str.split(', ')
+    grouped = df.groupby('topic')['RelevantKeywords_new'].sum().reset_index()
+    def get_top_2_keywords(keywords_list):
+        all_keywords = [keyword for keyword in keywords_list]
+        keyword_counts = Counter(all_keywords)
+        top_2 = ', '.join([kw for kw, _ in keyword_counts.most_common(2)])
+        return top_2
+    grouped['topic_keyword'] = grouped['RelevantKeywords_new'].apply(get_top_2_keywords)
+    df = df.merge(grouped[['topic', 'topic_keyword']], on='topic', how='left')
+    return df
+
+    
+
+def create_two_treemaps(data):
+    data = data[data.topic != -1]
+    data = make_topic_keyword_column(data)
+    data = data[data['AlertFlag'].isin(['Red', 'Yellow'])]  # Filter out Green alerts
     data['NewsCategory'] = data.apply(map_nuclear, axis=1)
     data['URL'] = data['URL'].apply(create_hyperlink)
-    # Ensure data is a DataFrame
     if not isinstance(data, pd.DataFrame):
         data = pd.DataFrame(data)
     
-    # Create separate dataframes for each alert level
-    alert_levels = ['Red', 'Yellow', 'Green']
+    alert_levels = ['Red', 'Yellow']
     dataframes = {level: data[data['AlertFlag'] == level] for level in alert_levels}
     
-    # Create a FigureWidget with 1 row and 3 columns
-    fig = go.FigureWidget(make_subplots(rows=1, cols=3, 
-                        column_widths=[0.5, 0.30, 0.20], 
-                        specs=[[{'type': 'treemap'}, {'type': 'treemap'}, {'type': 'treemap'}]],
-                        subplot_titles=("High Risk", "Medium Risk", "Low Risk"),
-                        horizontal_spacing=0.01))
+    fig = go.FigureWidget(make_subplots(rows=2, cols=1, 
+                        row_heights=[0.5, 0.5],
+                        specs=[[{'type': 'treemap'}], [{'type': 'treemap'}]],
+                        subplot_titles=("High Risk", "Medium Risk"),
+                        vertical_spacing=0.05))
     
-    # Create and add each treemap to the subplot
-    for i, (level, df) in enumerate(dataframes.items(), start=1):
-        treemap = px.treemap(
-            df,
-            path=['AlertFlag', 'NewsCategory', 'topic', 'RelevantKeywords', 'URL', 'Title'],
-            color='AlertFlag',
-            color_discrete_map={'Red': 'red', 'Yellow': 'yellow', 'Green': 'green'},
-            custom_data=['URL']
-        )
-        
-        treemap.update_traces(
-            hovertemplate='<span style="font-size: 20px;"><b>%{label}</b><br>Count: %{value}<br>',
-            marker=dict(cornerradius=5),
-            textfont=dict(size=15)
-        )
-        
-        # Add the treemap to the main figure
-        for trace in treemap.data:
-            fig.add_trace(trace, row=1, col=i)
+    # High Risk treemap
+    high_risk_treemap = px.treemap(
+        dataframes['Red'],
+        path=['AlertFlag', 'NewsCategory', 'topic_keyword', 'RelevantKeywords', 'URL', 'Title'],
+        color='AlertFlag',
+        color_discrete_map={'Red': 'red'},
+        custom_data=['URL']
+    )
+    
+    high_risk_treemap.update_traces(
+        hovertemplate='<span style="font-size: 20px;"><b>%{label}</b><br>Count: %{value}<br>',
+        marker=dict(cornerradius=5),
+        textfont=dict(size=25)
+    )
+    
+    for trace in high_risk_treemap.data:
+        fig.add_trace(trace, row=1, col=1)
+    
+    # Medium Risk treemap
+    medium_risk_treemap = px.treemap(
+        dataframes['Yellow'],
+        path=['AlertFlag', 'NewsCategory', 'topic_keyword', 'RelevantKeywords', 'URL', 'Title'],
+        color='AlertFlag',
+        color_discrete_map={'Yellow': 'yellow'},
+        custom_data=['URL']
+    )
+    
+    medium_risk_treemap.update_traces(
+        hovertemplate='<span style="font-size: 20px;"><b>%{label}</b><br>Count: %{value}<br>',
+        marker=dict(cornerradius=5),
+        textfont=dict(size=25)
+    )
+    
+    for trace in medium_risk_treemap.data:
+        fig.add_trace(trace, row=2, col=1)
 
     def on_click(trace, points, state):
         if points.point_inds:
             ind = points.point_inds[0]
             url = trace.customdata[ind][0]
-            if url and url != 'nan':  # Check if URL is not empty or NaN
+            if url and url != 'nan':
                 webbrowser.open_new_tab(url)
 
     for trace in fig.data:
         trace.on_click(on_click)
     
-    # Update the layout of the main figure
     fig.update_layout(
-        height=600,
+        height=800,
         margin=dict(t=80, l=25, r=25, b=25),
         title={
             'text': '<b>News Article Risk Assessment</b><br><sup>Categorized by Alert Level, News Category, Topic, and Keywords</sup>',
-            'y': 0.95,
+            'y': 0.98,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
@@ -444,8 +542,6 @@ def create_three_treemaps(data):
         clickmode='event+select'
     )
     
-    # Update subplot titles
     for annotation in fig.layout.annotations:
-        annotation.font.update(size=14)
-    
+        annotation.font.update(size=14)    
     return fig

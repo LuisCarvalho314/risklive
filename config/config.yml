@@ -18,6 +18,7 @@ QUERIES:
   - decommissioning
 PROMPT_PATHS:
   EXTRACTION_PROMPT: 'prompts/info_extraction.txt'
+  REPORT_PROMPT: 'prompts/report_prompt.txt'
 INTERVAL: 15  
 SAVE_DIR:
   CSV_DATA_DIR: 'results/data/'

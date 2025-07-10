@@ -1,7 +1,9 @@
 import os
 import pickle
+import pandas as pd
 import streamlit as st
 import plotly.io as pio
+import streamlit_analytics2 as streamlit_analytics
 st.set_page_config(page_title="Risk Live", page_icon=':star', layout='wide')
 
 margins_css = """
@@ -14,6 +16,7 @@ margins_css = """
 
 st.markdown(margins_css, unsafe_allow_html=True)
 IMG_DIR = "./results/images"
+report_path = "./results/data/df_report.csv"
 
 def get_figures():
     with open(os.path.join(IMG_DIR, '3d_time_plot.pkl'), 'rb') as f:
@@ -34,24 +37,33 @@ def get_figures():
         tree = f.read()
     return json_figures, tree
 
+def get_report():
+    df = pd.read_csv(report_path)
+    df = df[['keyword', 'response']]
+    return df
 
 def main():
     st.title("Risk Live: Topic Modeling")
     st.write("This app applies topic modeling on news articles from the past 72hours and visualizes them. There is a seperate tab for summary and alerts")
 
     json_figures, tree = get_figures()
+    with st.expander("Daily Report"):
+        df = get_report()
+        keyword = st.selectbox("Select Topic", df['keyword'].unique(), key="topic_selector")
+        response = df[df['keyword'] == keyword]['response'].values[0]
+        st.write(response)
     with st.expander("Topic Tree"):
         st.text(tree)
         
-    st.plotly_chart(json_figures[6])
+    st.plotly_chart(json_figures[6], use_container_width=True)
     
-    st.plotly_chart(json_figures[0])
-    st.plotly_chart(json_figures[1])
-    st.plotly_chart(json_figures[2])
-    st.plotly_chart(json_figures[3])
-    st.plotly_chart(json_figures[4])
-    st.plotly_chart(json_figures[5])
-    
-    
+    st.plotly_chart(json_figures[0], use_container_width=True)
+    st.plotly_chart(json_figures[1], use_container_width=True)
+    st.plotly_chart(json_figures[2], use_container_width=True)
+    st.plotly_chart(json_figures[3], use_container_width=True)
+    st.plotly_chart(json_figures[4], use_container_width=True)
+    st.plotly_chart(json_figures[5], use_container_width=True)
+
 if __name__ == '__main__':
-    main()
+    with streamlit_analytics.track():
+        main()
