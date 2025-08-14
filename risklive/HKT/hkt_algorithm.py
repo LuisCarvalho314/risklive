@@ -40,7 +40,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Dict,  List, Optional, Set, Tuple
 
-from data_helper import Source
+from .data_helper import Source
 
 
 # ---------------------------------------------------------------------------
