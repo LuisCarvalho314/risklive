@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 from ..data_extraction import aggregate_regular_news, aggregate_trending_news
 from ..data_processing import process_df
-from ..topic_modeling import compute_topic_modeling, get_report
+from ..topic_modeling import compute_topic_modeling, get_report, compute_hkt_tree
 import logging
 from ..config import SAVE_DIR
 
@@ -37,6 +37,7 @@ def compute_save_topic_model():
         logging.info("Starting topic modeling")
         df = pd.read_csv(os.path.join(SAVE_DIR['CSV_DATA_DIR'], 'news_data_with_llm_info.csv'))
         _ = compute_topic_modeling(df)
+        compute_hkt_tree()
         logging.info("Topic modeling completed successfully")
     except Exception as e:
         logging.error(f"Error during topic modeling: {e}")

@@ -6,8 +6,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from data_helper import DataHelper
-from hkt_algorithm import HKTAlgorithm
+from .data_helper import DataHelper
+from .hkt_algorithm import HKTAlgorithm
 
 
 st.set_page_config(layout="wide", page_title="NewHKT Streamlit")
@@ -33,7 +33,7 @@ min_sources_branch = st.sidebar.number_input(
 load = st.sidebar.button("Load Data")
 
 if load:
-    helper = DataHelper("dataset.csv")
+    helper = DataHelper()
     sources = helper.load_sources()
     algo = HKTAlgorithm(
         minimum_threshold_against_max_word_count=min_threshold,
