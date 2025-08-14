@@ -26058,3 +26058,6 @@ KeyError: 'Timestamp'
 2025-07-10 14:46:38,609 - __main__ - INFO - Starting scheduler
 2025-07-10 14:46:38,615 - __main__ - INFO - Scheduler started successfully
 2025-07-10 14:47:50,877 - __main__ - INFO - Application stopped
+2025-07-25 10:10:38,127 - __main__ - INFO - Starting the application
+2025-07-25 10:10:38,128 - __main__ - INFO - Starting scheduler
+2025-07-25 10:10:38,137 - __main__ - INFO - Scheduler started successfully

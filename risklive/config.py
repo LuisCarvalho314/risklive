@@ -32,6 +32,7 @@ CONFIG = load_config()
 
 OPENAI_API_TYPE = "azure"
 BING_API_KEY=os.getenv("BING_API_KEY")
+SERP_API_KEY=os.getenv("SERP_API_KEY")
 OPENAI_API_BASE=os.getenv("OPENAI_API_BASE")
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")

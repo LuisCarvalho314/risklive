@@ -36,6 +36,7 @@ setup(
         "numpy>=1.26.4",
         "openai>=1.36.1",
         "pandas>=2.2.2",
+        "plotly==5.22.0",
         "python-dotenv>=1.0.1",
         "PyYAML>=6.0.1",
         "requests>=2.32.3",
@@ -46,6 +47,7 @@ setup(
         "streamlit>=1.36.0",
         "torch>=2.3.1",
         "transformers>=4.42.4",
+        "streamlit-analytics2"
     ],
     extras_require={
         "dev": [

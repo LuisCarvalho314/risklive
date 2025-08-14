@@ -64,3 +64,5 @@ Thumbs.db
 
 # Results files are too large
 results/
+
+.env.txt
