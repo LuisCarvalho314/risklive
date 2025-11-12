@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import json
 import webbrowser
 from collections import Counter

@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import pandas as pd
 import streamlit as st
 from datetime import datetime, timedelta

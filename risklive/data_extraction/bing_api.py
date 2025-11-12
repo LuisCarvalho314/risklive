@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import os
 import requests
 import pandas as pd

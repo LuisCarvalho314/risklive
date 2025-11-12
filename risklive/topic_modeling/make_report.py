@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import logging
 import pandas as pd
 from collections import Counter

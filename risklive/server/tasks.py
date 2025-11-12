@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import os
 import pandas as pd
 from datetime import datetime

@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 from flask import Flask, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
 from .tasks import save_trending_news, save_regular_news, llm_info_extraction, compute_save_topic_model, generate_report
