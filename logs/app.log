@@ -26061,3 +26061,157 @@ KeyError: 'Timestamp'
 2025-07-25 10:10:38,127 - __main__ - INFO - Starting the application
 2025-07-25 10:10:38,128 - __main__ - INFO - Starting scheduler
 2025-07-25 10:10:38,137 - __main__ - INFO - Scheduler started successfully
+2025-11-20 23:05:42,034 - __main__ - INFO - Starting the application
+2025-11-20 23:05:42,034 - __main__ - INFO - Starting scheduler
+2025-11-20 23:05:42,039 - __main__ - INFO - Scheduler started successfully
+2025-11-20 23:06:50,784 - __main__ - INFO - Starting the application
+2025-11-20 23:06:50,784 - __main__ - INFO - Starting scheduler
+2025-11-20 23:06:50,787 - __main__ - INFO - Scheduler started successfully
+2025-11-20 23:09:35,236 - __main__ - INFO - Starting the application
+2025-11-20 23:09:35,236 - __main__ - INFO - Starting scheduler
+2025-11-20 23:09:35,239 - __main__ - INFO - Scheduler started successfully
+2025-11-20 23:13:47,895 - __main__ - INFO - Application stopped
+2025-11-20 23:14:19,412 - __main__ - INFO - Starting the application
+2025-11-20 23:14:19,412 - __main__ - INFO - Starting scheduler
+2025-11-20 23:14:19,414 - __main__ - INFO - Scheduler started successfully
+2025-11-20 23:44:19,084 - __main__ - INFO - Application stopped
+2025-11-21 00:26:55,689 - __main__ - INFO - Starting the application
+2025-11-21 00:26:55,690 - __main__ - INFO - Starting scheduler
+2025-11-21 00:26:55,696 - __main__ - INFO - Scheduler started successfully
+2025-11-21 00:27:49,110 - __main__ - INFO - Application stopped
+2025-11-21 00:36:29,359 - __main__ - INFO - Starting the application
+2025-11-21 00:36:29,360 - __main__ - INFO - Starting scheduler
+2025-11-21 00:36:29,362 - __main__ - INFO - Scheduler started successfully
+2025-11-21 01:00:00,004 - __main__ - INFO - Starting hourly task
+2025-11-21 01:00:00,039 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 01:00:00,050 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 01:00:00,050 - __main__ - ERROR - Error in hourly task: Cannot convert tz-naive timestamps, use tz_localize to localize
+Traceback (most recent call last):
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/data_maintenance.py", line 30, in clean_old_data
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='ISO8601').dt.tz_convert('UTC')
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/accessor.py", line 112, in f
+    return self._delegate_method(name, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/accessors.py", line 132, in _delegate_method
+    result = method(*args, **kwargs)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/datetimes.py", line 283, in tz_convert
+    arr = self._data.tz_convert(tz)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/arrays/datetimes.py", line 917, in tz_convert
+    raise TypeError(
+        "Cannot convert tz-naive timestamps, use tz_localize to localize"
+    )
+TypeError: Cannot convert tz-naive timestamps, use tz_localize to localize
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/app.py", line 28, in hourly_task
+    clean_old_data()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/data_maintenance.py", line 32, in clean_old_data
+    df['Timestamp'] = pd.to_datetime(df['Timestamp']).dt.tz_convert('UTC')
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/accessor.py", line 112, in f
+    return self._delegate_method(name, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/accessors.py", line 132, in _delegate_method
+    result = method(*args, **kwargs)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/datetimes.py", line 283, in tz_convert
+    arr = self._data.tz_convert(tz)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/arrays/datetimes.py", line 917, in tz_convert
+    raise TypeError(
+        "Cannot convert tz-naive timestamps, use tz_localize to localize"
+    )
+TypeError: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 12:03:06,308 - __main__ - INFO - Application stopped
+2025-11-21 12:03:13,698 - __main__ - INFO - Starting the application
+2025-11-21 12:03:13,698 - __main__ - INFO - Starting scheduler
+2025-11-21 12:03:13,701 - __main__ - INFO - Scheduler started successfully
+2025-11-21 13:58:13,210 - __main__ - INFO - Starting the application
+2025-11-21 13:58:13,210 - __main__ - INFO - Starting scheduler
+2025-11-21 13:58:13,212 - __main__ - INFO - Scheduler started successfully
+2025-11-21 13:58:22,729 - __main__ - INFO - Starting the application
+2025-11-21 13:58:22,729 - __main__ - INFO - Starting scheduler
+2025-11-21 13:58:22,730 - __main__ - INFO - Scheduler started successfully
+2025-11-21 14:00:00,006 - __main__ - INFO - Starting hourly task
+2025-11-21 14:00:00,017 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:00:00,025 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:00:00,025 - __main__ - ERROR - Error in hourly task: Cannot convert tz-naive timestamps, use tz_localize to localize
+Traceback (most recent call last):
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/data_maintenance.py", line 30, in clean_old_data
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='ISO8601').dt.tz_convert('UTC')
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/accessor.py", line 112, in f
+    return self._delegate_method(name, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/accessors.py", line 132, in _delegate_method
+    result = method(*args, **kwargs)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/datetimes.py", line 283, in tz_convert
+    arr = self._data.tz_convert(tz)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/arrays/datetimes.py", line 917, in tz_convert
+    raise TypeError(
+        "Cannot convert tz-naive timestamps, use tz_localize to localize"
+    )
+TypeError: Cannot convert tz-naive timestamps, use tz_localize to localize
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/app.py", line 28, in hourly_task
+    clean_old_data()
+    ~~~~~~~~~~~~~~^^
+  File "/Users/lcarv/PycharmProjects/risklive/risklive/server/data_maintenance.py", line 32, in clean_old_data
+    df['Timestamp'] = pd.to_datetime(df['Timestamp']).dt.tz_convert('UTC')
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/accessor.py", line 112, in f
+    return self._delegate_method(name, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/accessors.py", line 132, in _delegate_method
+    result = method(*args, **kwargs)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/indexes/datetimes.py", line 283, in tz_convert
+    arr = self._data.tz_convert(tz)
+  File "/Users/lcarv/PycharmProjects/risklive/.venv/lib/python3.13/site-packages/pandas/core/arrays/datetimes.py", line 917, in tz_convert
+    raise TypeError(
+        "Cannot convert tz-naive timestamps, use tz_localize to localize"
+    )
+TypeError: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:14:50,034 - __main__ - INFO - Application stopped
+2025-11-21 14:14:55,976 - __main__ - INFO - Starting the application
+2025-11-21 14:14:55,976 - __main__ - INFO - Starting scheduler
+2025-11-21 14:14:55,979 - __main__ - INFO - Scheduler started successfully
+2025-11-21 14:15:09,634 - __main__ - INFO - Application stopped
+2025-11-21 14:15:09,635 - __main__ - INFO - Manual trigger for report generation initiated
+2025-11-21 14:15:09,697 - __main__ - INFO - Manual report generation completed
+2025-11-21 14:15:35,674 - __main__ - INFO - Starting the application
+2025-11-21 14:15:35,674 - __main__ - INFO - Manual trigger for report generation initiated
+2025-11-21 14:15:35,694 - __main__ - INFO - Manual report generation completed
+2025-11-21 14:16:04,283 - __main__ - INFO - Starting the application
+2025-11-21 14:16:04,283 - __main__ - INFO - Starting scheduler
+2025-11-21 14:16:04,285 - __main__ - INFO - Scheduler started successfully
+2025-11-21 14:16:47,323 - __main__ - INFO - Manual trigger for regular news initiated
+2025-11-21 14:16:47,327 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:16:47,330 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:16:58,556 - __main__ - INFO - Manual trigger for regular news initiated
+2025-11-21 14:16:58,558 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:16:58,560 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:17:52,351 - __main__ - INFO - Manual trigger for regular news initiated
+2025-11-21 14:17:52,354 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:17:52,355 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:18:13,327 - __main__ - INFO - Manual trigger for regular news initiated
+2025-11-21 14:18:13,329 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:18:13,331 - risklive.server.data_maintenance - ERROR - Error during data cleanup: Cannot convert tz-naive timestamps, use tz_localize to localize
+2025-11-21 14:18:44,054 - __main__ - INFO - Manual trigger for report generation initiated
+2025-11-21 14:18:44,101 - __main__ - INFO - Manual report generation completed
+2025-11-21 14:20:27,794 - __main__ - INFO - Starting the application
+2025-11-21 14:20:27,794 - __main__ - INFO - Starting scheduler
+2025-11-21 14:20:27,796 - __main__ - INFO - Scheduler started successfully
+2025-11-21 14:20:37,898 - __main__ - INFO - Manual trigger for regular news initiated
+2025-11-21 14:20:37,902 - risklive.server.data_maintenance - INFO - Cleaning up news_data.csv
+2025-11-21 14:20:37,910 - risklive.server.data_maintenance - INFO - Cleanup completed for news_data.csv. Records removed: 0
+2025-11-21 14:20:37,910 - risklive.server.data_maintenance - INFO - Cleaning up news_data_with_llm_info.csv
+2025-11-21 14:20:37,913 - risklive.server.data_maintenance - INFO - Cleanup completed for news_data_with_llm_info.csv. Records removed: 0
+2025-11-21 14:20:37,913 - risklive.server.data_maintenance - INFO - Cleanup completed. Total records removed: 0
+2025-11-21 14:20:37,913 - __main__ - INFO - Starting news data processing
+2025-11-21 14:21:02,647 - __main__ - INFO - News data processing completed successfully
+2025-11-21 14:21:02,647 - __main__ - INFO - Manual regular news processing completed

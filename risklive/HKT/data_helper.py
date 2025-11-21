@@ -142,7 +142,7 @@ STOP_WORDS: Set[str] = {
     "than",
     "too",
     "very",
-    "s",
+    "query",
     "t",
     "can",
     "will",

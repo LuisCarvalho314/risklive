@@ -83,12 +83,15 @@ def process_df(df, prompt_type='EXTRACTION_PROMPT', save_folder=None):
     total_tokens = []
     api_timestamp = []
 
-    for index, row in df.iterrows():
+    # for index, row in df.iterrows():
+    print(list(full_df.iterrows()))
+    for index, row in full_df.iterrows():
         title = row['Title']
         article_content = row['Description']
         input_text = f"{title}. {article_content}"
         curr_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         response, price, token_usage = extract_information(client, input_text, prompt_type)
+        print(response)
         if response is not None:
         
             parsed_info = parse_json_info(response)
@@ -148,3 +151,4 @@ def process_df(df, prompt_type='EXTRACTION_PROMPT', save_folder=None):
         df = pd.concat([full_df, df])
         df.to_csv(f"{save_folder}/news_data_with_llm_info.csv", index=False)
     return df
+

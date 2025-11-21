@@ -4,15 +4,22 @@ import os
 import requests
 from pathlib import Path
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Any
+from itertools import chain
+from typing import Iterable
 
+from fontTools.misc.plistlib import end_date
 from pandas import DataFrame
 from valyu import Valyu, SearchResponse
 from valyu.types import SearchResult
 
 from risklive.config import (VALYU_API_KEY, CATEGORIES, QUERIES,
-                             EXCLUDED_SOURCES, TRENDING)
+                             EXCLUDED_SOURCES, TRENDING, SAVE_DIR)
+
+from pathlib import Path
+
+CSV_DATA_DIR = Path(SAVE_DIR["CSV_DATA_DIR"])
 
 import logging
 logger = logging.getLogger(__name__)
@@ -44,13 +51,33 @@ TODAY = datetime.today().date()
 
 # ---- sequential compound search ----
 
-def _row(response: SearchResponse) -> Dict[str, Any]:
-    row: Dict[str, Any] = {}
+# def _rows_from_response(response: SearchResponse) -> list[Dict[str, Any]]:
+#     rows: list[Dict[str, Any]] = []
+#     for result in response.results:
+#         # Pydantic model → dict
+#         row = result.model_dump()
+#         # attach originating query for traceability
+#         row["query"] = response.query
+#         rows.append(row)
+#     return rows
+
+def _rows_from_response(response: SearchResponse) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
     for result in response.results:
-        for field in result.model_fields_set:
-            row[field] = getattr(result, field, None)
-        row["query"] = response.query
-    return row
+        data = result.model_dump()
+
+        rows.append(
+            {
+                "Title": data.get("title"),
+                "URL": data.get("url"),
+                "Description": data.get("description"),
+                "Timestamp": (datetime.now().isoformat()
+                ),
+                "Query": response.query,
+            }
+        )
+    return rows
+
 
 def write_df(
         df: pd.DataFrame,
@@ -88,36 +115,52 @@ class ValyuAPI:
         self.client = Valyu(api_key or os.getenv("VALYU_API_KEY"))
 
 
-    def search(self,
-               s: str,
-               start_date: str,
-               end_date: str | None = TODAY,
-               market: str | None = "en_GB") -> SearchResponse | None:
+    def search_news(self,
+                    query: str,
+                    since: int,
+                    market: str | None = "en_GB") -> SearchResponse | None:
+        end_date = TODAY
+        start_date = end_date - timedelta(days=since)
         resp: SearchResponse | None = self.client.search(
-            s,
-            search_type="web",
-            start_date=start_date,
-            end_date=end_date,
-            max_num_results=20,
+            query,
+            search_type="news",
+            start_date=str(start_date),
+            end_date=str(end_date),
+            max_num_results=5,
+            url_only=True,
             excluded_sources=EXCLUDED_SOURCES,
             relevance_threshold=0.5,
             response_length="short",
-            max_price=40,
+            max_price=20,
             country_code=market
         )
+        if resp.success:
+            print(f"Retrieved {len(resp.results)} results.")
+        else:
+            print(resp.error if resp else "Unknown error")
         return resp
 
-    def compound_search(self,
-                        searches: list[str],
-                        start_date: str | None = None,
-                        end_date: str | None = None,
-                        market: str | None = None) -> List[Dict[str , Any]]:
+    def compound_search(
+            self,
+            queries: list[str],
+            since: int,
+            market: str | None = None,
+    ) -> list[Dict[str, Any]]:
+        all_rows: list[Dict[str, Any]] = []
 
-        responses: list[Dict[str , Any]] = list()
-        for s in searches:
-            resp: SearchResponse | None = self.search(s, start_date, end_date, market)
-            responses.append(_row(resp))
-        return responses
+        for query in queries:
+            resp = self.search_news(
+                query=query,
+                since=since,
+                market=market,
+            )
+            if not resp or not resp.success:
+                continue
+
+            all_rows.extend(_rows_from_response(resp))
+
+        return all_rows
+
 
 
     def compound_search_from_txt(
@@ -126,18 +169,28 @@ class ValyuAPI:
             end_date: str | None = None,
             country_code: str | None = None,
             search_type: str = "web",
-            out_dir: str = "data",
-            out_format: str = "csv",  # csv | jsonl | parquet
+            out_dir: str | Path = CSV_DATA_DIR,
+            out_format: str = "csv",
     ) -> DataFrame:
 
-        # searches = ["nuclear", "nuclear power"]
-        searches: list[str] = QUERIES + CATEGORIES
-        responses = self.compound_search(searches, start_date, end_date)
+        searches = ["nuclear", "nuclear power"]
+        # searches: list[str] = QUERIES + CATEGORIES + TRENDING
 
-        df : DataFrame = pd.DataFrame(responses).drop_duplicates(subset="url",
-                                                                 keep="first").drop_duplicates(subset="url",keep="first")
-        self.write_df(df, out_dir, out_format)
-        return df
+        rows: list[Dict[str, Any]] = self.compound_search(
+            searches,
+            start_date=start_date,
+            end_date=end_date,
+            market=country_code,
+        )
+
+        df: DataFrame = pd.DataFrame.from_records(rows).drop_duplicates(
+            subset="url",
+            keep="first",
+        )
+
+        path = write_df(df, out_dir, out_format, filename_stem="news_data", timestamp=False)
+
+        return path
 
     def get_trending_topics(self,
                             start_date,
@@ -149,23 +202,60 @@ class ValyuAPI:
     def get_news_by_category(
             self,
             category: str,
-            start_date: str | None = None,
-            end_date: str | None = TODAY,
+            since: int = 3,
             market: str | None = None
     ) -> List[Dict[str , Any]]:
-        return self.compound_search(category, start_date, end_date, market)
+        return self.compound_search(category, since, market)
 
 
+def compound_search_news(queries: list[str], since: int) -> pd.DataFrame:
+    valyu_api = ValyuAPI()
+
+    rows: list[Dict[str, Any]] = valyu_api.compound_search(
+        queries,
+        since=since,
+    )
+
+    df: DataFrame = pd.DataFrame.from_records(rows).drop_duplicates(
+        subset="URL",
+        keep="first",
+    )
+    return df
 
 
+def aggregate_regular_news(hours=1, save_folder=None):
+    if save_folder and os.path.exists(f"{save_folder}/news_data.csv"):
+        full_news_df = pd.read_csv(f"{save_folder}/news_data.csv")
+    else:
+        full_news_df = pd.DataFrame()
+    since_date = int((datetime.now() - pd.DateOffset(hours=hours)).timestamp())
+
+    queries: list[str] = CATEGORIES + QUERIES
+    full_news_df = compound_search_news(queries, since_date)
+
+    full_news_df.dropna(subset=['Description'], inplace=True)
+    if save_folder:
+        os.makedirs(save_folder, exist_ok=True)
+        full_news_df.dropna(subset=['Description'], inplace=True)
+        full_news_df.to_csv(f"{save_folder}/news_data.csv", index=False)
+    return full_news_df
 
 
-api = ValyuAPI()
-path = api.compound_search_from_txt(
-    start_date="2025-11-03",
-    end_date="2025-11-10",
-    search_type="web",
-    out_dir="data",
-    out_format="csv",
-)
-print("Saved:", path)
+def aggregate_news_data(is_trending=True, days=3, save_folder=None):
+    full_news_df = pd.DataFrame()
+    since_date = int((datetime.now() - pd.DateOffset(days=days)).timestamp())
+
+    queries: list[str] = CATEGORIES + QUERIES
+    full_news_df = compound_search_news(queries, since = days)
+
+    full_news_df = full_news_df.drop_duplicates(subset=['URL'])
+    if save_folder:
+        os.makedirs(save_folder, exist_ok=True)
+        full_news_df.dropna(subset=['Description'], inplace=True)
+        full_news_df.to_csv(f"{save_folder}/news_data.csv", index=False)
+    return full_news_df
+
+
+if __name__ == "__main__":
+    print(VALYU_API_KEY)
+    # aggregate_news_data(save_folder=CSV_DATA_DIR)
