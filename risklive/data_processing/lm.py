@@ -24,7 +24,7 @@ def pricing(token_usage, model):
         price = (token_usage.prompt_tokens * 0.003 + token_usage.completion_tokens * 0.0004) / 1000
     elif model=="gpt4":
         price = (token_usage.prompt_tokens * 0.048 + token_usage.completion_tokens * 0.096) / 1000
-    elif model=="gpt4o":
+    elif model=="gpt-4o":
         price = (token_usage.prompt_tokens * 0.004 + token_usage.completion_tokens * 0.0119) / 1000
     return price
 
@@ -47,6 +47,7 @@ def is_rate_limit_error(exception):
 )
 def api_call(client, model, user_prompt, system_prompt="You are a useful assistant.", temperature=0, max_tokens=500):
     try:
+        model = "gpt-4o"
         response = client.chat.completions.create(
             model=model,
             temperature=float(temperature),
@@ -57,6 +58,15 @@ def api_call(client, model, user_prompt, system_prompt="You are a useful assista
                 {"role": "user", "content": user_prompt},
             ]
         )
+        # response = client.chat.completions.create(messages=[
+        #     {"role": "system", "content": "You are a helpful assistant.", },
+        #     {"role": "user",
+        #      "content": "I am going to Paris, what should I see?", }],
+        #                                           max_tokens=4096,
+        #                                           temperature=1.0, top_p=1.0,
+        #                                           model=model)
+        # print(response.choices[0].message.content)
+
         response_output = response.choices[0].message.content
         response_output = json.loads(response_output)
         token_usage = response.usage

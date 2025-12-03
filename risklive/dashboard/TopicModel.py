@@ -20,14 +20,15 @@ IMG_DIR = "./results/images"
 report_path = "./results/data/df_report.csv"
 
 def get_figures():
-    with open(os.path.join(IMG_DIR, '3d_time_plot.pkl'), 'rb') as f:
-        fig1 = pickle.load(f)
+    # with open(os.path.join(IMG_DIR, '3d_time_plot.pkl'), 'rb') as f:
+    #     fig1 = pickle.load(f)
     
     with open(os.path.join(IMG_DIR, 'treemap.pkl'), 'rb') as f:
         fig2 = pickle.load(f)
     
     json_files = ['topics.json', 'barchart.json', 'topics_over_time.json', 'documents.json', 'hierarchy.json']
-    json_figures = [fig1]
+    # json_figures = [fig1]
+    json_figures = []
     for file in json_files:
         with open(os.path.join(IMG_DIR, file), 'r') as f:
             fig = pio.from_json(f.read())
@@ -56,14 +57,15 @@ def main():
     with st.expander("Topic Tree"):
         st.text(tree)
         
-    st.plotly_chart(json_figures[6], use_container_width=True)
-    
+    # st.plotly_chart(json_figures[6], use_container_width=True)
+    st.plotly_chart(json_figures[5], use_container_width=True)
+
     st.plotly_chart(json_figures[0], use_container_width=True)
     st.plotly_chart(json_figures[1], use_container_width=True)
     st.plotly_chart(json_figures[2], use_container_width=True)
     st.plotly_chart(json_figures[3], use_container_width=True)
     st.plotly_chart(json_figures[4], use_container_width=True)
-    st.plotly_chart(json_figures[5], use_container_width=True)
+    # st.plotly_chart(json_figures[5], use_container_width=True)
 
 if __name__ == '__main__':
     with streamlit_analytics.track():

@@ -10,7 +10,7 @@ def extract_information(client, news_content, prompt_type='EXTRACTION_PROMPT'):
     try:
         prompt_template = PROMPTS[prompt_type]        
         user_prompt = format_prompt(prompt_template, news_content=news_content)
-        model = "gpt4o"
+        model = "gpt-4o"
         response, price, token_usage = api_call(client, model, user_prompt=user_prompt)
         return response, price, token_usage
     except Exception as e:
@@ -59,7 +59,7 @@ def get_delta(full_df, df):
 def process_df(df, prompt_type='EXTRACTION_PROMPT', save_folder=None):
     if os.path.exists(f"{save_folder}/news_data_with_llm_info.csv"):
         full_df = pd.read_csv(f"{save_folder}/news_data_with_llm_info.csv")
-        df = get_delta(full_df, df)
+        # df = get_delta(full_df, df)
         logging.info("Loaded existing DataFrame")
     else:
         os.makedirs(save_folder, exist_ok=True)
@@ -84,8 +84,8 @@ def process_df(df, prompt_type='EXTRACTION_PROMPT', save_folder=None):
     api_timestamp = []
 
     # for index, row in df.iterrows():
-    print(list(full_df.iterrows()))
-    for index, row in full_df.iterrows():
+    # print(list(full_df.iterrows()))
+    for index, row in df.iterrows():
         title = row['Title']
         article_content = row['Description']
         input_text = f"{title}. {article_content}"

@@ -26215,3 +26215,58 @@ TypeError: Cannot convert tz-naive timestamps, use tz_localize to localize
 2025-11-21 14:20:37,913 - __main__ - INFO - Starting news data processing
 2025-11-21 14:21:02,647 - __main__ - INFO - News data processing completed successfully
 2025-11-21 14:21:02,647 - __main__ - INFO - Manual regular news processing completed
+2025-11-24 14:25:03,705 - __main__ - INFO - Starting the application
+2025-11-24 14:25:03,706 - __main__ - INFO - Starting scheduler
+2025-11-24 14:25:03,709 - __main__ - INFO - Scheduler started successfully
+2025-11-24 14:25:22,915 - __main__ - INFO - Application stopped
+2025-11-24 15:00:15,663 - __main__ - INFO - Starting the application
+2025-11-24 15:00:15,664 - __main__ - INFO - Starting scheduler
+2025-11-24 15:00:15,666 - __main__ - INFO - Scheduler started successfully
+2025-11-24 15:05:21,706 - __main__ - INFO - Manual trigger for report generation initiated
+2025-11-24 15:05:21,744 - __main__ - INFO - Manual report generation completed
+2025-11-24 15:08:25,785 - __main__ - INFO - Application stopped
+2025-11-24 15:08:31,827 - INFO - __main__ - app.py:102 - main - Starting the application
+2025-11-24 15:08:31,827 - INFO - __main__ - app.py:46 - start_scheduler - Starting scheduler
+2025-11-24 15:08:31,830 - INFO - __main__ - app.py:53 - start_scheduler - Scheduler started successfully
+2025-11-24 15:08:33,130 - INFO - __main__ - app.py:92 - trigger_generate_report - Manual trigger for report generation initiated
+2025-11-24 15:08:33,160 - INFO - __main__ - app.py:94 - trigger_generate_report - Manual report generation completed
+2025-11-24 17:17:13,560 - INFO - __main__ - app.py:102 - main - Starting the application
+2025-11-24 17:17:13,561 - INFO - __main__ - app.py:46 - start_scheduler - Starting scheduler
+2025-11-24 17:17:13,564 - INFO - __main__ - app.py:53 - start_scheduler - Scheduler started successfully
+2025-11-24 22:00:00,004 - INFO - __main__ - app.py:25 - hourly_task - Starting hourly task
+2025-11-24 22:00:49,552 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data.csv
+2025-11-24 22:00:49,569 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data.csv. Records removed: 78
+2025-11-24 22:00:49,570 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up df_with_response_and_topics.csv
+2025-11-24 22:00:49,586 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for df_with_response_and_topics.csv. Records removed: 146
+2025-11-24 22:00:49,586 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data_with_llm_info.csv
+2025-11-24 22:00:49,599 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data_with_llm_info.csv. Records removed: 156
+2025-11-24 22:00:49,599 - INFO - risklive.server.data_maintenance - data_maintenance.py:141 - clean_old_data - Cleanup completed. Total records removed: 380
+2025-11-24 22:00:49,599 - INFO - __main__ - app.py:16 - process_news_data - Starting news data processing
+2025-11-24 22:09:36,566 - INFO - __main__ - app.py:20 - process_news_data - News data processing completed successfully
+2025-11-24 22:09:36,566 - INFO - __main__ - app.py:30 - hourly_task - Hourly task completed successfully
+2025-11-25 11:00:00,061 - INFO - __main__ - app.py:25 - hourly_task - Starting hourly task
+2025-11-25 11:00:08,774 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data.csv
+2025-11-25 11:00:08,784 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data.csv. Records removed: 0
+2025-11-25 11:00:08,784 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up df_with_response_and_topics.csv
+2025-11-25 11:00:08,809 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for df_with_response_and_topics.csv. Records removed: 0
+2025-11-25 11:00:08,809 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data_with_llm_info.csv
+2025-11-25 11:00:08,833 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data_with_llm_info.csv. Records removed: 0
+2025-11-25 11:00:08,833 - INFO - risklive.server.data_maintenance - data_maintenance.py:141 - clean_old_data - Cleanup completed. Total records removed: 0
+2025-11-25 11:00:08,833 - INFO - __main__ - app.py:16 - process_news_data - Starting news data processing
+2025-11-25 11:08:57,657 - INFO - __main__ - app.py:20 - process_news_data - News data processing completed successfully
+2025-11-25 11:08:57,658 - INFO - __main__ - app.py:30 - hourly_task - Hourly task completed successfully
+2025-11-25 16:00:00,002 - INFO - __main__ - app.py:25 - hourly_task - Starting hourly task
+2025-11-25 16:00:09,184 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data.csv
+2025-11-25 16:00:09,197 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data.csv. Records removed: 0
+2025-11-25 16:00:09,197 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up df_with_response_and_topics.csv
+2025-11-25 16:00:09,229 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for df_with_response_and_topics.csv. Records removed: 0
+2025-11-25 16:00:09,229 - INFO - risklive.server.data_maintenance - data_maintenance.py:74 - clean_old_data - Cleaning up news_data_with_llm_info.csv
+2025-11-25 16:00:09,250 - INFO - risklive.server.data_maintenance - data_maintenance.py:135 - clean_old_data - Cleanup completed for news_data_with_llm_info.csv. Records removed: 0
+2025-11-25 16:00:09,250 - INFO - risklive.server.data_maintenance - data_maintenance.py:141 - clean_old_data - Cleanup completed. Total records removed: 0
+2025-11-25 16:00:09,251 - INFO - __main__ - app.py:16 - process_news_data - Starting news data processing
+2025-11-26 11:10:50,213 - INFO - __main__ - app.py:20 - process_news_data - News data processing completed successfully
+2025-11-26 11:10:50,214 - INFO - __main__ - app.py:30 - hourly_task - Hourly task completed successfully
+2025-11-26 12:19:37,959 - INFO - __main__ - app.py:105 - main - Application stopped
+2025-11-26 15:04:52,415 - INFO - __main__ - app.py:102 - main - Starting the application
+2025-11-26 15:04:52,415 - INFO - __main__ - app.py:46 - start_scheduler - Starting scheduler
+2025-11-26 15:04:52,418 - INFO - __main__ - app.py:53 - start_scheduler - Scheduler started successfully

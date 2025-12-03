@@ -22,7 +22,7 @@ def save_regular_news():
         _ = aggregate_regular_news(save_folder=SAVE_DIR["CSV_DATA_DIR"])
         logging.info("Regular news data aggregation completed successfully")
     except Exception as e:
-        logging.error(f"Error during aggregation of regular news data: {e}")
+        logging.exception(f"Error during aggregation of regular news data: {e}")
         
 def llm_info_extraction():
     try:

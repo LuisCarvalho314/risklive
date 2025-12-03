@@ -7,7 +7,7 @@ from .lm import initialize_client, api_call, load_prompt_template, format_prompt
 
 def extract_information(client, user_prompt, prompt_type='EXTRACTION_PROMPT'):
     try:
-        model = "gpt4o"
+        model = "gpt-4o"
         response, price, token_usage = api_call(client, model, user_prompt=user_prompt)
         return response, price, token_usage
     except Exception as e:

@@ -117,21 +117,19 @@ class ValyuAPI:
 
     def search_news(self,
                     query: str,
-                    since: int,
+                    start_date: str,
                     market: str | None = "en_GB") -> SearchResponse | None:
-        end_date = TODAY
-        start_date = end_date - timedelta(days=since)
         resp: SearchResponse | None = self.client.search(
             query,
             search_type="news",
             start_date=str(start_date),
-            end_date=str(end_date),
-            max_num_results=5,
+            end_date=str(TODAY),
+            max_num_results=30,
             url_only=True,
             excluded_sources=EXCLUDED_SOURCES,
             relevance_threshold=0.5,
             response_length="short",
-            max_price=20,
+            max_price=100,
             country_code=market
         )
         if resp.success:
@@ -143,7 +141,7 @@ class ValyuAPI:
     def compound_search(
             self,
             queries: list[str],
-            since: int,
+            start_date: str,
             market: str | None = None,
     ) -> list[Dict[str, Any]]:
         all_rows: list[Dict[str, Any]] = []
@@ -151,7 +149,7 @@ class ValyuAPI:
         for query in queries:
             resp = self.search_news(
                 query=query,
-                since=since,
+                start_date=start_date,
                 market=market,
             )
             if not resp or not resp.success:
@@ -208,12 +206,12 @@ class ValyuAPI:
         return self.compound_search(category, since, market)
 
 
-def compound_search_news(queries: list[str], since: int) -> pd.DataFrame:
+def compound_search_news(queries: list[str], start_date: str) -> pd.DataFrame:
     valyu_api = ValyuAPI()
 
     rows: list[Dict[str, Any]] = valyu_api.compound_search(
         queries,
-        since=since,
+        start_date=start_date,
     )
 
     df: DataFrame = pd.DataFrame.from_records(rows).drop_duplicates(
@@ -228,10 +226,12 @@ def aggregate_regular_news(hours=1, save_folder=None):
         full_news_df = pd.read_csv(f"{save_folder}/news_data.csv")
     else:
         full_news_df = pd.DataFrame()
-    since_date = int((datetime.now() - pd.DateOffset(hours=hours)).timestamp())
+    start_date = (pd.Timestamp.now() - pd.DateOffset(hours=hours)).strftime(
+        "%Y-%m-%d")
 
     queries: list[str] = CATEGORIES + QUERIES
-    full_news_df = compound_search_news(queries, since_date)
+    search_news_df = compound_search_news(queries, start_date)
+    full_news_df = pd.concat([full_news_df, search_news_df]).drop_duplicates(subset=['URL'], keep='first')
 
     full_news_df.dropna(subset=['Description'], inplace=True)
     if save_folder:
@@ -243,12 +243,15 @@ def aggregate_regular_news(hours=1, save_folder=None):
 
 def aggregate_news_data(is_trending=True, days=3, save_folder=None):
     full_news_df = pd.DataFrame()
-    since_date = int((datetime.now() - pd.DateOffset(days=days)).timestamp())
+    since_date = (pd.Timestamp.now() - pd.DateOffset(days=days)).strftime(
+        "%Y-%m-%d")
 
     queries: list[str] = CATEGORIES + QUERIES
     full_news_df = compound_search_news(queries, since = days)
 
-    full_news_df = full_news_df.drop_duplicates(subset=['URL'])
+    search_news_df = compound_search_news(queries, since_date)
+    full_news_df = pd.concat([full_news_df, search_news_df]).drop_duplicates(subset=['URL'], keep='first')
+
     if save_folder:
         os.makedirs(save_folder, exist_ok=True)
         full_news_df.dropna(subset=['Description'], inplace=True)
