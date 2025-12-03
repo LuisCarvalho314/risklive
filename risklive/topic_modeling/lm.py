@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import os
 import openai
 import logging
@@ -23,7 +24,7 @@ def pricing(token_usage, model):
         price = (token_usage.prompt_tokens * 0.003 + token_usage.completion_tokens * 0.0004) / 1000
     elif model=="gpt4":
         price = (token_usage.prompt_tokens * 0.048 + token_usage.completion_tokens * 0.096) / 1000
-    elif model=="gpt4o":
+    elif model=="gpt-4o":
         price = (token_usage.prompt_tokens * 0.004 + token_usage.completion_tokens * 0.0119) / 1000
     return price
 
@@ -69,5 +70,5 @@ def api_call(client, model, user_prompt, system_prompt="You are a useful assista
             logging.warning(f"Rate limit exceeded. Retrying in 60 seconds: {e}")
             raise
         else:
-            logging.error(f"API call failed: {e}")
+            logging.exception(f"API call failed: {e}")
             return None, None, None

@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 from __future__ import annotations
 
 """Utility helpers for loading and tokenising source data.
@@ -141,7 +142,7 @@ STOP_WORDS: Set[str] = {
     "than",
     "too",
     "very",
-    "s",
+    "query",
     "t",
     "can",
     "will",

@@ -1,1 +1,1 @@
-from .bing_api import BingAPI, search_news_for_trending_topics, extract_news_by_category, search_news, aggregate_news_data, aggregate_regular_news, aggregate_trending_news
+from .valyu_api import  aggregate_news_data, aggregate_regular_news

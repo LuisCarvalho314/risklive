@@ -1,3 +1,4 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
 import json
 import webbrowser
 from collections import Counter
@@ -253,7 +254,7 @@ def _get_annotations(topic_model,
                        un-merged topics.
 
     Returns:
-        text_annotations: Annotations to be used within Plotly's `ff.create_dendogram`
+        text_annotations: Annotations to be used within Plotly'query `ff.create_dendogram`
     """
     df = hierarchical_topics.loc[hierarchical_topics.Parent_Name != "Top", :]
 
