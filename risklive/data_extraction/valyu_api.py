@@ -245,7 +245,7 @@ def aggregate_regular_news(hours=1, save_folder=None):
         "%Y-%m-%d")
 
     queries: list[str] = CATEGORIES + QUERIES
-    known_stories = list(full_news_df[full_news_df["URL"]])
+    known_stories = full_news_df["URL"].values.tolist()
     search_news_df = compound_search_news(queries, start_date, known_stories)
     full_news_df = pd.concat([full_news_df, search_news_df]).drop_duplicates(subset=['URL'], keep='first')
 
@@ -263,7 +263,7 @@ def aggregate_news_data(is_trending=True, days=3, save_folder=None):
         "%Y-%m-%d")
 
     queries: list[str] = CATEGORIES + QUERIES
-    known_stories = list(full_news_df[full_news_df["URL"]])
+    known_stories = full_news_df["URL"].values.tolist()
     search_news_df = compound_search_news(queries, since_date, known_stories)
     full_news_df = pd.concat([full_news_df, search_news_df]).drop_duplicates(subset=['URL'], keep='first')
 
