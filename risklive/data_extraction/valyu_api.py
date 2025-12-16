@@ -47,7 +47,7 @@ WRITERS = {
     "parquet": lambda df, p, **kw: df.to_parquet(p, index=False, **kw),
 }
 
-TODAY = datetime.today().date()
+
 
 # ---- sequential compound search ----
 
@@ -119,17 +119,26 @@ class ValyuAPI:
                     query: str,
                     start_date: str,
                     market: str | None = "en_GB") -> SearchResponse | None:
+        end_date = str(datetime.today().date())
+
+        if start_date and end_date:
+            start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+            end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+
+            if start_dt > end_dt:
+                print(f"Start date ({start_date}) is later than end date ({end_date})")
+
         resp: SearchResponse | None = self.client.search(
             query,
             search_type="news",
             start_date=str(start_date),
-            end_date=str(TODAY),
-            max_num_results=30,
+            end_date=str(end_date),
+            max_num_results=100,
             url_only=True,
             excluded_sources=EXCLUDED_SOURCES,
             relevance_threshold=0.5,
             response_length="short",
-            max_price=100,
+            max_price=150,
             country_code=market
         )
         if resp.success:
@@ -192,7 +201,7 @@ class ValyuAPI:
 
     def get_trending_topics(self,
                             start_date,
-                            end_date=TODAY,
+                            end_date,
                             market="en-GB") -> List[Dict[str , Any]]:
         """Gets trending topics for a given market."""
         return self.compound_search(TRENDING, start_date, end_date, market)

@@ -51,9 +51,27 @@ def main():
     json_figures, tree = get_figures()
     with st.expander("Daily Report"):
         df = get_report()
-        keyword = st.selectbox("Select Topic", df['keyword'].unique(), key="topic_selector")
-        response = df[df['keyword'] == keyword]['response'].values[0]
-        st.write(response)
+
+        # Handle no data / empty dataframe
+        if df is None or df.empty:
+            st.warning("No high risk reports available.")
+        else:
+            # Get list of topics safely
+            topics = df["keyword"].dropna().unique().tolist()
+
+            if not topics:
+                st.warning("No topics available.")
+            else:
+                keyword = st.selectbox("Select Topic", topics, key="topic_selector")
+
+                # Filter response safely
+                response_series = df.loc[df["keyword"] == keyword, "response"]
+
+                if response_series.empty:
+                    st.warning("No response found for the selected topic.")
+                else:
+                    response = response_series.iloc[0]
+                    st.write(response)
     with st.expander("Topic Tree"):
         st.text(tree)
         

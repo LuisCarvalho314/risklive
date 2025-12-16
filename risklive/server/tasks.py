@@ -16,10 +16,10 @@ def save_trending_news():
     except Exception as e:
         logging.error(f"Error during aggregation of trending news data: {e}")
 
-def save_regular_news():
+def save_regular_news(hours=1):
     try:
         logging.info("Starting aggregation of regular news data")
-        _ = aggregate_regular_news(save_folder=SAVE_DIR["CSV_DATA_DIR"])
+        _ = aggregate_regular_news(hours=hours,save_folder=SAVE_DIR["CSV_DATA_DIR"])
         logging.info("Regular news data aggregation completed successfully")
     except Exception as e:
         logging.exception(f"Error during aggregation of regular news data: {e}")

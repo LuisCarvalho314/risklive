@@ -101,7 +101,7 @@ def health():
 def main():
     logger.info("Starting the application")
     start_scheduler()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
     logger.info("Application stopped")
 
 if __name__ == '__main__':

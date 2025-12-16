@@ -19,6 +19,8 @@ def get_df():
     file_path = f"{data_dir}/df_with_response_and_topics.csv"
     df = pd.read_csv(file_path)
     df = df[df["AlertFlag"] == "Red"]
+
+
     return df
 
 def get_keywords_by_frequency(keywords_list):
