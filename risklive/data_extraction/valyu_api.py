@@ -11,6 +11,7 @@ from typing import Iterable
 
 from fontTools.misc.plistlib import end_date
 from pandas import DataFrame
+from sympy.logic.algorithms.z3_wrapper import known_functions
 from valyu import Valyu, SearchResponse
 from valyu.types import SearchResult
 
@@ -139,7 +140,7 @@ class ValyuAPI:
             search_type="news",
             start_date=str(start_date),
             end_date=str(end_date),
-            max_num_results=100,
+            max_num_results=10,
             url_only=True,
             excluded_sources=excluded_sources,
             relevance_threshold=0.5,
@@ -149,6 +150,14 @@ class ValyuAPI:
         )
         if resp.success:
             logger.info(f"Retrieved {len(resp.results)} results. Query{query}")
+            from pandas.errors import EmptyDataError
+            try:
+                resp_df_existing = pd.read_csv("analytics.csv")
+            except (FileNotFoundError, EmptyDataError):
+                resp_df_existing = pd.DataFrame()
+            resp_df = pd.DataFrame.from_records(resp.results)
+            full_df = pd.concat([resp_df_existing, resp_df])
+            write_df(resp_df, "analytics.csv", out_format="csv")
         else:
             print(resp.error if resp else "Unknown error")
         return resp
@@ -267,7 +276,8 @@ def aggregate_news_data(is_trending=True, days=3, save_folder=None):
         "%Y-%m-%d")
 
     queries: list[str] = CATEGORIES + QUERIES
-    known_stories = full_news_df["URL"].values.tolist()
+    # known_stories = full_news_df["URL"].values.tolist()
+    known_stories = []
     search_news_df = compound_search_news(queries, since_date, known_stories)
     full_news_df = pd.concat([full_news_df, search_news_df]).drop_duplicates(subset=['URL'], keep='first')
 
