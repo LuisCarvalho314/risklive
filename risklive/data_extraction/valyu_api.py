@@ -130,6 +130,10 @@ class ValyuAPI:
             if start_dt > end_dt:
                 print(f"Start date ({start_date}) is later than end date ({end_date})")
 
+        # excluded_sources = EXCLUDED_SOURCES + known_stories
+        excluded_sources = EXCLUDED_SOURCES
+        # TODO: Contact Valyu about increasing resolution of time filter
+
         resp: SearchResponse | None = self.client.search(
             query,
             search_type="news",
@@ -137,14 +141,14 @@ class ValyuAPI:
             end_date=str(end_date),
             max_num_results=100,
             url_only=True,
-            excluded_sources=EXCLUDED_SOURCES+known_stories,
+            excluded_sources=excluded_sources,
             relevance_threshold=0.5,
             response_length="short",
             max_price=150,
             country_code=market
         )
         if resp.success:
-            print(f"Retrieved {len(resp.results)} results.")
+            logger.info(f"Retrieved {len(resp.results)} results. Query{query}")
         else:
             print(resp.error if resp else "Unknown error")
         return resp
@@ -276,4 +280,4 @@ def aggregate_news_data(is_trending=True, days=3, save_folder=None):
 
 if __name__ == "__main__":
     print(VALYU_API_KEY)
-    # aggregate_news_data(save_folder=CSV_DATA_DIR)
+    aggregate_news_data(save_folder=CSV_DATA_DIR)

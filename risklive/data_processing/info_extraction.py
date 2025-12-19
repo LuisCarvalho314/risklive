@@ -59,7 +59,7 @@ def get_delta(full_df, df):
 def process_df(df, prompt_type='EXTRACTION_PROMPT', save_folder=None):
     if os.path.exists(f"{save_folder}/news_data_with_llm_info.csv"):
         full_df = pd.read_csv(f"{save_folder}/news_data_with_llm_info.csv")
-        # df = get_delta(full_df, df)
+        df = get_delta(full_df, df)
         logging.info("Loaded existing DataFrame")
     else:
         os.makedirs(save_folder, exist_ok=True)

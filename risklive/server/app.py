@@ -1,5 +1,5 @@
 """© 2025 University of Aberdeen. All rights reserved"""
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from .tasks import save_trending_news, save_regular_news, llm_info_extraction, compute_save_topic_model, generate_report
 from .data_maintenance import clean_old_data
@@ -45,7 +45,7 @@ def daily_task():
 def start_scheduler():
     logger.info("Starting scheduler")
     scheduler = BackgroundScheduler()
-    scheduler.add_job(hourly_task, 'cron', hour='0-7,9-23')    
+    # scheduler.add_job(hourly_task, 'cron', hour='0-7,9-23')
     scheduler.add_job(daily_task, 'cron', hour=7)
     scheduler.add_job(generate_report, 'cron', hour=7, minute=30)
     scheduler.add_job(clean_old_data, 'cron', hour=6, minute=30, args=[CLEANUP_DAYS_TO_KEEP])
@@ -57,14 +57,26 @@ def home():
     logger.info("Home route accessed")
     return jsonify({"status": "Server is running"})
 
-@app.route('/trigger/regular')
+# @app.route('/trigger/regular')
+# def trigger_regular():
+#     logger.info("Manual trigger for regular news initiated")
+#     save_regular_news()
+#     clean_old_data()
+#     process_news_data()
+#     logger.info("Manual regular news processing completed")
+#     return jsonify({"status": "Regular news aggregation and processing triggered"})
+
+@app.route("/trigger/regular")
 def trigger_regular():
-    logger.info("Manual trigger for regular news initiated")
-    save_regular_news()
+    hours = request.args.get("hours", default=1, type=int)  # one argument
+
+    logger.info("Manual trigger for regular news initiated (hours=%s)", hours)
+
+    save_regular_news(hours=hours)  # update function to accept it
     clean_old_data()
     process_news_data()
-    logger.info("Manual regular news processing completed")
-    return jsonify({"status": "Regular news aggregation and processing triggered"})
+
+    return jsonify({"status": "triggered", "hours": hours})
 
 @app.route('/trigger/trending')
 def trigger_trending():
