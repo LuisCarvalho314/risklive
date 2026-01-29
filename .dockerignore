@@ -7,6 +7,11 @@ __pycache__/
 *.db
 *.sqlite3
 *.log
+runtime/
+results/
+data/
+logs/
+notebooks/
 .DS_Store
 .idea/
 .vscode/

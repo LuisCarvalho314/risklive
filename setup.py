@@ -12,7 +12,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/risklive",
-    packages=find_packages(exclude=["tests", "notebooks"]),
+    packages=find_packages(where="src", exclude=["tests", "notebooks"]),
+    package_dir={"": "src"},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -37,6 +38,8 @@ setup(
         "openai>=1.36.1",
         "pandas>=2.2.2",
         "plotly==5.22.0",
+        "pydantic>=2.8.2",
+        "pydantic-settings>=2.4.0",
         "python-dotenv>=1.0.1",
         "PyYAML>=6.0.1",
         "requests>=2.32.3",
@@ -60,7 +63,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "risklive=risklive.server.app:main",
+            "risklive=app.cli:main",
+            "risklive-server=app.server:main",
         ],
     },
 )

@@ -2,6 +2,10 @@
 
 RiskLive is a real-time risk analysis dashboard for the nuclear industry. It aggregates news and data from various sources, processes the information using advanced natural language processing techniques, and presents insights through an interactive web interface.
 
+## Status
+
+This repository is being restructured for a LangGraph-based agentic pipeline. The new skeleton lives under `src/` and `apps/`.
+
 ## Features
 
 - Real-time news aggregation from multiple sources
@@ -22,26 +26,23 @@ RiskLive is a real-time risk analysis dashboard for the nuclear industry. It agg
 ## Project Structure
 ```
 risklive/
-├── src/
-│   └── risklive/
-│       ├── data_extraction/
-│       ├── data_processing/
-│       ├── topic_modeling/
-│       └── server/
-├── tests/
-├── notebooks/
-├── config/
+├── apps/                 # Entry points (api, worker, scheduler, dashboard)
+├── config/               # Defaults, logging, prompts
+├── docs/                 # Architecture notes
+├── src/                  # Python package (risklive)
+├── tests/                # Unit and integration tests
+├── runtime/              # Local runtime data (ignored by git)
 ├── .env
-├── setup.py
-├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
 └── README.md
 ```
 
-- `src/risklive/`: Main package source code
-- `tests/`: Unit and integration tests
-- `notebooks/`: Jupyter notebooks for analysis and development
-- `config/`: Configuration files
-- `.env`: Environment variables (not version controlled)
+- `apps/`: Runtime entry points for services
+- `src/`: Main package source code (LangGraph nodes/graphs)
+- `config/`: Configuration files and prompts
+- `runtime/`: Generated data and artifacts (ignored)
 
 ## Installation
 
