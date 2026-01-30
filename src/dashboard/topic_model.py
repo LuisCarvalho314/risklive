@@ -11,6 +11,12 @@ import pickle
 
 import sys
 
+import os
+if os.getenv("PYCHARM_DEBUG") == "1":
+    import pydevd_pycharm
+    pydevd_pycharm.settrace("127.0.0.1", port=5678, suspend=False)
+
+
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:

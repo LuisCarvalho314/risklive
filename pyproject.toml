@@ -46,6 +46,9 @@ dependencies = [
         "pytest>=9.0.2",
         "pydantic-ai[examples]>=1.47.0",
         "pydantic-ai-slim[web]>=1.47.0",
+        "polars>=1.37.1",
+        "python-docx>=1.2.0",
+        "pydevd-pycharm>=261.17801.91",
 ]
 
 [project.optional-dependencies]
