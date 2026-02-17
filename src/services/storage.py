@@ -40,15 +40,24 @@ def write_csv(rows: Iterable[dict], path: Path) -> Path:
     if not rows:
         path.write_text("")
         return path
-    fieldnames: list[str] = []
+    normalized_rows: list[dict] = []
     for row in rows:
+        normalized: dict = {}
+        for key, value in row.items():
+            if isinstance(value, list):
+                normalized[key] = ", ".join([str(item) for item in value if str(item).strip()])
+            else:
+                normalized[key] = value
+        normalized_rows.append(normalized)
+    fieldnames: list[str] = []
+    for row in normalized_rows:
         for key in row.keys():
             if key not in fieldnames:
                 fieldnames.append(key)
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(normalized_rows)
     return path
 
 

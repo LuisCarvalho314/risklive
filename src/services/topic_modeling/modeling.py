@@ -6,6 +6,7 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
+import ast
 from pathlib import Path
 from typing import List, Optional
 
@@ -36,6 +37,20 @@ def _normalize_keywords(value) -> str:
         return ""
     if isinstance(value, list):
         return ", ".join([str(v) for v in value])
+    if isinstance(value, str):
+        raw = value.strip()
+        if raw.startswith("[") and raw.endswith("]"):
+            for loader in (json.loads, ast.literal_eval):
+                try:
+                    parsed = loader(raw)
+                except Exception:
+                    continue
+                if isinstance(parsed, list):
+                    return ", ".join([str(v) for v in parsed])
+        if raw.startswith("[") and not raw.endswith("]"):
+            raw = raw.lstrip("[").rstrip("]")
+            return ", ".join([part.strip().strip("'\"") for part in raw.split(",") if part.strip()])
+        return raw
     return str(value)
 
 

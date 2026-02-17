@@ -5,6 +5,7 @@ import argparse
 from services.pipeline import (
     cleanup_old_data,
     extract_news_info,
+    export_dashboard,
     fetch_news,
     generate_report,
     run_topic_modeling,
@@ -13,9 +14,11 @@ from services.pipeline import (
 )
 from services.storage import data_path, read_csv
 from utils.rows import llm_rows_from_records, news_rows_from_records
+from utils.logging import configure_logging
 
 
 def main() -> None:
+    configure_logging()
     parser = argparse.ArgumentParser(prog="risklive")
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -27,6 +30,7 @@ def main() -> None:
     sub.add_parser("topic")
     sub.add_parser("visualize")
     sub.add_parser("report")
+    sub.add_parser("dashboard")
     full_cmd = sub.add_parser("full")
     full_cmd.add_argument("--hours", type=int, default=24)
     full_cmd.add_argument("--trending", type=int, default=1)
@@ -50,12 +54,15 @@ def main() -> None:
     elif args.command == "report":
         rows = llm_rows_from_records(read_csv(data_path("df_with_response_and_topics.csv")))
         generate_report(rows)
+    elif args.command == "dashboard":
+        export_dashboard()
     elif args.command == "cleanup":
         cleanup_old_data(args.days)
     elif args.command == "full":
         from app.server import manual_fetch_and_process
 
         manual_fetch_and_process(hours=args.hours, include_trending=args.trending == 1)
+        export_dashboard()
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ class TaskName(str, Enum):
     llm_info_extraction = "llm_info_extraction"
     compute_topic_model = "compute_topic_model"
     generate_report = "generate_report"
+    export_dashboard = "export_dashboard"
     cleanup = "cleanup"
 
 

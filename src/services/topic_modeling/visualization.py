@@ -362,7 +362,10 @@ def create_hyperlink(url):
 
 
 def make_topic_keyword_column(df):
-    df["RelevantKeywords_new"] = df["RelevantKeywords"].str.split(", ")
+    df["RelevantKeywords_new"] = df["RelevantKeywords"].apply(_normalize_keywords)
+    df["RelevantKeywords_new"] = df["RelevantKeywords_new"].apply(
+        lambda value: [part.strip() for part in str(value).split(",") if part.strip()]
+    )
     grouped = df.groupby("topic")["RelevantKeywords_new"].sum().reset_index()
 
     def get_top_2_keywords(keywords_list):

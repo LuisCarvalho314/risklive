@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from datetime import datetime
+import ast
+import json
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -65,7 +67,18 @@ class LLMEnrichedRow(NewsRow):
         if isinstance(value, list):
             return [str(item).strip() for item in value if str(item).strip()]
         if isinstance(value, str):
-            return [item.strip() for item in value.split(",") if item.strip()]
+            raw = value.strip()
+            if raw.startswith("[") and raw.endswith("]"):
+                for loader in (json.loads, ast.literal_eval):
+                    try:
+                        parsed = loader(raw)
+                    except Exception:
+                        continue
+                    if isinstance(parsed, list):
+                        return [str(item).strip() for item in parsed if str(item).strip()]
+            if raw.startswith("[") and not raw.endswith("]"):
+                raw = raw.lstrip("[").rstrip("]")
+            return [item.strip().strip("'\"") for item in raw.split(",") if item.strip()]
         return [str(value)]
 
     @field_validator("llm_price", "prompt_tokens", "completion_tokens", "total_tokens", "topic", mode="before")

@@ -9,10 +9,10 @@ from config.settings import get_settings
 
 
 def build_model(model_name: str = "gpt-4o") -> OpenAIChatModel:
-    settings = get_settings()
-    azure_endpoint = settings.openai_api_base
-    api_key = settings.openai_api_key
-    api_version = settings.openai_api_version
+    model_config = get_settings().azure_openai_config
+    azure_endpoint = model_config.api_base
+    api_key = model_config.api_key.get_secret_value()
+    api_version = model_config.api_version
     provider = AzureProvider(
         azure_endpoint=azure_endpoint,
         api_key=api_key,
@@ -22,9 +22,9 @@ def build_model(model_name: str = "gpt-4o") -> OpenAIChatModel:
 
 if __name__ == "__main__":
     print("Starting Azure model creation")
-    settings = get_settings()
-    print(settings.openai_api_base)
-    print(settings.openai_api_key)
-    print(settings.openai_api_version)
+    model_config = get_settings().azure_openai_config
+    print(model_config.openai_api_base)
+    print(model_config.openai_api_key)
+    print(model_config.openai_api_version)
     model = build_model()
     print(f"Model {model} created successfully")

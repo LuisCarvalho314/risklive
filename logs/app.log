@@ -28607,3 +28607,1141 @@ pandas.errors.ParserError: Error tokenizing data. C error: EOF inside string sta
 2025-12-19 12:59:24,716 - INFO - risklive.server.data_maintenance - data_maintenance.py:141 - clean_old_data - Cleanup completed. Total records removed: 0
 2025-12-19 12:59:24,716 - INFO - __main__ - app.py:16 - process_news_data - Starting news data processing
 2025-12-19 13:01:56,476 - INFO - __main__ - app.py:20 - process_news_data - News data processing completed successfully
+2026-01-31 01:06:49,095 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-01-31 01:06:49,605 INFO adapters.valyu: Valyu results query='Business' count=1
+2026-01-31 01:06:50,089 INFO adapters.valyu: Valyu results query='Politics' count=1
+2026-01-31 01:06:50,564 INFO adapters.valyu: Valyu results query='World' count=1
+2026-01-31 01:06:52,055 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=0
+2026-01-31 01:06:52,562 INFO adapters.valyu: Valyu results query='Health' count=1
+2026-01-31 01:06:53,040 INFO adapters.valyu: Valyu results query='UK' count=1
+2026-01-31 01:06:54,522 INFO adapters.valyu: Valyu results query='nuclear industry' count=0
+2026-01-31 01:06:55,913 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=0
+2026-01-31 01:06:57,480 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=0
+2026-01-31 01:06:57,936 INFO adapters.valyu: Valyu results query='nuclear energy' count=1
+2026-01-31 01:06:58,411 INFO adapters.valyu: Valyu results query='nuclear power' count=1
+2026-01-31 01:06:59,734 INFO adapters.valyu: Valyu results query='nuclear plant' count=0
+2026-01-31 01:07:01,269 INFO adapters.valyu: Valyu results query='nuclear waste' count=0
+2026-01-31 01:07:02,759 INFO adapters.valyu: Valyu results query='nuclear' count=0
+2026-01-31 01:07:04,240 INFO adapters.valyu: Valyu results query='sellafield' count=0
+2026-01-31 01:07:05,573 INFO adapters.valyu: Valyu results query='decommissioning' count=0
+2026-01-31 01:07:07,107 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=0
+2026-01-31 01:07:08,731 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=0
+2026-01-31 01:07:10,383 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=0
+2026-01-31 01:07:11,919 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=0
+2026-01-31 01:07:13,457 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=0
+2026-01-31 01:07:14,992 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=0
+2026-01-31 01:07:16,528 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=0
+2026-01-31 01:07:18,063 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=0
+2026-01-31 01:07:18,063 INFO adapters.valyu: Fetch done: articles=7
+2026-01-31 01:07:29,526 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-01-31 01:07:31,070 INFO adapters.valyu: Valyu results query='Business' count=2
+2026-01-31 01:07:32,625 INFO adapters.valyu: Valyu results query='Politics' count=3
+2026-01-31 01:07:34,140 INFO adapters.valyu: Valyu results query='World' count=3
+2026-01-31 01:07:35,269 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=0
+2026-01-31 01:07:36,905 INFO adapters.valyu: Valyu results query='Health' count=2
+2026-01-31 01:07:38,441 INFO adapters.valyu: Valyu results query='UK' count=1
+2026-01-31 01:07:39,670 INFO adapters.valyu: Valyu results query='nuclear industry' count=0
+2026-01-31 01:07:40,900 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=0
+2026-01-31 01:07:42,230 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=0
+2026-01-31 01:07:43,766 INFO adapters.valyu: Valyu results query='nuclear energy' count=1
+2026-01-31 01:07:45,302 INFO adapters.valyu: Valyu results query='nuclear power' count=1
+2026-01-31 01:07:46,533 INFO adapters.valyu: Valyu results query='nuclear plant' count=0
+2026-01-31 01:07:47,759 INFO adapters.valyu: Valyu results query='nuclear waste' count=0
+2026-01-31 01:07:48,964 INFO adapters.valyu: Valyu results query='nuclear' count=0
+2026-01-31 01:07:50,204 INFO adapters.valyu: Valyu results query='sellafield' count=0
+2026-01-31 01:07:51,446 INFO adapters.valyu: Valyu results query='decommissioning' count=0
+2026-01-31 01:07:52,882 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=0
+2026-01-31 01:07:54,211 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=0
+2026-01-31 01:07:55,502 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=0
+2026-01-31 01:07:56,744 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=0
+2026-01-31 01:07:58,105 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=0
+2026-01-31 01:07:59,358 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=0
+2026-01-31 01:08:00,629 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=0
+2026-01-31 01:08:01,892 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=0
+2026-01-31 01:08:01,892 INFO adapters.valyu: Fetch done: articles=13
+2026-01-31 01:14:16,794 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:14:20,986 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:14:43,384 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:14:49,235 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:15:10,343 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:03,696 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:10,864 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:12,605 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:13,700 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:15,046 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:16,520 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:17,930 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:20,932 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:22,538 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:24,279 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:25,815 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:26,942 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:28,373 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:29,501 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:31,038 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:32,367 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:33,910 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:35,136 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:36,566 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:37,784 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:39,137 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:40,764 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:16:40,809 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-01-31 01:16:40,812 INFO openai._base_client: Retrying request to /chat/completions in 22.000000 seconds
+2026-01-31 01:17:04,317 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:17:04,392 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-01-31 01:17:04,395 INFO openai._base_client: Retrying request to /chat/completions in 6.000000 seconds
+2026-01-31 01:17:25,266 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-01-31 01:17:25,825 INFO adapters.valyu: Valyu results query='Business' count=2
+2026-01-31 01:17:26,312 INFO adapters.valyu: Valyu results query='Politics' count=3
+2026-01-31 01:17:27,225 INFO adapters.valyu: Valyu results query='World' count=3
+2026-01-31 01:17:28,894 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=0
+2026-01-31 01:17:29,375 INFO adapters.valyu: Valyu results query='Health' count=2
+2026-01-31 01:17:29,868 INFO adapters.valyu: Valyu results query='UK' count=1
+2026-01-31 01:17:31,454 INFO adapters.valyu: Valyu results query='nuclear industry' count=0
+2026-01-31 01:17:33,300 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=0
+2026-01-31 01:17:34,732 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=0
+2026-01-31 01:17:35,261 INFO adapters.valyu: Valyu results query='nuclear energy' count=1
+2026-01-31 01:17:35,741 INFO adapters.valyu: Valyu results query='nuclear power' count=1
+2026-01-31 01:17:37,291 INFO adapters.valyu: Valyu results query='nuclear plant' count=0
+2026-01-31 01:17:38,829 INFO adapters.valyu: Valyu results query='nuclear waste' count=0
+2026-01-31 01:17:40,274 INFO adapters.valyu: Valyu results query='nuclear' count=0
+2026-01-31 01:17:41,798 INFO adapters.valyu: Valyu results query='sellafield' count=0
+2026-01-31 01:17:43,434 INFO adapters.valyu: Valyu results query='decommissioning' count=0
+2026-01-31 01:17:45,000 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=0
+2026-01-31 01:17:46,714 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=0
+2026-01-31 01:17:48,249 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=0
+2026-01-31 01:17:50,720 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=0
+2026-01-31 01:17:52,264 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=0
+2026-01-31 01:17:53,780 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=0
+2026-01-31 01:17:55,313 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=0
+2026-01-31 01:17:56,952 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=0
+2026-01-31 01:17:56,953 INFO adapters.valyu: Fetch done: articles=13
+2026-01-31 01:18:32,090 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:33,613 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:35,252 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:36,480 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:37,504 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:39,039 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:40,575 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:42,008 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:43,443 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:45,081 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:46,369 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-01-31 01:18:48,257 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:49:19,822 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 14:49:22,776 WARNING adapters.valyu: Valyu search failed query='Business'
+2026-02-16 14:49:26,487 WARNING adapters.valyu: Valyu search failed query='Politics'
+2026-02-16 14:49:28,474 WARNING adapters.valyu: Valyu search failed query='World'
+2026-02-16 14:49:29,853 WARNING adapters.valyu: Valyu search failed query='ScienceAndTechnology'
+2026-02-16 14:49:31,375 WARNING adapters.valyu: Valyu search failed query='Health'
+2026-02-16 14:49:33,013 WARNING adapters.valyu: Valyu search failed query='UK'
+2026-02-16 14:49:34,550 WARNING adapters.valyu: Valyu search failed query='nuclear industry'
+2026-02-16 14:49:36,189 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning'
+2026-02-16 14:49:37,569 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning authority'
+2026-02-16 14:49:39,261 WARNING adapters.valyu: Valyu search failed query='nuclear energy'
+2026-02-16 14:49:40,759 WARNING adapters.valyu: Valyu search failed query='nuclear power'
+2026-02-16 14:49:42,400 WARNING adapters.valyu: Valyu search failed query='nuclear plant'
+2026-02-16 14:49:44,074 WARNING adapters.valyu: Valyu search failed query='nuclear waste'
+2026-02-16 14:49:45,609 WARNING adapters.valyu: Valyu search failed query='nuclear'
+2026-02-16 14:49:47,043 WARNING adapters.valyu: Valyu search failed query='sellafield'
+2026-02-16 14:49:48,420 WARNING adapters.valyu: Valyu search failed query='decommissioning'
+2026-02-16 14:50:28,475 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 14:50:29,636 WARNING adapters.valyu: Valyu search failed query='Business'
+2026-02-16 14:50:30,770 WARNING adapters.valyu: Valyu search failed query='Politics'
+2026-02-16 14:50:31,922 WARNING adapters.valyu: Valyu search failed query='World'
+2026-02-16 14:50:33,000 WARNING adapters.valyu: Valyu search failed query='ScienceAndTechnology'
+2026-02-16 14:50:34,139 WARNING adapters.valyu: Valyu search failed query='Health'
+2026-02-16 14:50:35,378 WARNING adapters.valyu: Valyu search failed query='UK'
+2026-02-16 14:50:37,261 WARNING adapters.valyu: Valyu search failed query='nuclear industry'
+2026-02-16 14:50:38,888 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning'
+2026-02-16 14:50:41,132 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning authority'
+2026-02-16 14:50:42,361 WARNING adapters.valyu: Valyu search failed query='nuclear energy'
+2026-02-16 14:50:43,537 WARNING adapters.valyu: Valyu search failed query='nuclear power'
+2026-02-16 14:50:44,695 WARNING adapters.valyu: Valyu search failed query='nuclear plant'
+2026-02-16 14:50:45,837 WARNING adapters.valyu: Valyu search failed query='nuclear waste'
+2026-02-16 14:50:47,050 WARNING adapters.valyu: Valyu search failed query='nuclear'
+2026-02-16 14:50:48,175 WARNING adapters.valyu: Valyu search failed query='sellafield'
+2026-02-16 14:50:49,302 WARNING adapters.valyu: Valyu search failed query='decommissioning'
+2026-02-16 14:50:50,431 WARNING adapters.valyu: Valyu search failed query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.'
+2026-02-16 14:50:51,967 WARNING adapters.valyu: Valyu search failed query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.'
+2026-02-16 14:50:53,502 WARNING adapters.valyu: Valyu search failed query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.'
+2026-02-16 14:50:55,141 WARNING adapters.valyu: Valyu search failed query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.'
+2026-02-16 14:51:49,871 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 14:51:50,261 WARNING adapters.valyu: Valyu search failed query='Business'
+2026-02-16 14:51:50,613 WARNING adapters.valyu: Valyu search failed query='Politics'
+2026-02-16 14:51:50,966 WARNING adapters.valyu: Valyu search failed query='World'
+2026-02-16 14:51:51,375 WARNING adapters.valyu: Valyu search failed query='ScienceAndTechnology'
+2026-02-16 14:51:51,724 WARNING adapters.valyu: Valyu search failed query='Health'
+2026-02-16 14:51:52,080 WARNING adapters.valyu: Valyu search failed query='UK'
+2026-02-16 14:51:52,467 WARNING adapters.valyu: Valyu search failed query='nuclear industry'
+2026-02-16 14:51:52,811 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning'
+2026-02-16 14:51:53,172 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning authority'
+2026-02-16 14:51:53,517 WARNING adapters.valyu: Valyu search failed query='nuclear energy'
+2026-02-16 14:51:53,859 WARNING adapters.valyu: Valyu search failed query='nuclear power'
+2026-02-16 14:51:54,205 WARNING adapters.valyu: Valyu search failed query='nuclear plant'
+2026-02-16 14:51:54,564 WARNING adapters.valyu: Valyu search failed query='nuclear waste'
+2026-02-16 14:51:54,911 WARNING adapters.valyu: Valyu search failed query='nuclear'
+2026-02-16 14:51:55,274 WARNING adapters.valyu: Valyu search failed query='sellafield'
+2026-02-16 14:51:55,663 WARNING adapters.valyu: Valyu search failed query='decommissioning'
+2026-02-16 14:51:56,004 WARNING adapters.valyu: Valyu search failed query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.'
+2026-02-16 14:51:56,344 WARNING adapters.valyu: Valyu search failed query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.'
+2026-02-16 14:51:56,703 WARNING adapters.valyu: Valyu search failed query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.'
+2026-02-16 14:51:57,089 WARNING adapters.valyu: Valyu search failed query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.'
+2026-02-16 14:51:57,474 WARNING adapters.valyu: Valyu search failed query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.'
+2026-02-16 14:51:59,006 WARNING adapters.valyu: Valyu search failed query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.'
+2026-02-16 14:52:00,673 WARNING adapters.valyu: Valyu search failed query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.'
+2026-02-16 14:52:37,630 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 14:52:37,980 WARNING adapters.valyu: Valyu search failed query='Business'
+2026-02-16 14:52:38,321 WARNING adapters.valyu: Valyu search failed query='Politics'
+2026-02-16 14:52:38,665 WARNING adapters.valyu: Valyu search failed query='World'
+2026-02-16 14:52:39,010 WARNING adapters.valyu: Valyu search failed query='ScienceAndTechnology'
+2026-02-16 14:52:39,361 WARNING adapters.valyu: Valyu search failed query='Health'
+2026-02-16 14:52:39,703 WARNING adapters.valyu: Valyu search failed query='UK'
+2026-02-16 14:52:40,045 WARNING adapters.valyu: Valyu search failed query='nuclear industry'
+2026-02-16 14:52:40,390 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning'
+2026-02-16 14:52:40,732 WARNING adapters.valyu: Valyu search failed query='nuclear decommissioning authority'
+2026-02-16 14:52:41,111 WARNING adapters.valyu: Valyu search failed query='nuclear energy'
+2026-02-16 14:52:41,452 WARNING adapters.valyu: Valyu search failed query='nuclear power'
+2026-02-16 14:52:41,797 WARNING adapters.valyu: Valyu search failed query='nuclear plant'
+2026-02-16 14:52:42,155 WARNING adapters.valyu: Valyu search failed query='nuclear waste'
+2026-02-16 14:52:42,505 WARNING adapters.valyu: Valyu search failed query='nuclear'
+2026-02-16 14:52:42,851 WARNING adapters.valyu: Valyu search failed query='sellafield'
+2026-02-16 14:52:43,202 WARNING adapters.valyu: Valyu search failed query='decommissioning'
+2026-02-16 14:52:43,549 WARNING adapters.valyu: Valyu search failed query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.'
+2026-02-16 14:52:43,910 WARNING adapters.valyu: Valyu search failed query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.'
+2026-02-16 14:55:35,917 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 14:55:37,353 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 878}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--7376654', query='Business', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:39,477 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 708}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-41573468', query='Politics', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:40,671 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 670}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--7726938', query='World', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:41,025 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1374}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-24075235', query='ScienceAndTechnology', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:41,367 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 761}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-21264089', query='Health', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:41,707 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 897}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--5236646', query='UK', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:42,042 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1109}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--4745190', query='nuclear industry', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:42,384 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1386}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--2764317', query='nuclear decommissioning', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:42,731 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1062}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-49909209', query='nuclear decommissioning authority', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:43,072 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1078}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-62807875', query='nuclear energy', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:43,405 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1404}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-34747609', query='nuclear power', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:43,756 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1064}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--6855171', query='nuclear plant', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:44,094 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1207}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-77987078', query='nuclear waste', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:44,433 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 896}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--7238581', query='nuclear', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:44,771 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'... 'total_characters': 97}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--6429013', query='sellafield', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:45,103 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1153}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--8259651', query='decommissioning', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:45,450 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 754}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--5301593', query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:45,795 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 727}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-18123716', query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:46,132 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 881}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--5394982', query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:46,470 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...total_characters': 1021}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-50093227', query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:46,809 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 859}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-73675362', query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:47,167 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 802}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-25931427', query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:47,509 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 644}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-59400064', query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:47,855 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 635}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception--1153320', query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:49,333 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 715}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-65243631', query='top stories', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:50,869 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 657}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-81212795', query='trending news', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:53,344 WARNING adapters.valyu: Valyu search failed: SearchResponse(success=False, error="1 validation error for SearchResponse\ntotal_deduction_pcm\n  Field required [type=missing, input_value={'success': True, 'error'...'total_characters': 715}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing", tx_id='exception-65243631', query='news', results=[], results_by_source=ResultsBySource(web=0, proprietary=0), total_deduction_pcm=0.0, total_deduction_dollars=0.0, total_characters=0)
+2026-02-16 14:55:53,344 INFO adapters.valyu: Fetch done: articles=0
+2026-02-16 14:55:56,500 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:55:58,641 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:56:00,390 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:56:01,724 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:56:03,360 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:56:04,786 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 14:56:06,155 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:07:18,476 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-16 15:07:20,332 INFO adapters.valyu: Valyu results query='Business' count=5
+2026-02-16 15:07:21,820 INFO adapters.valyu: Valyu results query='Politics' count=5
+2026-02-16 15:07:23,353 INFO adapters.valyu: Valyu results query='World' count=5
+2026-02-16 15:07:24,742 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=5
+2026-02-16 15:07:26,087 INFO adapters.valyu: Valyu results query='Health' count=5
+2026-02-16 15:07:27,504 INFO adapters.valyu: Valyu results query='UK' count=5
+2026-02-16 15:07:29,037 INFO adapters.valyu: Valyu results query='nuclear industry' count=5
+2026-02-16 15:07:30,423 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=5
+2026-02-16 15:07:31,704 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=5
+2026-02-16 15:07:33,131 INFO adapters.valyu: Valyu results query='nuclear energy' count=5
+2026-02-16 15:07:34,567 INFO adapters.valyu: Valyu results query='nuclear power' count=5
+2026-02-16 15:07:36,073 INFO adapters.valyu: Valyu results query='nuclear plant' count=5
+2026-02-16 15:07:37,534 INFO adapters.valyu: Valyu results query='nuclear waste' count=5
+2026-02-16 15:07:39,071 INFO adapters.valyu: Valyu results query='nuclear' count=5
+2026-02-16 15:07:40,477 INFO adapters.valyu: Valyu results query='sellafield' count=1
+2026-02-16 15:07:41,762 INFO adapters.valyu: Valyu results query='decommissioning' count=5
+2026-02-16 15:07:43,371 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=4
+2026-02-16 15:07:44,846 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=5
+2026-02-16 15:07:46,343 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=5
+2026-02-16 15:07:47,880 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=5
+2026-02-16 15:07:49,451 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=5
+2026-02-16 15:07:50,847 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=5
+2026-02-16 15:07:52,384 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=5
+2026-02-16 15:07:53,919 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=5
+2026-02-16 15:07:54,277 INFO adapters.valyu: Valyu results query='top stories' count=5
+2026-02-16 15:07:54,627 INFO adapters.valyu: Valyu results query='trending news' count=5
+2026-02-16 15:07:55,022 INFO adapters.valyu: Valyu results query='news' count=5
+2026-02-16 15:07:55,023 INFO adapters.valyu: Fetch done: articles=130
+2026-02-16 15:07:57,074 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:07:58,738 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:00,172 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:01,391 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:02,722 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:04,260 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:05,794 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:07,215 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:08,436 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:10,210 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:11,347 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:13,101 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:14,191 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:15,727 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:17,161 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:18,800 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:20,008 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:21,671 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:23,202 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:24,444 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:25,968 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:27,545 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:27,575 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:08:27,576 INFO openai._base_client: Retrying request to /chat/completions in 29.000000 seconds
+2026-02-16 15:08:58,068 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:08:59,404 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:00,493 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:03,068 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:04,540 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:06,097 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:07,487 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:08,953 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:10,628 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:11,675 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:13,176 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:14,448 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:16,381 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:17,868 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:19,161 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:20,841 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:22,360 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:24,082 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:25,661 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:27,407 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:29,402 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:30,919 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:09:30,950 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:09:30,950 INFO openai._base_client: Retrying request to /chat/completions in 26.000000 seconds
+2026-02-16 15:09:58,640 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:00,097 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:01,911 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:03,554 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:05,343 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:06,886 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:08,758 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:10,545 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:12,053 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:13,648 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:15,147 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:17,276 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:18,865 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:20,493 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:21,977 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:23,318 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:24,993 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:27,516 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:29,383 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:30,873 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:32,431 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:10:32,459 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:10:32,460 INFO openai._base_client: Retrying request to /chat/completions in 25.000000 seconds
+2026-02-16 15:10:59,158 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:00,678 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:03,257 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:04,892 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:06,387 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:08,120 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:09,477 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:11,129 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:12,586 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:14,379 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:15,970 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:17,283 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:18,701 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:20,355 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:21,852 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:23,199 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:24,554 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:26,193 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:27,625 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:29,161 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:29,194 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:11:29,194 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:11:32,046 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:33,596 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:33,625 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:11:33,625 INFO openai._base_client: Retrying request to /chat/completions in 24.000000 seconds
+2026-02-16 15:11:59,074 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:11:59,106 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:11:59,107 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:01,607 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:02,953 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:02,985 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:02,986 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:05,417 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:07,152 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:08,701 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:10,121 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:11,862 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:13,726 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:14,754 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:16,053 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:16,081 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:16,082 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:17,885 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:18,917 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:20,200 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:20,229 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:20,230 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:22,409 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:23,506 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:24,764 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:25,891 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:25,920 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:25,921 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:28,159 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:29,270 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:29,301 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:29,302 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:31,244 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:31,273 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:31,274 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:12:33,775 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:33,804 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:33,805 INFO openai._base_client: Retrying request to /chat/completions in 24.000000 seconds
+2026-02-16 15:12:59,479 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:12:59,513 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:12:59,514 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:13:01,732 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:13:03,063 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:13:03,093 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-16 15:13:03,094 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-16 15:13:05,396 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:13:05,463 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-16 15:13:05,463 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-16 15:13:22,316 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-16 15:13:28,766 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 14:04:44,754 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 14:04:44,755 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:19:17,515 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-17 15:19:20,559 INFO adapters.valyu: Valyu results query='Business' count=5
+2026-02-17 15:19:23,234 INFO adapters.valyu: Valyu results query='Politics' count=5
+2026-02-17 15:19:26,132 INFO adapters.valyu: Valyu results query='World' count=5
+2026-02-17 15:19:27,630 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=5
+2026-02-17 15:19:29,130 INFO adapters.valyu: Valyu results query='Health' count=5
+2026-02-17 15:19:30,693 INFO adapters.valyu: Valyu results query='UK' count=5
+2026-02-17 15:19:32,231 INFO adapters.valyu: Valyu results query='nuclear industry' count=5
+2026-02-17 15:19:33,670 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=5
+2026-02-17 15:19:35,098 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=5
+2026-02-17 15:19:36,706 INFO adapters.valyu: Valyu results query='nuclear energy' count=5
+2026-02-17 15:19:38,259 INFO adapters.valyu: Valyu results query='nuclear power' count=5
+2026-02-17 15:19:39,677 INFO adapters.valyu: Valyu results query='nuclear plant' count=5
+2026-02-17 15:19:41,131 INFO adapters.valyu: Valyu results query='nuclear waste' count=5
+2026-02-17 15:19:42,653 INFO adapters.valyu: Valyu results query='nuclear' count=5
+2026-02-17 15:19:44,015 INFO adapters.valyu: Valyu results query='sellafield' count=4
+2026-02-17 15:19:45,337 INFO adapters.valyu: Valyu results query='decommissioning' count=5
+2026-02-17 15:19:46,845 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=5
+2026-02-17 15:19:48,409 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=5
+2026-02-17 15:19:49,930 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=5
+2026-02-17 15:19:51,335 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=5
+2026-02-17 15:19:52,892 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=5
+2026-02-17 15:19:54,323 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=5
+2026-02-17 15:19:55,889 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=5
+2026-02-17 15:19:57,488 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=5
+2026-02-17 15:19:59,076 INFO adapters.valyu: Valyu results query='top stories' count=5
+2026-02-17 15:20:00,633 INFO adapters.valyu: Valyu results query='trending news' count=5
+2026-02-17 15:20:02,101 INFO adapters.valyu: Valyu results query='news' count=5
+2026-02-17 15:20:02,102 INFO adapters.valyu: Fetch done: articles=134
+2026-02-17 15:20:04,032 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:05,309 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:06,342 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:07,481 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:08,846 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:10,365 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:12,607 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:13,679 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:16,019 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:18,198 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:19,284 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:20,695 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:21,791 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:23,080 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:24,432 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:25,834 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:26,892 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:28,063 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:30,253 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:32,008 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:33,417 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:34,963 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:20:34,991 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:20:34,992 INFO openai._base_client: Retrying request to /chat/completions in 28.000000 seconds
+2026-02-17 15:21:04,490 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:06,028 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:07,323 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:08,586 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:10,124 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:11,555 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:13,091 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:14,935 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:16,881 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:18,723 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:20,364 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:21,591 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:22,820 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:24,356 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:26,301 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:27,939 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:29,306 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:30,543 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:32,035 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:33,666 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:35,108 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:36,542 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:21:36,574 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:21:36,574 INFO openai._base_client: Retrying request to /chat/completions in 27.000000 seconds
+2026-02-17 15:22:05,111 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:06,749 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:08,285 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:09,616 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:11,053 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:12,279 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:13,023 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:13,059 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:22:13,060 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:22:15,453 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:17,093 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:18,732 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:18,759 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:22:18,760 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:22:21,106 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:22,724 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:23,852 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:25,591 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:26,717 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:28,093 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:29,585 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:31,223 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:32,759 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:34,294 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:35,627 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:36,855 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:22:36,882 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:22:36,883 INFO openai._base_client: Retrying request to /chat/completions in 27.000000 seconds
+2026-02-17 15:23:05,322 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:06,987 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:08,606 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:09,931 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:11,183 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:12,388 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:13,898 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:13,930 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:23:13,930 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:23:16,166 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:17,413 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:18,665 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:18,695 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:23:18,696 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 15:23:22,098 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:23,337 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:24,677 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:26,244 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:28,228 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:30,238 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:31,627 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:33,577 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:35,434 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:37,224 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:38,115 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:39,210 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:23:39,238 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:23:39,239 INFO openai._base_client: Retrying request to /chat/completions in 25.000000 seconds
+2026-02-17 15:24:05,342 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:05,368 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:24:05,369 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:24:07,593 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:08,591 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:08,619 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:24:08,620 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:24:10,763 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:12,463 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:13,646 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:14,970 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:14,998 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:24:14,999 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:24:17,168 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:18,318 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:18,377 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 15:24:18,377 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:24:35,332 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:43,910 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:24:50,449 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:32:12,836 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 15:32:12,836 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:33:03,182 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-17 15:33:04,469 INFO adapters.valyu: Valyu results query='Business' count=5
+2026-02-17 15:33:05,638 INFO adapters.valyu: Valyu results query='Politics' count=5
+2026-02-17 15:33:06,565 INFO adapters.valyu: Valyu results query='World' count=5
+2026-02-17 15:33:10,816 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=5
+2026-02-17 15:33:11,188 INFO adapters.valyu: Valyu results query='Health' count=5
+2026-02-17 15:33:11,581 INFO adapters.valyu: Valyu results query='UK' count=5
+2026-02-17 15:33:11,946 INFO adapters.valyu: Valyu results query='nuclear industry' count=5
+2026-02-17 15:33:12,377 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=5
+2026-02-17 15:33:12,751 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=5
+2026-02-17 15:33:13,117 INFO adapters.valyu: Valyu results query='nuclear energy' count=5
+2026-02-17 15:33:13,483 INFO adapters.valyu: Valyu results query='nuclear power' count=5
+2026-02-17 15:33:13,869 INFO adapters.valyu: Valyu results query='nuclear plant' count=5
+2026-02-17 15:33:14,236 INFO adapters.valyu: Valyu results query='nuclear waste' count=5
+2026-02-17 15:33:14,603 INFO adapters.valyu: Valyu results query='nuclear' count=5
+2026-02-17 15:33:14,980 INFO adapters.valyu: Valyu results query='sellafield' count=4
+2026-02-17 15:33:15,357 INFO adapters.valyu: Valyu results query='decommissioning' count=5
+2026-02-17 15:33:15,726 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=5
+2026-02-17 15:33:16,091 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=5
+2026-02-17 15:33:16,453 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=5
+2026-02-17 15:33:16,797 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=5
+2026-02-17 15:33:17,169 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=5
+2026-02-17 15:33:17,542 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=5
+2026-02-17 15:33:17,903 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=5
+2026-02-17 15:33:18,274 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=5
+2026-02-17 15:33:18,650 INFO adapters.valyu: Valyu results query='top stories' count=5
+2026-02-17 15:33:19,012 INFO adapters.valyu: Valyu results query='trending news' count=5
+2026-02-17 15:33:19,391 INFO adapters.valyu: Valyu results query='news' count=5
+2026-02-17 15:33:19,391 INFO adapters.valyu: Fetch done: articles=134
+2026-02-17 15:33:20,953 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:22,411 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:23,819 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:24,741 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:26,171 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:27,710 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:28,788 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:29,867 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:31,193 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:32,687 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:34,264 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:35,698 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:36,722 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:38,053 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:39,281 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:40,717 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:42,251 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:43,582 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:44,807 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:45,837 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:47,269 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:48,703 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:33:48,734 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:33:48,735 INFO openai._base_client: Retrying request to /chat/completions in 31.000000 seconds
+2026-02-17 15:34:21,573 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:25,259 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:26,693 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:28,127 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:29,887 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:31,046 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:32,574 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:33,759 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:35,295 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:36,830 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:38,469 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:39,903 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:41,155 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:42,770 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:44,511 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:46,046 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:47,378 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:48,504 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:49,938 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:51,679 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:53,316 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:54,955 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:34:54,985 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:34:54,986 INFO openai._base_client: Retrying request to /chat/completions in 25.000000 seconds
+2026-02-17 15:35:21,375 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:21,401 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:35:21,401 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:35:23,832 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:23,858 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:35:23,858 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 15:35:27,622 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:28,949 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:30,552 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:31,969 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:33,457 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:34,891 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:36,593 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:38,373 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:39,704 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:41,240 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:42,674 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:44,210 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:46,065 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:46,974 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:48,101 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:49,534 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:50,968 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:53,220 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:54,757 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:56,526 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:35:56,554 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:35:56,554 INFO openai._base_client: Retrying request to /chat/completions in 24.000000 seconds
+2026-02-17 15:36:21,893 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:21,923 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:36:21,923 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:36:24,558 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:24,587 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:36:24,588 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 15:36:28,035 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:29,266 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:30,670 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:32,032 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:32,061 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:36:32,062 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:36:34,579 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:36,025 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:37,416 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:38,962 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:40,633 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:42,066 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:43,519 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:45,038 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:46,366 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:47,709 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:49,029 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:50,565 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:52,199 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:53,376 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:54,745 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:54,773 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:36:54,774 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:36:57,230 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:36:57,259 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:36:57,260 INFO openai._base_client: Retrying request to /chat/completions in 24.000000 seconds
+2026-02-17 15:37:22,616 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:22,647 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:22,647 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:24,854 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:24,884 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:24,885 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 15:37:28,249 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:29,631 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:30,959 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:32,347 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:32,375 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:32,376 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:34,597 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:34,626 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:34,627 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:36,883 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:38,386 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:39,624 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:40,969 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:42,073 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:42,102 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:42,103 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:44,325 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:45,555 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:46,653 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:47,705 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:47,734 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:47,734 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:50,199 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:51,391 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:52,622 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:53,889 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:55,487 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:55,516 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:55,516 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:37:57,843 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:37:57,872 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:37:57,872 INFO openai._base_client: Retrying request to /chat/completions in 24.000000 seconds
+2026-02-17 15:38:23,342 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:38:23,371 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:38:23,371 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:38:25,471 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:38:25,500 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:38:25,500 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 15:38:28,824 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:38:28,879 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 15:38:28,879 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:38:42,967 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:38:51,444 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:42:32,812 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 15:42:32,813 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:45:44,878 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-17 15:45:46,895 INFO adapters.valyu: Valyu results query='Business' count=5
+2026-02-17 15:45:48,522 INFO adapters.valyu: Valyu results query='Politics' count=5
+2026-02-17 15:45:50,089 INFO adapters.valyu: Valyu results query='World' count=5
+2026-02-17 15:45:51,484 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=5
+2026-02-17 15:45:53,040 INFO adapters.valyu: Valyu results query='Health' count=5
+2026-02-17 15:45:54,612 INFO adapters.valyu: Valyu results query='UK' count=5
+2026-02-17 15:45:56,247 INFO adapters.valyu: Valyu results query='nuclear industry' count=5
+2026-02-17 15:45:57,742 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=5
+2026-02-17 15:45:59,126 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=5
+2026-02-17 15:46:00,626 INFO adapters.valyu: Valyu results query='nuclear energy' count=5
+2026-02-17 15:46:02,192 INFO adapters.valyu: Valyu results query='nuclear power' count=5
+2026-02-17 15:46:03,678 INFO adapters.valyu: Valyu results query='nuclear plant' count=5
+2026-02-17 15:46:05,103 INFO adapters.valyu: Valyu results query='nuclear waste' count=5
+2026-02-17 15:46:06,668 INFO adapters.valyu: Valyu results query='nuclear' count=5
+2026-02-17 15:46:07,975 INFO adapters.valyu: Valyu results query='sellafield' count=4
+2026-02-17 15:46:09,458 INFO adapters.valyu: Valyu results query='decommissioning' count=5
+2026-02-17 15:46:10,971 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=5
+2026-02-17 15:46:12,564 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=5
+2026-02-17 15:46:14,153 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=5
+2026-02-17 15:46:15,660 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=5
+2026-02-17 15:46:17,204 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=5
+2026-02-17 15:46:18,680 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=5
+2026-02-17 15:46:20,196 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=5
+2026-02-17 15:46:21,816 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=5
+2026-02-17 15:46:23,417 INFO adapters.valyu: Valyu results query='top stories' count=5
+2026-02-17 15:46:24,940 INFO adapters.valyu: Valyu results query='trending news' count=5
+2026-02-17 15:46:26,481 INFO adapters.valyu: Valyu results query='news' count=5
+2026-02-17 15:46:26,482 INFO adapters.valyu: Fetch done: articles=134
+2026-02-17 15:46:27,922 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:29,283 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:30,303 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:31,695 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:32,898 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:34,158 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:35,412 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:36,396 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:37,671 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:39,011 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:40,252 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:41,564 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:42,690 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:44,063 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:45,398 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:46,714 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:48,119 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:49,325 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:50,389 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:51,655 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:52,794 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:54,109 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:46:54,137 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:46:54,138 INFO openai._base_client: Retrying request to /chat/completions in 33.000000 seconds
+2026-02-17 15:47:28,627 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:29,967 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:31,082 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:32,508 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:33,690 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:35,076 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:36,542 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:37,777 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:39,158 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:40,343 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:41,961 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:43,590 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:45,231 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:47,018 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:48,557 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:49,889 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:51,152 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:52,437 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:54,026 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:56,018 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:57,553 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:59,127 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:47:59,154 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:47:59,155 INFO openai._base_client: Retrying request to /chat/completions in 29.000000 seconds
+2026-02-17 15:48:29,958 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:31,630 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:33,137 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:34,508 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:36,105 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:37,646 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:39,018 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:40,907 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:42,186 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:43,472 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:44,836 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:46,312 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:47,662 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:48,824 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:50,451 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:51,338 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:52,274 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:53,758 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:55,049 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:56,366 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:57,952 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:59,309 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:48:59,336 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:48:59,337 INFO openai._base_client: Retrying request to /chat/completions in 29.000000 seconds
+2026-02-17 15:49:29,764 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:29,793 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:49:29,794 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:49:31,880 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:33,158 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:33,190 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:49:33,191 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:49:35,549 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:36,998 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:38,523 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:40,280 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:41,668 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:43,362 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:44,713 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:46,219 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:47,678 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:49,040 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:50,692 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:52,246 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:53,476 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:55,120 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:56,568 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:57,998 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:49:59,438 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:00,778 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:02,055 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:02,100 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:02,100 INFO openai._base_client: Retrying request to /chat/completions in 27.000000 seconds
+2026-02-17 15:50:30,487 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:30,538 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:30,538 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:50:32,756 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:34,147 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:34,178 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:34,179 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:50:36,369 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:37,746 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:39,431 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:40,503 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:41,890 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:43,513 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:45,116 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:46,317 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:47,468 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:47,491 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:47,492 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:50:49,497 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:50,694 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:50,725 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:50,725 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:50:53,466 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:54,536 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:55,789 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:56,861 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:58,034 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:50:58,056 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:50:58,057 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:50:59,985 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:01,123 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:02,517 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:02,541 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:51:02,541 INFO openai._base_client: Retrying request to /chat/completions in 27.000000 seconds
+2026-02-17 15:51:31,081 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:31,106 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 15:51:31,106 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 15:51:33,340 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:34,571 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:34,605 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 15:51:34,605 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 15:51:50,393 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:51:58,270 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 15:52:05,824 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:14:41,372 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:14:41,381 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:14:41,390 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:18:52,954 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:18:52,963 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:18:52,972 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:19:10,808 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:19:10,817 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:19:10,818 INFO adapters.valyu: Fetch done: articles=0
+2026-02-17 16:19:10,820 INFO adapters.valyu: Fetching news: hours=1 market=GB
+2026-02-17 16:19:10,822 WARNING adapters.valyu: Valyu search failed: <test_valyu_branches.test_valyu_unsuccessful.<locals>.DummyResponse object at 0x12f465fd0>
+2026-02-17 16:19:10,822 INFO adapters.valyu: Fetch done: articles=0
+2026-02-17 16:31:14,852 INFO adapters.valyu: Fetching news: hours=24 market=GB
+2026-02-17 16:31:17,213 INFO adapters.valyu: Valyu results query='Business' count=5
+2026-02-17 16:31:18,761 INFO adapters.valyu: Valyu results query='Politics' count=5
+2026-02-17 16:31:20,256 INFO adapters.valyu: Valyu results query='World' count=5
+2026-02-17 16:31:21,760 INFO adapters.valyu: Valyu results query='ScienceAndTechnology' count=5
+2026-02-17 16:31:23,281 INFO adapters.valyu: Valyu results query='Health' count=5
+2026-02-17 16:31:24,801 INFO adapters.valyu: Valyu results query='UK' count=5
+2026-02-17 16:31:26,387 INFO adapters.valyu: Valyu results query='nuclear industry' count=5
+2026-02-17 16:31:27,871 INFO adapters.valyu: Valyu results query='nuclear decommissioning' count=5
+2026-02-17 16:31:29,343 INFO adapters.valyu: Valyu results query='nuclear decommissioning authority' count=5
+2026-02-17 16:31:30,898 INFO adapters.valyu: Valyu results query='nuclear energy' count=5
+2026-02-17 16:31:32,341 INFO adapters.valyu: Valyu results query='nuclear power' count=5
+2026-02-17 16:31:33,830 INFO adapters.valyu: Valyu results query='nuclear plant' count=5
+2026-02-17 16:31:35,347 INFO adapters.valyu: Valyu results query='nuclear waste' count=5
+2026-02-17 16:31:36,787 INFO adapters.valyu: Valyu results query='nuclear' count=5
+2026-02-17 16:31:38,118 INFO adapters.valyu: Valyu results query='sellafield' count=4
+2026-02-17 16:31:39,687 INFO adapters.valyu: Valyu results query='decommissioning' count=5
+2026-02-17 16:31:41,130 INFO adapters.valyu: Valyu results query='Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.' count=5
+2026-02-17 16:31:42,742 INFO adapters.valyu: Valyu results query='Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.' count=5
+2026-02-17 16:31:44,262 INFO adapters.valyu: Valyu results query='Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.' count=5
+2026-02-17 16:31:45,681 INFO adapters.valyu: Valyu results query='Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.' count=5
+2026-02-17 16:31:47,372 INFO adapters.valyu: Valyu results query='Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.' count=5
+2026-02-17 16:31:48,776 INFO adapters.valyu: Valyu results query='Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.' count=5
+2026-02-17 16:31:50,267 INFO adapters.valyu: Valyu results query='Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.' count=5
+2026-02-17 16:31:51,881 INFO adapters.valyu: Valyu results query='Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.' count=5
+2026-02-17 16:31:53,501 INFO adapters.valyu: Valyu results query='top stories' count=5
+2026-02-17 16:31:55,073 INFO adapters.valyu: Valyu results query='trending news' count=5
+2026-02-17 16:31:56,657 INFO adapters.valyu: Valyu results query='news' count=5
+2026-02-17 16:31:56,657 INFO adapters.valyu: Fetch done: articles=134
+2026-02-17 16:31:58,574 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:31:59,763 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:01,478 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:02,719 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:03,845 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:05,257 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:06,607 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:07,969 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:08,965 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:10,549 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:12,083 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:13,340 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:14,426 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:15,355 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:17,160 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:18,560 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:20,106 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:21,204 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:22,237 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:23,460 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:24,753 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:25,908 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:32:25,936 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:32:25,937 INFO openai._base_client: Retrying request to /chat/completions in 32.000000 seconds
+2026-02-17 16:32:59,530 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:00,836 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:02,311 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:03,676 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:05,196 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:06,504 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:07,830 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:09,664 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:11,232 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:12,492 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:13,871 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:15,626 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:17,013 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:18,420 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:19,982 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:21,736 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:23,193 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:25,299 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:27,214 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:30,005 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:31,556 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:33,168 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:33:33,210 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:33:33,210 INFO openai._base_client: Retrying request to /chat/completions in 25.000000 seconds
+2026-02-17 16:33:59,697 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:02,163 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:03,471 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:05,265 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:06,599 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:06,625 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:34:06,626 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:34:09,385 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:10,793 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:12,290 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:13,765 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:15,515 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:16,983 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:18,817 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:20,522 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:21,980 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:23,747 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:24,883 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:25,769 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:27,415 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:28,917 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:28,953 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:34:28,954 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 16:34:32,476 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:35,445 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:37,313 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:34:37,342 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:34:37,342 INFO openai._base_client: Retrying request to /chat/completions in 21.000000 seconds
+2026-02-17 16:35:00,373 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:01,704 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:01,733 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:01,734 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:35:04,010 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:05,413 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:06,804 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:06,832 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:06,833 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:35:09,217 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:09,246 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:09,247 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:35:11,840 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:13,240 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:14,742 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:16,313 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:18,034 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:19,495 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:20,683 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:22,731 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:24,208 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:25,473 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:27,440 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:29,026 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:30,357 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:30,385 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:30,386 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:35:32,697 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:34,097 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:34,125 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:34,125 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 16:35:37,513 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:35:37,541 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:35:37,542 INFO openai._base_client: Retrying request to /chat/completions in 21.000000 seconds
+2026-02-17 16:36:00,020 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:00,048 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:00,049 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:02,331 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:02,359 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:02,360 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:04,574 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:06,030 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:07,417 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:07,446 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:07,446 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:10,797 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:11,850 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:11,880 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:11,880 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:13,952 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:15,233 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:16,833 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:18,088 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:19,633 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:20,856 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:22,227 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:22,254 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:22,255 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:24,437 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:25,479 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:25,506 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:25,506 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:27,545 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:28,815 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:28,842 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:28,843 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:31,439 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:32,466 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:32,494 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:32,495 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:36:34,591 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:34,622 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:34,622 INFO openai._base_client: Retrying request to /chat/completions in 2.000000 seconds
+2026-02-17 16:36:38,238 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:36:38,268 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:36:38,268 INFO openai._base_client: Retrying request to /chat/completions in 21.000000 seconds
+2026-02-17 16:37:00,534 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:37:00,563 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:37:00,564 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:37:02,758 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:37:02,790 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 429 Too Many Requests"
+2026-02-17 16:37:02,791 INFO openai._base_client: Retrying request to /chat/completions in 1.000000 seconds
+2026-02-17 16:37:04,957 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:37:06,209 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:37:06,273 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: mps
+2026-02-17 16:37:06,273 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: BAAI/bge-large-en-v1.5
+2026-02-17 16:37:20,916 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"
+2026-02-17 16:37:27,687 INFO httpx: HTTP Request: POST https://risklive.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview "HTTP/1.1 200 OK"

@@ -7,6 +7,7 @@ from config.settings import get_config
 from services.pipeline import (
     cleanup_old_data,
     extract_news_info,
+    export_dashboard,
     fetch_news,
     generate_report,
     run_topic_modeling,
@@ -54,6 +55,11 @@ def create_app() -> Flask:
         generate_report(rows)
         return jsonify({"status": "triggered", "task": "report"})
 
+    @app.route("/trigger/dashboard")
+    def trigger_dashboard():
+        export_dashboard()
+        return jsonify({"status": "triggered", "task": "dashboard"})
+
     @app.route("/trigger/full")
     def trigger_full():
         hours = request.args.get("hours", default=24, type=int)
@@ -81,6 +87,7 @@ def start_scheduler(app: Flask) -> BackgroundScheduler:
 
 def fetch_and_process(_app: Flask) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
+    export_dashboard()
 
 
 def manual_fetch_and_process(hours: int = 24, include_trending: bool = True) -> None:

@@ -10,6 +10,7 @@ from services.extraction import extract_from_rows
 from services.reporting import generate_reports_from_rows
 from services.storage import data_path, load_if_exists, write_csv
 from services.topic_modeling import compute_topic_modeling, compute_topic_visualizations
+from services.dashboard_export import main as export_dashboard_main
 from utils.rows import (
     llm_rows_from_records,
     news_rows_from_records,
@@ -167,3 +168,7 @@ def cleanup_old_data(days_to_keep: int) -> int:
             kept.append(row)
     write_csv(records_from_llm_rows(kept), path)
     return before - len(kept)
+
+
+def export_dashboard() -> None:
+    export_dashboard_main()
