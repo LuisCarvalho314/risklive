@@ -1,0 +1,247 @@
+{
+  "$defs": {
+    "AlertItem": {
+      "properties": {
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "timestamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timestamp"
+        },
+        "alert_flag": {
+          "default": "",
+          "title": "Alert Flag",
+          "type": "string"
+        },
+        "alert_reason": {
+          "default": "",
+          "title": "Alert Reason",
+          "type": "string"
+        },
+        "news_category": {
+          "default": "",
+          "title": "News Category",
+          "type": "string"
+        },
+        "short_summary": {
+          "default": "",
+          "title": "Short Summary",
+          "type": "string"
+        },
+        "relevance": {
+          "default": "",
+          "title": "Relevance",
+          "type": "string"
+        }
+      },
+      "title": "AlertItem",
+      "type": "object"
+    },
+    "AlertsSection": {
+      "properties": {
+        "nuclear": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Nuclear",
+          "type": "array"
+        },
+        "non_nuclear": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/AlertItem"
+            },
+            "type": "array"
+          },
+          "title": "Non Nuclear",
+          "type": "object"
+        }
+      },
+      "title": "AlertsSection",
+      "type": "object"
+    },
+    "FlaggedAlerts": {
+      "properties": {
+        "red": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Red",
+          "type": "array"
+        },
+        "yellow": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Yellow",
+          "type": "array"
+        }
+      },
+      "title": "FlaggedAlerts",
+      "type": "object"
+    },
+    "RecentAlerts": {
+      "properties": {
+        "red": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Red",
+          "type": "array"
+        },
+        "yellow": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Yellow",
+          "type": "array"
+        },
+        "green": {
+          "items": {
+            "$ref": "#/$defs/AlertItem"
+          },
+          "title": "Green",
+          "type": "array"
+        }
+      },
+      "title": "RecentAlerts",
+      "type": "object"
+    },
+    "TopicEntry": {
+      "properties": {
+        "keyword": {
+          "default": "",
+          "title": "Keyword",
+          "type": "string"
+        },
+        "response": {
+          "default": "",
+          "title": "Response",
+          "type": "string"
+        }
+      },
+      "title": "TopicEntry",
+      "type": "object"
+    },
+    "TreemapNode": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/TreemapNode"
+          },
+          "title": "Children",
+          "type": "array"
+        },
+        "meta": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Meta"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "TreemapNode",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "alerts": {
+      "$ref": "#/$defs/AlertsSection"
+    },
+    "recent_alerts": {
+      "$ref": "#/$defs/RecentAlerts"
+    },
+    "flagged_alerts": {
+      "$ref": "#/$defs/FlaggedAlerts"
+    },
+    "newsmap": {
+      "$ref": "#/$defs/TreemapNode"
+    },
+    "topics": {
+      "items": {
+        "$ref": "#/$defs/TopicEntry"
+      },
+      "title": "Topics",
+      "type": "array"
+    },
+    "topic_tree": {
+      "default": "",
+      "title": "Topic Tree",
+      "type": "string"
+    }
+  },
+  "required": [
+    "generated_at",
+    "alerts",
+    "recent_alerts",
+    "flagged_alerts",
+    "newsmap"
+  ],
+  "title": "DashboardModel",
+  "type": "object"
+}
