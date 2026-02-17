@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: 40 40% 94%;
+    --foreground: 33 22% 10%;
+    --card: 34 100% 97%;
+    --card-foreground: 33 22% 10%;
+    --popover: 34 100% 97%;
+    --popover-foreground: 33 22% 10%;
+    --primary: 33 22% 10%;
+    --primary-foreground: 40 40% 94%;
+    --secondary: 36 34% 83%;
+    --secondary-foreground: 33 22% 10%;
+    --muted: 36 34% 83%;
+    --muted-foreground: 34 15% 49%;
+    --accent: 16 73% 44%;
+    --accent-foreground: 40 40% 94%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 36 34% 83%;
+    --input: 36 34% 83%;
+    --ring: 16 73% 44%;
+    --radius: 0.6rem;
+    --page-bg: linear-gradient(140deg, #f6f2ea 0%, #fff8ee 55%, #efe6d8 100%);
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 30 16% 9%;
+    --foreground: 40 40% 94%;
+    --card: 26 18% 12%;
+    --card-foreground: 40 40% 94%;
+    --popover: 26 18% 12%;
+    --popover-foreground: 40 40% 94%;
+    --primary: 40 40% 94%;
+    --primary-foreground: 30 16% 9%;
+    --secondary: 28 10% 18%;
+    --secondary-foreground: 40 40% 94%;
+    --muted: 28 10% 18%;
+    --muted-foreground: 34 12% 70%;
+    --accent: 16 73% 44%;
+    --accent-foreground: 40 40% 94%;
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 28 10% 20%;
+    --input: 28 10% 20%;
+    --ring: 16 73% 44%;
+    --page-bg: radial-gradient(
+        1200px 800px at 15% -10%,
+        rgba(196, 73, 30, 0.15),
+        transparent 60%
+      ),
+      linear-gradient(160deg, #17130f 0%, #14110e 45%, #100e0c 100%);
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    color: hsl(var(--foreground));
+    background: hsl(var(--background));
+  }
+}
+
+body {
+  background: var(--page-bg);
+}
