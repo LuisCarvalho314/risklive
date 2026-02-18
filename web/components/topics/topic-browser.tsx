@@ -12,8 +12,19 @@ export function TopicBrowser({ topics }: { topics: TopicEntry[] }) {
 
   const filtered = useMemo(() => {
     const lowered = query.trim().toLowerCase();
-    if (!lowered) return topics;
-    return topics.filter((topic) => topic.keyword.toLowerCase().includes(lowered));
+    const seen = new Set<string>();
+    const out: TopicEntry[] = [];
+
+    for (const topic of topics) {
+      const keyword = topic.keyword?.trim();
+      if (!keyword) continue;
+      if (seen.has(keyword)) continue;
+      if (lowered && !keyword.toLowerCase().includes(lowered)) continue;
+      seen.add(keyword);
+      out.push(topic);
+    }
+
+    return out;
   }, [topics, query]);
 
   const active = topics.find((topic) => topic.keyword === selected) ?? filtered[0];

@@ -1,6 +1,8 @@
 # Environments
 .env
 .venv
+web/node_modules/
+web/.next
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

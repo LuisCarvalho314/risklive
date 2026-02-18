@@ -6,7 +6,8 @@ export default async function TopicsPage() {
   const dashboard = await loadDashboard();
 
   return (
-    <div className="space-y-6">
+    <div className="h-full min-h-0 overflow-y-auto p-6">
+      <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Daily Report</CardTitle>
@@ -21,6 +22,7 @@ export default async function TopicsPage() {
         </CardContent>
       </Card>
 
+      </div>
     </div>
   );
 }

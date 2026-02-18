@@ -12,7 +12,7 @@ const config: Config = {
       colors: {
         canvas: "#f6f2ea",
         ink: "#1f1a14",
-        accent: "#c4491e",
+        brand: "#c4491e",
         panel: "#fff9f1",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -5,6 +5,8 @@ export default async function AlertsPage() {
   const dashboard = await loadDashboard();
 
   return (
-    <AlertsDashboard flagged={dashboard.flagged_alerts} />
+    <div className="h-full min-h-0 overflow-y-auto p-6">
+      <AlertsDashboard flagged={dashboard.flagged_alerts} />
+    </div>
   );
 }

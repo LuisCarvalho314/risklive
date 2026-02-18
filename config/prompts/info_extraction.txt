@@ -1,0 +1,57 @@
+
+Your task is to meticulously analyze a news article to accomplish several objectives that will aid in understanding its implications for the Nuclear Decommissioning Authority (NDA). These objectives include identifying key themes through relevant keywords, summarizing the article concisely, determining its relevance to the NDA, providing a rationale for its relevance or lack thereof, classifying the news with an alert flag based on its importance and potential impact on the NDA, and and categorizing the news into a specific category. The alert flag should indicate the urgency or significance of the article's content with respect to the Nuclear Decommissioning Authority's interests and responsibilities, using a color-coded system: Red (high importance), Yellow (moderate importance), Green (low importance). The main pillars to check for are risks related to Supply Chain, Health and Safety, Cybersecurity, and news related to the Nuclear Industry and relevant news related to the United Kingdom.
+
+### Instructions:
+
+1. Extract Relevant Keywords: Identify 3-5 keywords that encapsulate the core themes and topics of the news article. These keywords should be distinct, relevant, and effectively highlight the main points of interest. Choose the keywords strictly from the news article. Ensure that proper nouns, such as company names or key individuals, are included if they are relevant to understanding the news. If the news is related to the nuclear industry and decommissioning, ensure keywords like "nuclear" are included.
+
+2. Summarize the News Article: Provide a brief summary, ideally in one or two sentences, that captures the essential information and key points discussed in the article. Include the chosen keywords from the previous step in the summary. Avoid phrases like "The news article highlights...". Directly state the key points.
+
+3. Assess Relevance to the NDA: Evaluate the article to determine if it directly pertains to the Nuclear Decommissioning Authority’s core responsibilities and the risk analyst's areas of focus. Relevance should be assessed based on the presence of content specifically related to:
+   - Health and Safety Risks: Information on incidents, regulations, or studies impacting safety in nuclear environments.
+   - Cybersecurity Risks: Updates on threats, breaches, or advancements in security technologies protecting nuclear data and infrastructure.
+   - Supply Chain Risks: News on disruptions, dependencies, or innovations in the supply chain critical to nuclear operations.
+   - Nuclear Industry Risks: Significant developments in nuclear technology, regulatory changes, or industry-wide economic shifts.
+   - Workforce Issues: Insights on labor dynamics, skills shortages, or major policy changes affecting the workforce within the nuclear sector.
+   - Relevant News Related to Britain: Significant news related to Britain's military, health, and safety that could have an impact on the NDA's operations or strategic considerations.
+   - Global News Impact: Important global news that could affect health and safety, cybersecurity, and supply chain of the United Kingdom or NDA's operations .
+   - Exclude general news and non-specific updates such as sports, entertainment, and obituaries unless they directly impact the above areas. Clearly state "Yes" if the article is relevant, addressing one or more of these focus areas directly. State "No" if the article does not meet these criteria.
+
+4. Provide Relevance Reason: If the article is relevant, explain why, highlighting how the content pertains to the NDA's focus areas. If not relevant, specify "NA".
+
+5. Classify with an Alert Flag: Based on the content's importance, assign an alert flag color. Every news with Relevance as "No" should be classified as Green.
+   - Red: The news is of high seriousness and requires attention. It should have a direct and significant impact on our main pillars of assessment: risks related to Nuclear Industry, Supply Chain, Health and Safety, Cybersecurity, and Workforce Issues. These articles address immediate threats or significant changes that require the NDA's attention and swift action.
+   - Yellow: The news has moderate seriousness and requires some attention, potentially affecting our interests but not immediately critical. News that doesn't classify as green or red alert should be classified as yellow.
+   - Green: The news is of low importance but is relevant to the NDA although not a big concern.
+
+6. Explain the Alert Reason: Justify the chosen alert flag by explaining the potential impact or significance of the news article's content in relation to the NDA.
+
+7. Categorize the News: Assign the article to one of the following categories based on its primary focus. Ensure that you return the category exactly as written here, with no variations in capitalization or spacing:
+   - health: News primarily related to health and safety issues in the nuclear industry or general public health concerns.
+   - cybersecurity: News about cyber threats, data breaches, or advancements in digital security relevant to the nuclear sector or the United Kingdom.
+   - geopolitical: News concerning international relations, political developments, or global events that could affect the United Kingdom or the nuclear industry or NDA operations.
+   - supplychain: News about logistical issues, resource availability, or changes in supply networks relevant to the United Kingdom or nuclear decommissioning.
+   - miscellaneous: Any relevant news that doesn't fit clearly into the above categories.
+
+Your analysis should be thorough, ensuring that the keywords are accurately reflective of the article's content, the summary is clear and succinct, and the relevance assessment is thoughtfully considered based on the NDA's focus areas.
+
+### Response Structure:
+Format your response as a valid JSON object with the following keys:
+- "RelevantKeywords"
+- "ShortSummary"
+- "Relevance"
+- "RelevanceReason"
+- "AlertFlag"
+- "AlertReason"
+- "NewsCategory"
+
+
+### News Article:
+The news article is provided below, delimited by triple backticks.
+```
+{news_content}
+```
+
+Please format your response as a valid JSON object.
+
+### Your response: 

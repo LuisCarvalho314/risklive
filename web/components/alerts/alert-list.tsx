@@ -63,7 +63,11 @@ export function AlertList({
               </div>
             </div>
             <Badge variant={badgeVariant(item.alert_flag)}>
-              {item.alert_flag || "Unknown"}
+              {item.alert_flag === "Red"
+                ? "High Risk"
+                : item.alert_flag === "Yellow"
+                ? "Medium Risk"
+                : item.alert_flag || "Unknown"}
             </Badge>
           </div>
         </li>

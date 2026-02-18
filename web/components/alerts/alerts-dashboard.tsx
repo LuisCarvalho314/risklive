@@ -8,6 +8,12 @@ import { AlertItem, FlaggedAlerts } from "@/lib/dashboard";
 
 const alertFilters = ["All", "Red", "Yellow"] as const;
 
+const alertFilterLabel = (value: (typeof alertFilters)[number]) => {
+  if (value === "Red") return "High Risk";
+  if (value === "Yellow") return "Medium Risk";
+  return "All";
+};
+
 type AlertFilter = (typeof alertFilters)[number];
 
 function filterItems(items: AlertItem[], query: string, filter: AlertFilter) {
@@ -100,7 +106,7 @@ export function AlertsDashboard({ flagged }: { flagged: FlaggedAlerts }) {
               variant={filter === value ? "default" : "outline"}
               onClick={() => setFilter(value)}
             >
-              {value}
+              {alertFilterLabel(value)}
             </Button>
           ))}
         </div>
