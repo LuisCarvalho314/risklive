@@ -19,7 +19,7 @@ num_of_ctg = st.sidebar.number_input(
     "Number of categories per experiment", min_value=1, value=1, step=1
 )
 min_threshold = st.sidebar.number_input(
-    "Minimum threshold against max word count", min_value=0.0, value=0.0
+    "Minimum threshold against max word count", min_value=0.0, value=0.70
 )
 similarity_threshold = st.sidebar.number_input(
     "Similarity threshold", min_value=0.0, max_value=1.0, value=0.5
@@ -34,7 +34,7 @@ min_sources_branch = st.sidebar.number_input(
 load = st.sidebar.button("Load Data")
 
 if load:
-    helper = DataHelper("dataset.csv")
+    helper = DataHelper("results/data/news_data.csv")
     sources = helper.load_sources()
     algo = HKTAlgorithm(
         minimum_threshold_against_max_word_count=min_threshold,
@@ -88,6 +88,18 @@ if load:
         f"Words: {stats['number_of_words']} – Source/Word relations: {stats['update_source_word_relation_db']}"
     )
 
+    st.subheader("Treemap")
+    treemap_data = build_treemap_data(hkts, algo)
+
+    if treemap_data:
+        df = pd.DataFrame(treemap_data)
+        fig = px.treemap(
+            df, ids="id", names="label", parents="parent", values="value"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No data to display")
+
     st.subheader("Tree View")
 
     def build_tree_lines(hkt, depth=0):
@@ -109,16 +121,6 @@ if load:
     else:
         st.info("No data to display")
 
-    st.subheader("Treemap")
-    treemap_data = build_treemap_data(hkts, algo)
 
-    if treemap_data:
-        df = pd.DataFrame(treemap_data)
-        fig = px.treemap(
-            df, ids="id", names="label", parents="parent", values="value"
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info("No data to display")
 else:
     st.info("Use the controls in the sidebar to load and analyse the CSV data.")
