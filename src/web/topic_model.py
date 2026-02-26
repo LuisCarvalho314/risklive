@@ -22,7 +22,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from config.settings import ROOT_DIR, get_config
+from config import settings as settings_module
 
 st.set_page_config(page_title="Risk Live", page_icon=":star", layout="wide")
 
@@ -38,10 +38,10 @@ st.markdown(margins_css, unsafe_allow_html=True)
 
 
 def _path_from_save_dir(key: str, filename: str) -> Path:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     base = Path(cfg.save_dir.get(key, "results"))
     if not base.is_absolute():
-        base = ROOT_DIR / base
+        base = settings_module.ROOT_DIR / base
     return base / filename
 
 

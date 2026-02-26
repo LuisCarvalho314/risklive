@@ -6,7 +6,6 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { TreemapCanvas } from "@/components/newsmap/treemap-canvas";
 import { TreemapNode } from "@/lib/dashboard";
 import { defaultTuning, treemapLabelColors, treemapPalettes } from "@/lib/treemap/config";
-import { useTopbarContent } from "@/components/layout/topbar-context";
 import {
   ancestorsOf,
   buildEmphasisSet,
@@ -34,7 +33,6 @@ function formatTimestamp(value?: string | null): string {
 }
 
 export function TreemapClient({ data }: { data: TreemapNode }) {
-  const { setContent } = useTopbarContent();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [flagFilter, setFlagFilter] = useState<FlagFilter>("All");
@@ -273,10 +271,14 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
     return ids.map((id) => treeIndex.byId.get(id)).filter(Boolean) as TreemapNode[];
   }, [focusPath, treeIndex]);
 
-  useEffect(() => {
-    setContent(
-      <>
-        <div className="flex items-center gap-2">
+  return (
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
+      <div className="sticky top-0 z-10 border-b border-border/60 bg-background/95 p-2 backdrop-blur-sm">
+        <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap">
+          <div className="inline-flex items-center gap-2">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Layout</span>
+          </div>
+          <div className="inline-flex items-center gap-2">
           <button
             type="button"
             onClick={() => setLayoutMode("binary")}
@@ -291,9 +293,14 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
           >
             Squarify
           </button>
-        </div>
+          </div>
 
-        <div className="flex items-center gap-2">
+          <span className="h-5 w-px bg-border/70" />
+
+          <div className="inline-flex items-center gap-2">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Risk</span>
+          </div>
+          <div className="inline-flex items-center gap-2">
           <button
             type="button"
             onClick={() => setFlagFilter("All")}
@@ -318,9 +325,14 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
           >
             Medium Risk
           </button>
-        </div>
+          </div>
 
-        <div className="relative flex items-center gap-2 overflow-x-auto">
+          <span className="h-5 w-px bg-border/70" />
+
+          <div className="inline-flex items-center gap-2">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Path</span>
+          </div>
+          <div className="relative inline-flex items-center gap-2">
           {breadcrumbNodes.map((node) => {
             const isLast = node.id === focusId;
             const label = node.name || "All";
@@ -342,9 +354,14 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
               </button>
             );
           })}
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
+          </div>
+
+          <span className="h-5 w-px bg-border/70" />
+
+          <div className="inline-flex items-center gap-2">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Categories</span>
+          </div>
+          <div className="inline-flex min-w-0 items-center gap-2">
             <button
               type="button"
               onClick={() => {
@@ -391,49 +408,32 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
               </button>
             ))}
           </div>
-          <div className="sticky right-0 z-10 shrink-0 pl-2 bg-background/80 backdrop-blur-sm border-l border-border/60">
-            <button
-              type="button"
-              onClick={() => {
-                setFocusId("root::newsmap");
-                setFlagFilter("All");
-                setLayoutMode("binary");
-                setSelectedCategoryIds(categories.map((c) => c.id));
-              }}
-              className={[
-                "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
-                "border border-border",
-                focusId === "root::newsmap" && flagFilter === "All"
-                  ? "bg-foreground text-background"
-                  : "bg-background/80 text-muted-foreground backdrop-blur hover:bg-muted/60 hover:text-foreground",
-              ].join(" ")}
-              title="Reset all filters"
-            >
-              Reset
-            </button>
-          </div>
+
+          <span className="h-5 w-px bg-border/70" />
+
+          <button
+            type="button"
+            onClick={() => {
+              setFocusId("root::newsmap");
+              setFlagFilter("All");
+              setLayoutMode("binary");
+              setSelectedCategoryIds(categories.map((c) => c.id));
+            }}
+            className={[
+              "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+              "border border-border",
+              focusId === "root::newsmap" && flagFilter === "All"
+                ? "bg-foreground text-background"
+                : "bg-background/80 text-muted-foreground backdrop-blur hover:bg-muted/60 hover:text-foreground",
+            ].join(" ")}
+            title="Reset all filters"
+          >
+            Reset
+          </button>
         </div>
-      </>
-    );
+      </div>
 
-    return () => setContent(null);
-  }, [
-    breadcrumbNodes,
-    buttonClass,
-    categories,
-    flagFilter,
-    focusId,
-    getCategoryTextColor,
-    layoutMode,
-    selectedCategorySet,
-    setContent,
-    setFlagFilter,
-    setFocusId,
-  ]);
-
-  return (
-    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
-      <div className="absolute inset-0">
+      <div ref={containerRef} className="relative min-h-0 flex-1 overflow-hidden">
         <ParentSize>
           {({ width, height }) => {
             if (width <= 0 || height <= 0) return null;

@@ -1,10 +1,10 @@
 import { readFile } from "fs/promises";
-import path from "path";
+import { getDashboardPath } from "@/lib/dashboard-path";
 
 export const revalidate = 60;
 
 export async function GET() {
-  const dashboardPath = path.join(process.cwd(), "..", "results", "web", "dashboard.json");
+  const dashboardPath = getDashboardPath();
   try {
     const raw = await readFile(dashboardPath, "utf-8");
     return new Response(raw, {

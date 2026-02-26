@@ -15,15 +15,15 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from config.settings import ROOT_DIR, get_config
+from config import settings as settings_module
 
 
 def _data_path(filename: str) -> Path:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     data_dir = cfg.save_dir.get("CSV_DATA_DIR", "results/data/")
     path = Path(data_dir)
     if not path.is_absolute():
-        path = ROOT_DIR / path
+        path = settings_module.ROOT_DIR / path
     return path / filename
 
 

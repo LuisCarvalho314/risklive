@@ -48,6 +48,10 @@ CLEANUP_DAYS_TO_KEEP: 3
 def reset_settings_cache(monkeypatch, tmp_path):
     # Reset module globals and redirect ROOT_DIR for isolated tests.
     monkeypatch.setattr(settings_module, "ROOT_DIR", tmp_path)
+    monkeypatch.setenv("VALYU_API_KEY", "test-valyu-key")
+    monkeypatch.setenv("OPENAI_API_BASE", "https://example.openai.azure.com")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setenv("OPENAI_API_VERSION", "2024-10-21")
     settings_module._settings = None
     settings_module._config = None
     _write_config(tmp_path)

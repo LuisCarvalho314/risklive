@@ -1,0 +1,16 @@
+{$CADDY_SITE_ADDRESS:localhost} {
+	encode gzip zstd
+
+	# Protect ops UI and ops APIs only.
+	@ops path /ops /ops/* /api/ops /api/ops/*
+	basic_auth @ops {
+		{$OPS_USER:opsadmin} {$OPS_PASSWORD_HASH:$2a$14$fpQiGU3YDm6PhYipG.N7ze.KLgo0NFKTNdygt/1ZFlzR9tO9.TgyG}
+	}
+
+	# Python app endpoints.
+	@app path /trigger /trigger/* /health /healthz
+	reverse_proxy @app app:5001
+
+	# Next.js web app (includes /api/dashboard and /api/ops routes).
+	reverse_proxy web:3000
+}

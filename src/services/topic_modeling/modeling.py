@@ -18,7 +18,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
 
-from config.settings import ROOT_DIR, get_config
+from config import settings as settings_module
 from models.csv import LLMEnrichedRow
 from models.topic_model import TopicAssignment, TopicModelArtifacts, TopicModelConfig, TopicVisualizations
 
@@ -29,7 +29,7 @@ _SENTENCE_MODEL_CACHE: dict[str, SentenceTransformer] = {}
 
 def _resolve_dir(path: str) -> Path:
     base = Path(path)
-    return base if base.is_absolute() else ROOT_DIR / base
+    return base if base.is_absolute() else settings_module.ROOT_DIR / base
 
 
 def _normalize_keywords(value) -> str:
@@ -156,7 +156,7 @@ def _load_config_from_metadata(images_dir: Path) -> Optional[TopicModelConfig]:
     return None
 
 def _resolve_save_dirs() -> tuple[Path, Path, Path]:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     images_dir = _resolve_dir(cfg.save_dir.get("TOPIC_MODEL_IMAGE_DIR", "results/images"))
     data_dir = _resolve_dir(cfg.save_dir.get("CSV_DATA_DIR", "results/data"))
     model_dir = _resolve_dir(cfg.save_dir.get("TOPIC_MODEL_DIR", "results/models"))

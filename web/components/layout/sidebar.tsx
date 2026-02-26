@@ -4,6 +4,7 @@ const navItems = [
   { href: "/newsmap", label: "Newsmap" },
   { href: "/alerts", label: "Alerts" },
   { href: "/topics", label: "Topics" },
+  { href: "/ops", label: "Ops" },
 ];
 
 export function Sidebar() {

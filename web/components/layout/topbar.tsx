@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTopbarContent } from "@/components/layout/topbar-context";
 
 export function Topbar() {
-  const { content, rightContent } = useTopbarContent();
+  const { rightContent } = useTopbarContent();
   const themes = useMemo(
     () => [
       { id: "github-light", label: "Studio Light", dark: false },
@@ -48,7 +48,7 @@ export function Topbar() {
 
   return (
     <header className="border-b border-border bg-background px-4 py-2">
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <Link
           href="/"
           className="leading-tight transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
@@ -62,7 +62,7 @@ export function Topbar() {
           </h1>
         </Link>
 
-        <nav className="ml-auto order-1 flex flex-wrap items-center gap-2">
+        <nav className="ml-auto flex min-w-0 items-center gap-2 overflow-x-auto whitespace-nowrap">
           <Link
             href="/topics"
             className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-foreground transition hover:bg-accent hover:text-accent-foreground"
@@ -105,10 +105,6 @@ export function Topbar() {
           </button>
           {rightContent}
         </nav>
-
-        {content ? (
-          <div className="order-2 flex flex-wrap items-center gap-2">{content}</div>
-        ) : null}
       </div>
     </header>
   );

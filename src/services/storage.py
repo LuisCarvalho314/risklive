@@ -5,33 +5,43 @@ from typing import Iterable, Optional
 
 import csv
 
-from config.settings import ROOT_DIR, get_config
+from config import settings as settings_module
+from models.errors import StorageError
+from utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 def _resolve_dir(path: str) -> Path:
     base = Path(path)
-    return base if base.is_absolute() else ROOT_DIR / base
+    return base if base.is_absolute() else settings_module.ROOT_DIR / base
 
 
 def get_data_dir() -> Path:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     return _resolve_dir(cfg.save_dir.get("CSV_DATA_DIR", "results/data"))
 
 
 def get_backup_dir() -> Path:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     return _resolve_dir(cfg.save_dir.get("CSV_DATA_BACKUP_DIR", "results/backup_data"))
 
 
 def ensure_dir(path: Path) -> Path:
-    path.mkdir(parents=True, exist_ok=True)
-    return path
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+    except OSError as exc:
+        raise StorageError("Unable to create directory", details={"path": str(path)}) from exc
 
 
 def read_csv(path: Path) -> list[dict]:
-    with path.open(newline="", encoding="utf-8") as handle:
-        reader = csv.DictReader(handle)
-        return list(reader)
+    try:
+        with path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            return list(reader)
+    except OSError as exc:
+        raise StorageError("Unable to read CSV file", details={"path": str(path)}) from exc
 
 
 def write_csv(rows: Iterable[dict], path: Path) -> Path:
@@ -54,10 +64,17 @@ def write_csv(rows: Iterable[dict], path: Path) -> Path:
         for key in row.keys():
             if key not in fieldnames:
                 fieldnames.append(key)
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(normalized_rows)
+    try:
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(normalized_rows)
+    except OSError as exc:
+        raise StorageError("Unable to write CSV file", details={"path": str(path)}) from exc
+    logger.debug(
+        "csv_written",
+        extra={"event": "csv_written", "component": "services.storage", "operation": "write_csv"},
+    )
     return path
 
 

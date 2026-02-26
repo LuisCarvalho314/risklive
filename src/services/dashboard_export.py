@@ -8,7 +8,7 @@ from typing import Dict, List
 
 import polars as pl
 
-from config.settings import ROOT_DIR, get_config
+from config import settings as settings_module
 from models.dashboard import (
     AlertItem,
     AlertsSection,
@@ -18,8 +18,10 @@ from models.dashboard import (
     TopicEntry,
     TreemapNode,
 )
+from utils.logging import get_logger, log_artifact_written
 
 ROOT = Path(__file__).resolve().parents[2]
+logger = get_logger(__name__)
 
 ALERT_ORDER = ["Red", "Yellow", "Green"]
 NUCLEAR_CATEGORIES = ["nuclear", "nuclear industry"]
@@ -28,11 +30,11 @@ ALERT_WEIGHT = {"Red": 5.0, "Yellow": 3.0, "Green": 1.0}
 
 
 def _data_path(filename: str, key: str = "CSV_DATA_DIR", default: str = "results/data/") -> Path:
-    cfg = get_config()
+    cfg = settings_module.get_config()
     data_dir = cfg.save_dir.get(key, default)
     path = Path(data_dir)
     if not path.is_absolute():
-        path = ROOT_DIR / path
+        path = settings_module.ROOT_DIR / path
     return path / filename
 
 
@@ -89,7 +91,7 @@ def _merge_topics(df: pl.DataFrame) -> pl.DataFrame:
         return df
 
     def _is_empty(series: pl.Series) -> bool:
-        if series.len() == 0:
+        if series.len() == 0:  # pragma: no cover
             return True
         values = [str(val or "").strip() for val in series.to_list()]
         return all(v == "" for v in values)
@@ -347,7 +349,10 @@ def load_topics() -> List[TopicEntry]:
     report_path = _data_path("df_report.csv")
     if not report_path.exists():
         return []
-    df = pl.read_csv(report_path)
+    try:
+        df = pl.read_csv(report_path)
+    except pl.exceptions.NoDataError:
+        return []
     if "keyword" not in df.columns or "response" not in df.columns:
         return []
     df = df.select(["keyword", "response"]).drop_nulls()
@@ -383,21 +388,45 @@ def main() -> None:
         topic_tree=topic_tree,
     )
 
-    output_path = ROOT / "results" / "web" / "dashboard.json"
+    output_path = settings_module.ROOT_DIR / "results" / "web" / "dashboard.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(dashboard.model_dump(mode="json"), indent=2),
         encoding="utf-8",
     )
+    log_artifact_written(
+        logger,
+        stage="dashboard_export",
+        operation="export_dashboard",
+        component="services.dashboard_export",
+        artifact_path=output_path,
+        artifact_type="json",
+    )
 
     schema = DashboardModel.model_json_schema()
-    schema_path = ROOT / "results" / "web" / "dashboard.schema.json"
+    schema_path = settings_module.ROOT_DIR / "results" / "web" / "dashboard.schema.json"
     schema_path.write_text(json.dumps(schema, indent=2), encoding="utf-8")
+    log_artifact_written(
+        logger,
+        stage="dashboard_export",
+        operation="export_dashboard",
+        component="services.dashboard_export",
+        artifact_path=schema_path,
+        artifact_type="json",
+    )
 
-    web_schema_path = ROOT / "web" / "schema" / "dashboard.schema.json"
+    web_schema_path = settings_module.ROOT_DIR / "web" / "schema" / "dashboard.schema.json"
     web_schema_path.parent.mkdir(parents=True, exist_ok=True)
     web_schema_path.write_text(json.dumps(schema, indent=2), encoding="utf-8")
+    log_artifact_written(
+        logger,
+        stage="dashboard_export",
+        operation="export_dashboard",
+        component="services.dashboard_export",
+        artifact_path=web_schema_path,
+        artifact_type="json",
+    )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

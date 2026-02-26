@@ -1,0 +1,11 @@
+# Replace `dashboard.example.com` with your host and keep HTTPS enabled.
+http://localhost:8080, http://127.0.0.1:8080 {
+	encode gzip zstd
+
+	@ops path /ops /ops/* /api/ops /api/ops/*
+	basic_auth @ops {
+		opsadmin $2a$14$HnDa5eeTldSqVoOwpp.trupDphLYmzdrTp5QSKANWJds612o55OTW
+	}
+
+	reverse_proxy 127.0.0.1:3000
+}

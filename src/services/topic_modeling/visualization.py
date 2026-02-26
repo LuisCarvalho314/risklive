@@ -385,7 +385,7 @@ def create_two_treemaps(data):
     data = data[data["AlertFlag"].isin(["Red", "Yellow"])]
     data["NewsCategory"] = data.apply(map_nuclear, axis=1)
     data["URL"] = data["URL"].apply(create_hyperlink)
-    if not isinstance(data, pd.DataFrame):
+    if not isinstance(data, pd.DataFrame):  # pragma: no cover
         data = pd.DataFrame(data)
 
     alert_levels = ["Red", "Yellow"]
