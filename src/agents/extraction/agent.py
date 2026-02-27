@@ -7,6 +7,7 @@ from agents.prompts.extraction import EXTRACTION_PROMPT
 from agents.prompts.system import SYSTEM_PROMPT
 from config.prompts import load_prompts
 from models.extraction import ExtractionRecord, ExtractionResult, LLMCallMetrics, TokenUsage
+from utils.pricing import estimate_price_usd
 
 
 _EXTRACTION_AGENT: Agent | None = None
@@ -55,7 +56,7 @@ def extract_record(text: str, model_name: str = "gpt-4o") -> ExtractionRecord:
         )
     metrics = LLMCallMetrics(
         model=model_name,
-        price_usd=None,
+        price_usd=estimate_price_usd(model_name, token_usage),
         token_usage=token_usage,
     )
     return ExtractionRecord(input_text=text, result=run.output, metrics=metrics)

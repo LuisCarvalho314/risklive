@@ -19,5 +19,6 @@ class Article(BaseModel):
     timestamp: datetime | None = None
     query: str | None = None
     publication_date: str | None = None
+    source_price: float | None = None
     source: ArticleSource = ArticleSource.unknown
     metadata: Dict[str, Any] = Field(default_factory=dict)

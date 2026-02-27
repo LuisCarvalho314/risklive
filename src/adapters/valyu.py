@@ -15,6 +15,20 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+def _extract_source_price(data: dict) -> float | None:
+    for key in ("price", "result_price", "cost"):
+        raw = data.get(key)
+        if raw is None:
+            continue
+        try:
+            value = float(raw)
+        except (TypeError, ValueError):
+            continue
+        if value >= 0:
+            return value
+    return None
+
+
 
 def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
         List[Article]:
@@ -58,6 +72,8 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
     )
 
     articles: List[Article] = []
+    total_priced_rows = 0
+    total_price_usd = 0.0
     for query in queries:
         if not query:
             continue
@@ -122,9 +138,14 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
             },
         )
 
-
+        query_priced_rows = 0
+        query_price_usd = 0.0
         for result in resp.results:
             data = result.model_dump()
+            source_price = _extract_source_price(data)
+            if source_price is not None:
+                query_priced_rows += 1
+                query_price_usd += source_price
             articles.append(
                 Article(
                     title=data.get("title", ""),
@@ -132,11 +153,28 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
                     description=data.get("description", ""),
                     timestamp=datetime.now(timezone.utc),
                     publication_date=data.get("publication_date"),
+                    source_price=source_price,
                     source=ArticleSource.valyu,
                     metadata=data,
                     query=query,
                 )
             )
+        total_priced_rows += query_priced_rows
+        total_price_usd += query_price_usd
+        logger.info(
+            "valyu_price_summary",
+            extra={
+                "event": "valyu_price_summary",
+                "component": "adapters.valyu",
+                "operation": "fetch_news",
+                "stage": "fetch",
+                "status": "ok",
+                "query": query,
+                "output_rows": len(resp.results),
+                "valyu_rows_with_price": query_priced_rows,
+                "valyu_price_sum_usd": round(query_price_usd, 8),
+            },
+        )
 
     logger.info(
         "fetch_news_complete",
@@ -148,6 +186,8 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
             "stage_status": "succeeded",
             "duration_ms": int((time.perf_counter() - started) * 1000),
             "output_rows": len(articles),
+            "valyu_rows_with_price": total_priced_rows,
+            "valyu_price_sum_usd": round(total_price_usd, 8),
             "status": "ok",
         },
     )

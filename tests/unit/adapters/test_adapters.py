@@ -34,8 +34,8 @@ def test_build_model_uses_env(monkeypatch):
 
 def test_valyu_fetch_news(monkeypatch):
     class DummyResult:
-        def __init__(self, title, url):
-            self._data = {"title": title, "url": url, "description": "d"}
+        def __init__(self, title, url, price="0.12"):
+            self._data = {"title": title, "url": url, "description": "d", "price": price}
 
         def model_dump(self):
             return dict(self._data)
@@ -62,3 +62,30 @@ def test_valyu_fetch_news(monkeypatch):
     articles = valyu_adapter.fetch_news(["q"], hours=1)
     assert articles
     assert articles[0].source == ArticleSource.valyu
+    assert articles[0].source_price == 0.12
+
+
+def test_valyu_fetch_news_non_numeric_price(monkeypatch):
+    class DummyResult:
+        def model_dump(self):
+            return {"title": "t", "url": "https://example.com", "description": "d", "price": "bad"}
+
+    class DummyResponse:
+        def __init__(self):
+            self.success = True
+            self.results = [DummyResult()]
+
+    class DummyValyu:
+        def __init__(self, api_key):
+            self.api_key = api_key
+
+        def search(self, *args, **kwargs):
+            return DummyResponse()
+
+    monkeypatch.setenv("VALYU_API_KEY", "key")
+    from config import settings as settings_module
+
+    settings_module._settings = None
+    monkeypatch.setattr(valyu_adapter, "Valyu", DummyValyu)
+    articles = valyu_adapter.fetch_news(["q"], hours=1)
+    assert articles[0].source_price is None

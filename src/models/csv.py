@@ -14,6 +14,7 @@ class NewsRow(BaseModel):
     description: str = Field(default="", alias="Description")
     timestamp: Optional[datetime] = Field(default=None, alias="Timestamp")
     query: str | None = Field(default=None, alias="Query")
+    source_price: float | None = Field(default=None, alias="Source_Price")
 
     model_config = {
         "populate_by_name": True,
@@ -31,6 +32,15 @@ class NewsRow(BaseModel):
     @field_validator("timestamp", mode="before")
     @classmethod
     def _empty_timestamp_to_none(cls, value: Any) -> Any:
+        if value is None:
+            return None
+        if isinstance(value, str) and value.strip().lower() in {"", "none", "nan"}:
+            return None
+        return value
+
+    @field_validator("source_price", mode="before")
+    @classmethod
+    def _empty_source_price_to_none(cls, value: Any) -> Any:
         if value is None:
             return None
         if isinstance(value, str) and value.strip().lower() in {"", "none", "nan"}:

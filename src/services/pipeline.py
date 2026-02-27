@@ -42,6 +42,23 @@ def _dedupe_rows(rows: Iterable, key_fn) -> List:
     return result
 
 
+def _merge_rows_with_price(existing_rows: Iterable, incoming_rows: Iterable, key_fn) -> List:
+    merged_by_key = {}
+    ordered: List = []
+    for row in list(existing_rows) + list(incoming_rows):
+        key = key_fn(row)
+        current = merged_by_key.get(key)
+        if current is None:
+            merged_by_key[key] = row
+            ordered.append(row)
+            continue
+        current_price = getattr(current, "source_price", None)
+        incoming_price = getattr(row, "source_price", None)
+        if current_price is None and incoming_price is not None:
+            setattr(current, "source_price", incoming_price)
+    return ordered
+
+
 def _fallback_report_keyword(rows: List[LLMEnrichedRow], topic: int) -> str:
     keyword_counter: Counter[str] = Counter()
     for row in rows:
@@ -90,6 +107,7 @@ def fetch_news(hours: int = 1, include_trending: bool = False) -> List[NewsRow]:
                     if article.timestamp
                     else datetime.now(timezone.utc).isoformat(),
                     Query=article.query or "",
+                    Source_Price=article.source_price,
                 )
             )
         end_stage("succeeded", input_rows=len(queries), output_rows=len(rows))
@@ -107,7 +125,7 @@ def save_news(rows: List[NewsRow], filename: str = "news_data.csv") -> List[News
         path = data_path(filename)
         existing = load_if_exists(path)
         existing_rows = news_rows_from_records(existing) if existing else []
-        merged = _dedupe_rows(existing_rows + rows, lambda r: _url_key(r.url))
+        merged = _merge_rows_with_price(existing_rows, rows, lambda r: _url_key(r.url))
         deduped_rows = max(0, (len(existing_rows) + len(rows)) - len(merged))
         write_csv(records_from_news_rows(merged), path)
         log_artifact_written(
@@ -138,6 +156,15 @@ def extract_news_info(rows: List[NewsRow], filename: str = "news_data_with_llm_i
         path = data_path(filename)
         existing = load_if_exists(path)
         existing_rows = llm_rows_from_records(existing) if existing else []
+        incoming_price_by_url = {
+            _url_key(row.url): row.source_price
+            for row in rows
+            if row.source_price is not None
+        }
+        for row in existing_rows:
+            key = _url_key(row.url)
+            if row.source_price is None and key in incoming_price_by_url:
+                row.source_price = incoming_price_by_url[key]
         existing_urls = {_url_key(row.url) for row in existing_rows}
         todo = [row for row in rows if _url_key(row.url) not in existing_urls]
         if not todo:
@@ -161,6 +188,7 @@ def extract_news_info(rows: List[NewsRow], filename: str = "news_data_with_llm_i
                 Description=base.description,
                 Timestamp=base.timestamp.isoformat() if base.timestamp else None,
                 Query=base.query or "",
+                Source_Price=base.source_price,
                 LLM_Response=result.model_dump() if result else None,
                 LLM_Price=metrics.price_usd if metrics else None,
                 LLM_Token_Usage=metrics.token_usage.model_dump() if metrics and metrics.token_usage else None,
@@ -184,7 +212,7 @@ def extract_news_info(rows: List[NewsRow], filename: str = "news_data_with_llm_i
             )
             enriched_rows.append(enriched)
 
-        merged = _dedupe_rows(existing_rows + enriched_rows, lambda r: _url_key(r.url))
+        merged = _merge_rows_with_price(existing_rows, enriched_rows, lambda r: _url_key(r.url))
         deduped_rows = max(0, (len(existing_rows) + len(enriched_rows)) - len(merged))
         write_csv(records_from_llm_rows(merged), path)
         log_artifact_written(

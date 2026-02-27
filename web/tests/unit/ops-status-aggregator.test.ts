@@ -1,14 +1,38 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildOpsOverview } from "@/lib/ops/status-aggregator";
+import { buildOpsCosts } from "@/lib/ops/cost-aggregator";
 
 vi.mock("@/lib/ops/log-parser", () => ({
   readLogEvents: vi.fn()
+}));
+vi.mock("@/lib/ops/cost-aggregator", () => ({
+  buildOpsCosts: vi.fn()
 }));
 
 describe("ops status aggregator", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(buildOpsCosts).mockResolvedValue({
+      llm: {
+        dayUsd: 1,
+        weekUsd: 2,
+        monthUsd: 3,
+        dayTokens: 10,
+        weekTokens: 20,
+        monthTokens: 30,
+        quality: {
+          status: "available",
+          reason: "explicit",
+          rowsInWindow: 3,
+          rowsWithExplicitPrice: 3,
+          rowsWithDerivedPrice: 0,
+          rowsWithoutPrice: 0
+        }
+      },
+      recentBuckets: [],
+      valyu: { status: "unavailable", dayUsd: 0, weekUsd: 0, monthUsd: 0, reason: "missing" }
+    });
   });
 
   it("derives healthy stage/run status from pipeline lifecycle logs", async () => {
@@ -77,6 +101,7 @@ describe("ops status aggregator", () => {
     const overview = await buildOpsOverview(now);
     expect(overview.overallStatus).toBe("healthy");
     expect(overview.stages.every((stage) => stage.status === "healthy")).toBe(true);
+    expect(overview.costs.llm.dayUsd).toBe(1);
     expect(overview.stages.find((stage) => stage.stage === "report")?.lastSuccessTs).toBeNull();
     expect(overview.stages.find((stage) => stage.stage === "report")?.evidence.join(" ")).toContain(
       "skip:no_reportable_red_topics"

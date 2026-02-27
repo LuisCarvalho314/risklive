@@ -13,8 +13,11 @@ function summaryVariant(status: OpsOverview["overallStatus"]): "green" | "yellow
 }
 
 export function OpsOverviewCards({ overview }: Props) {
+  const formatUsd = (value: number) => `$${value.toFixed(4)}`;
+  const formatInt = (value: number) => new Intl.NumberFormat("en-US").format(value);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
       <Card>
         <CardHeader>
           <CardDescription>Overall Status</CardDescription>
@@ -52,6 +55,45 @@ export function OpsOverviewCards({ overview }: Props) {
         </CardHeader>
         <CardContent className="text-xs text-muted-foreground">
           Rolling windows: day/week/month. Generated at {overview.generatedAt}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardDescription>LLM Cost (24 hours)</CardDescription>
+          <CardTitle className="text-2xl">{formatUsd(overview.costs.llm.dayUsd)}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs text-muted-foreground">
+          Week: {formatUsd(overview.costs.llm.weekUsd)} | Month: {formatUsd(overview.costs.llm.monthUsd)}
+          <br />
+          Quality: <span className="capitalize">{overview.costs.llm.quality.status}</span>.{" "}
+          {overview.costs.llm.quality.reason}
+          <br />
+          Explicit: {overview.costs.llm.quality.rowsWithExplicitPrice} | Derived:{" "}
+          {overview.costs.llm.quality.rowsWithDerivedPrice} | Missing: {overview.costs.llm.quality.rowsWithoutPrice}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardDescription>Tokens (24 hours)</CardDescription>
+          <CardTitle className="text-2xl">{formatInt(overview.costs.llm.dayTokens)}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs text-muted-foreground">
+          Week: {formatInt(overview.costs.llm.weekTokens)} | Month: {formatInt(overview.costs.llm.monthTokens)}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardDescription>Valyu Cost (24 hours)</CardDescription>
+          <CardTitle className="text-2xl">{formatUsd(overview.costs.valyu.dayUsd)}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-xs text-muted-foreground">
+          Status: <span className="capitalize">{overview.costs.valyu.status}</span>. Week:{" "}
+          {formatUsd(overview.costs.valyu.weekUsd)} | Month: {formatUsd(overview.costs.valyu.monthUsd)}
+          <br />
+          {overview.costs.valyu.reason}
         </CardContent>
       </Card>
     </div>

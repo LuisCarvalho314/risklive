@@ -19,7 +19,27 @@ describe("api ops overview route", () => {
       schedule: [],
       errorCounts: { day: 0, week: 0, month: 0 },
       warningCounts: { day: 0, week: 0, month: 0 },
-      parseErrors: 0
+      parseErrors: 0,
+      costs: {
+        llm: {
+          dayUsd: 0,
+          weekUsd: 0,
+          monthUsd: 0,
+          dayTokens: 0,
+          weekTokens: 0,
+          monthTokens: 0,
+          quality: {
+            status: "unavailable",
+            reason: "missing",
+            rowsInWindow: 0,
+            rowsWithExplicitPrice: 0,
+            rowsWithDerivedPrice: 0,
+            rowsWithoutPrice: 0
+          }
+        },
+        recentBuckets: [],
+        valyu: { status: "unavailable", dayUsd: 0, weekUsd: 0, monthUsd: 0, reason: "missing" }
+      }
     });
 
     const { GET } = await import("@/app/api/ops/overview/route");

@@ -15,9 +15,10 @@ from models.errors import (
 
 
 def test_news_row_and_alert_item_empty_values():
-    row = NewsRow(Title="t", URL="none", Timestamp="nan")
+    row = NewsRow(Title="t", URL="none", Timestamp="nan", Source_Price="none")
     assert row.url is None
     assert row.timestamp is None
+    assert row.source_price is None
 
     alert = AlertItem(title="a", url="none", timestamp="none")
     assert alert.url is None
@@ -32,6 +33,7 @@ def test_llm_enriched_row_keyword_and_numeric_coercion():
         PromptTokens="",
         CompletionTokens="nan",
         TotalTokens="3",
+        Source_Price="0.02",
         topic="4",
     )
     assert row.relevant_keywords == ["a", "b"]
@@ -39,6 +41,7 @@ def test_llm_enriched_row_keyword_and_numeric_coercion():
     assert row.prompt_tokens is None
     assert row.completion_tokens is None
     assert row.total_tokens == 3
+    assert row.source_price == 0.02
     assert row.topic == 4
 
 

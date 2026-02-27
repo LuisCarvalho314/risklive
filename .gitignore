@@ -1,5 +1,6 @@
 # Environments
 .env
+.env.*
 .venv
 web/node_modules/
 web/.next
@@ -71,3 +72,5 @@ data/
 logs/
 
 .env.txt
+deployment/env/*.env
+!deployment/env/*.env.example

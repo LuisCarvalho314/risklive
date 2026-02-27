@@ -237,3 +237,25 @@
 body {
   background: var(--page-bg);
 }
+
+.newsmap-control-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+}
+
+.newsmap-control-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.newsmap-control-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.newsmap-control-scroll::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: hsl(var(--muted-foreground) / 0.32);
+}
+
+.newsmap-control-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.45);
+}

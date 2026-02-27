@@ -245,7 +245,7 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   const buttonClass = useCallback(
     (active: boolean) =>
     [
-      "rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-colors",
+      "inline-flex h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       active
         ? "bg-accent text-foreground"
@@ -257,7 +257,7 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   const modeButtonClass = useCallback(
     (active: boolean) =>
       [
-        "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+        "inline-flex h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
         "border border-border",
         active
           ? "bg-foreground text-background"
@@ -274,162 +274,167 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
       <div className="sticky top-0 z-10 border-b border-border/60 bg-background/95 p-2 backdrop-blur-sm">
-        <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap">
-          <div className="inline-flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Layout</span>
-          </div>
-          <div className="inline-flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setLayoutMode("binary")}
-            className={modeButtonClass(layoutMode === "binary")}
-          >
-            Binary
-          </button>
-          <button
-            type="button"
-            onClick={() => setLayoutMode("squarify")}
-            className={modeButtonClass(layoutMode === "squarify")}
-          >
-            Squarify
-          </button>
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="newsmap-control-scroll min-w-0 flex-1 overflow-x-auto pr-2">
+            <div className="inline-flex items-center gap-3 whitespace-nowrap">
+              <div className="inline-flex items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Layout</span>
+              </div>
+              <div className="inline-flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLayoutMode("binary")}
+                  className={modeButtonClass(layoutMode === "binary")}
+                >
+                  Binary
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLayoutMode("squarify")}
+                  className={modeButtonClass(layoutMode === "squarify")}
+                >
+                  Squarify
+                </button>
+              </div>
+
+              <span className="h-5 w-px bg-border/70" />
+
+              <div className="inline-flex items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Risk</span>
+              </div>
+              <div className="inline-flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFlagFilter("All")}
+                  className={[
+                    ...buttonClass(flagFilter === "All").split(" "),
+                    flagFilter === "All" ? "ring-2 ring-accent/60 ring-offset-2 ring-offset-background" : "",
+                  ].join(" ").trim()}
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFlagFilter("Red")}
+                  className={buttonClass(flagFilter === "Red")}
+                >
+                  High Risk
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFlagFilter("Yellow")}
+                  className={buttonClass(flagFilter === "Yellow")}
+                >
+                  Medium Risk
+                </button>
+              </div>
+
+              <span className="h-5 w-px bg-border/70" />
+
+              <div className="inline-flex items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Path</span>
+              </div>
+              <div className="relative inline-flex items-center gap-2">
+                {breadcrumbNodes.map((node) => {
+                  const isLast = node.id === focusId;
+                  const label = node.name || "All";
+                  return (
+                    <button
+                      key={node.id}
+                      type="button"
+                      onClick={() => setFocusId(node.id ?? "root::newsmap")}
+                      disabled={isLast}
+                      className={[
+                        "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold transition-colors",
+                        isLast
+                          ? "bg-accent text-foreground"
+                          : "bg-muted/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground",
+                      ].join(" ")}
+                      title={label}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <span className="h-5 w-px bg-border/70" />
+
+              <div className="inline-flex items-center gap-2">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Categories</span>
+              </div>
+              <div className="inline-flex min-w-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFocusId("root::newsmap");
+                    setSelectedCategoryIds(categories.map((c) => c.id));
+                  }}
+                  className={[
+                    "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+                    "border border-border",
+                    selectedCategorySet.size === categories.length
+                      ? "bg-foreground text-background"
+                      : "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+                  ].join(" ")}
+                  title="All categories"
+                >
+                  All Categories
+                </button>
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategoryIds((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(category.id)) next.delete(category.id);
+                        else next.add(category.id);
+                        if (!next.size) return categories.map((c) => c.id);
+                        return Array.from(next);
+                      });
+                    }}
+                    className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition"
+                    style={{
+                      backgroundColor: category.color,
+                      color: getCategoryTextColor(category.color),
+                      opacity: selectedCategorySet.has(category.id) ? 1 : 0.35,
+                      outline: selectedCategorySet.has(category.id)
+                        ? "2px solid rgba(0,0,0,0.15)"
+                        : "1px dashed rgba(0,0,0,0.2)",
+                      outlineOffset: 1,
+                    }}
+                    title={category.name}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <span className="h-5 w-px bg-border/70" />
-
-          <div className="inline-flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Risk</span>
-          </div>
-          <div className="inline-flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setFlagFilter("All")}
-            className={[
-              ...buttonClass(flagFilter === "All").split(" "),
-              flagFilter === "All" ? "ring-2 ring-accent/60 ring-offset-2 ring-offset-background" : "",
-            ].join(" ").trim()}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            onClick={() => setFlagFilter("Red")}
-            className={buttonClass(flagFilter === "Red")}
-          >
-            High Risk
-          </button>
-          <button
-            type="button"
-            onClick={() => setFlagFilter("Yellow")}
-            className={buttonClass(flagFilter === "Yellow")}
-          >
-            Medium Risk
-          </button>
-          </div>
-
-          <span className="h-5 w-px bg-border/70" />
-
-          <div className="inline-flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Path</span>
-          </div>
-          <div className="relative inline-flex items-center gap-2">
-          {breadcrumbNodes.map((node) => {
-            const isLast = node.id === focusId;
-            const label = node.name || "All";
-            return (
-              <button
-                key={node.id}
-                type="button"
-                onClick={() => setFocusId(node.id ?? "root::newsmap")}
-                disabled={isLast}
-                className={[
-                  "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold transition-colors",
-                  isLast
-                    ? "bg-accent text-foreground"
-                    : "bg-muted/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground",
-                ].join(" ")}
-                title={label}
-              >
-                {label}
-              </button>
-            );
-          })}
-          </div>
-
-          <span className="h-5 w-px bg-border/70" />
-
-          <div className="inline-flex items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Categories</span>
-          </div>
-          <div className="inline-flex min-w-0 items-center gap-2">
+          <div className="flex-none">
             <button
               type="button"
               onClick={() => {
                 setFocusId("root::newsmap");
+                setFlagFilter("All");
+                setLayoutMode("binary");
                 setSelectedCategoryIds(categories.map((c) => c.id));
               }}
               className={[
-                "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+                "inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
                 "border border-border",
-                selectedCategorySet.size === categories.length
+                focusId === "root::newsmap" && flagFilter === "All"
                   ? "bg-foreground text-background"
-                  : "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+                  : "bg-background/80 text-muted-foreground backdrop-blur hover:bg-muted/60 hover:text-foreground",
               ].join(" ")}
-              title="All categories"
+              title="Reset all filters"
+              aria-label="Reset all filters"
             >
-              All Categories
+              Reset
             </button>
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                type="button"
-                onClick={() => {
-                  setSelectedCategoryIds((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(category.id)) next.delete(category.id);
-                    else next.add(category.id);
-                    if (!next.size) return categories.map((c) => c.id);
-                    return Array.from(next);
-                  });
-                }}
-                className="whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition"
-                style={{
-                  backgroundColor: category.color,
-                  color: getCategoryTextColor(category.color),
-                  opacity: selectedCategorySet.has(category.id) ? 1 : 0.35,
-                  outline: selectedCategorySet.has(category.id)
-                    ? "2px solid rgba(0,0,0,0.15)"
-                    : "1px dashed rgba(0,0,0,0.2)",
-                  outlineOffset: 1,
-                }}
-                title={category.name}
-              >
-                {category.name}
-              </button>
-            ))}
           </div>
-
-          <span className="h-5 w-px bg-border/70" />
-
-          <button
-            type="button"
-            onClick={() => {
-              setFocusId("root::newsmap");
-              setFlagFilter("All");
-              setLayoutMode("binary");
-              setSelectedCategoryIds(categories.map((c) => c.id));
-            }}
-            className={[
-              "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
-              "border border-border",
-              focusId === "root::newsmap" && flagFilter === "All"
-                ? "bg-foreground text-background"
-                : "bg-background/80 text-muted-foreground backdrop-blur hover:bg-muted/60 hover:text-foreground",
-            ].join(" ")}
-            title="Reset all filters"
-          >
-            Reset
-          </button>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import { OpsAutoRefresh } from "@/components/ops/auto-refresh";
+import { CostTrendTable } from "@/components/ops/cost-trend-table";
 import { ArtifactTable } from "@/components/ops/artifact-table";
 import { LogTable } from "@/components/ops/log-table";
 import { OpsOverviewCards } from "@/components/ops/ops-overview";
@@ -29,6 +30,8 @@ export default async function OpsPage() {
         </div>
 
         <OpsOverviewCards overview={overview} />
+
+        <CostTrendTable buckets={overview.costs.recentBuckets} />
 
         <ScheduleStatusList schedule={overview.schedule} />
 
