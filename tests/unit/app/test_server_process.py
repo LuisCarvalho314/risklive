@@ -13,6 +13,34 @@ def test_fetch_and_process(monkeypatch):
     monkeypatch.setattr(server_app, "run_topic_modeling", lambda rows: None)
     monkeypatch.setattr(server_app, "generate_report", lambda rows: [])
     monkeypatch.setattr(server_app, "export_dashboard", lambda: None)
+    monkeypatch.setattr(server_app, "run_seca_light_timeline", lambda: None)
+
+    server_app.fetch_and_process(None)
+
+
+def test_fetch_and_process_order(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        server_app,
+        "manual_fetch_and_process",
+        lambda **kwargs: calls.append("manual"),
+    )
+    monkeypatch.setattr(server_app, "export_dashboard", lambda: calls.append("dashboard"))
+    monkeypatch.setattr(server_app, "run_seca_light_timeline", lambda: calls.append("seca"))
+
+    server_app.fetch_and_process(None)
+
+    assert calls == ["manual", "dashboard", "seca"]
+
+
+def test_fetch_and_process_seca_failure_is_non_blocking(monkeypatch):
+    monkeypatch.setattr(server_app, "manual_fetch_and_process", lambda **kwargs: None)
+    monkeypatch.setattr(server_app, "export_dashboard", lambda: None)
+
+    def _boom():
+        raise RuntimeError("seca failed")
+
+    monkeypatch.setattr(server_app, "run_seca_light_timeline", _boom)
 
     server_app.fetch_and_process(None)
 

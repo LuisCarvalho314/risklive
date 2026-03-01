@@ -17,6 +17,7 @@ from services.pipeline import (
     run_topic_modeling,
     save_news,
 )
+from services.seca_timeline import run_seca_light_timeline
 from services.storage import data_path, read_csv
 from utils.logging import configure_logging, get_logger, log_context, set_correlation_id, set_run_id
 from utils.rows import llm_rows_from_records, news_rows_from_records
@@ -225,6 +226,20 @@ def _run_job(name: str, fn) -> None:
 def fetch_and_process(_app: Flask) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
     export_dashboard()
+    try:
+        run_seca_light_timeline()
+    except Exception:
+        logger.exception(
+            "seca_light_non_blocking_error",
+            extra={
+                "event": "seca_light_non_blocking_error",
+                "component": "app.server",
+                "operation": "fetch_and_process",
+                "stage": "seca_light",
+                "stage_status": "failed",
+                "skip_reason": "unexpected_exception",
+            },
+        )
 
 
 def manual_fetch_and_process(hours: int = 24, include_trending: bool = True) -> None:

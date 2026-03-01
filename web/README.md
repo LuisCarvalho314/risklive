@@ -19,6 +19,18 @@ The `web/` app uses a layered test strategy:
 - UI pages load dashboard data from `../results/web/dashboard.json` by default.
 - You can override the dashboard source with `DASHBOARD_JSON_PATH` (used by e2e tests to avoid writing to `results/`).
 - E2E smoke seeds a deterministic fixture payload before navigating pages.
+- Experimental Newsmap timeline route: `/newsmap-experimental`.
+- Experimental timeline loader order:
+  1. SECA static timeline files under:
+  - `../results/web/newsmap/seca-light-30d/` (rolling 30-day)
+  - `../results/web/newsmap/seca-light-7d/` (rolling 7-day)
+  each with `manifest.json` or `timeline_manifest.json` + `tree_batch_*.json`
+  2. CSV fallback read-only from:
+  - `../results/backup_data/news_data.csv`
+  - `../results/data/news_data.csv`
+- In SECA mode, `/newsmap-experimental` preserves native HKT parent-node structure (no synthetic category flattening).
+- One batch equals one UTC day of input rows. `/newsmap-experimental` shows a local selector for `30 days` and `7 days` when both SECA timelines are available.
+- If SECA timelines are missing/invalid, the experimental page falls back to `dashboard.newsmap`.
 
 ## Ops Route Protection
 

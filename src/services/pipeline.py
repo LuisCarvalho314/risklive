@@ -12,7 +12,7 @@ from models.errors import ValidationError
 from services.ingestion import collect_news
 from services.extraction import extract_from_rows
 from services.reporting import generate_reports_from_rows
-from services.storage import data_path, load_if_exists, write_csv
+from services.storage import backup_path, data_path, get_data_dir, load_if_exists, write_csv
 from services.topic_modeling import compute_topic_modeling, compute_topic_visualizations
 from services.dashboard_export import main as export_dashboard_main
 from utils.rows import (
@@ -82,7 +82,42 @@ def _fallback_report_keyword(rows: List[LLMEnrichedRow], topic: int) -> str:
     return f"topic-{topic}"
 
 
-def fetch_news(hours: int = 1, include_trending: bool = False) -> List[NewsRow]:
+def _parse_timestamp(value: object) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _record_key(record: dict) -> tuple[tuple[str, str], ...]:
+    return tuple(sorted((str(key), str(value)) for key, value in record.items()))
+
+
+def _dedupe_record_rows(rows: list[dict]) -> list[dict]:
+    seen: set[tuple[tuple[str, str], ...]] = set()
+    deduped: list[dict] = []
+    for row in rows:
+        key = _record_key(row)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(row)
+    return deduped
+
+
+def fetch_news(
+    hours: int = 1,
+    include_trending: bool = False,
+    reference_now_utc: datetime | None = None,
+) -> List[NewsRow]:
     with pipeline_stage(
         logger,
         stage="fetch",
@@ -94,7 +129,11 @@ def fetch_news(hours: int = 1, include_trending: bool = False) -> List[NewsRow]:
         queries = list(cfg.categories) + list(cfg.queries)
         if include_trending:
             queries += list(cfg.trending)
-        articles = collect_news(queries=queries, hours=hours)
+        articles = collect_news(
+            queries=queries,
+            hours=hours,
+            reference_now_utc=reference_now_utc,
+        )
 
         rows: List[NewsRow] = []
         for article in articles:
@@ -346,43 +385,133 @@ def generate_report(rows: List[LLMEnrichedRow], filename: str = "df_report.csv")
         return reports
 
 
-def cleanup_old_data(days_to_keep: int) -> int:
+def cleanup_old_data(days_to_keep: int, reference_now_utc: datetime | None = None) -> int:
     with pipeline_stage(
         logger,
         stage="cleanup",
         component="services.pipeline",
         operation="cleanup_old_data",
     ) as end_stage:
-        cutoff = datetime.now(timezone.utc) - timedelta(days=days_to_keep)
-        path = data_path("news_data_with_llm_info.csv")
-        records = load_if_exists(path)
-        if not records:
+        effective_now = (reference_now_utc or datetime.now(timezone.utc)).astimezone(timezone.utc)
+        retention_basis = "replay_anchor" if reference_now_utc else "runtime_now"
+        cutoff = effective_now - timedelta(days=days_to_keep)
+        data_dir = get_data_dir()
+        if not data_dir.exists():
+            end_stage("skipped", input_rows=0, output_rows=0, skip_reason="data_dir_missing")
+            return 0
+
+        total_input_rows = 0
+        total_output_rows = 0
+        total_removed_rows = 0
+        processed_files = 0
+
+        for path in sorted(data_dir.glob("*.csv")):
+            if path.name == "df_report.csv":
+                continue
+
+            records = load_if_exists(path)
+            if not records:
+                continue
+            if "Timestamp" not in records[0]:
+                logger.warning(
+                    "cleanup_missing_timestamp_column",
+                    extra={
+                        "event": "cleanup_missing_timestamp_column",
+                        "component": "services.pipeline",
+                        "operation": "cleanup_old_data",
+                        "stage": "cleanup",
+                        "status": "warning",
+                        "cleanup_filename": path.name,
+                    },
+                )
+                continue
+
+            processed_files += 1
+            before = len(records)
+            invalid_ts_rows = 0
+            kept: list[dict] = []
+            to_backup: list[dict] = []
+            for record in records:
+                ts = _parse_timestamp(record.get("Timestamp"))
+                if ts is None:
+                    invalid_ts_rows += 1
+                    continue
+                if ts >= cutoff:
+                    kept.append(record)
+                else:
+                    to_backup.append(record)
+
+            write_csv(kept, path)
+            log_artifact_written(
+                logger,
+                stage="cleanup",
+                operation="cleanup_old_data",
+                component="services.pipeline",
+                artifact_path=path,
+                artifact_type="csv",
+                artifact_rows=len(kept),
+            )
+
+            if to_backup:
+                backup_file = backup_path(path.name)
+                existing_backup = load_if_exists(backup_file) or []
+                merged_backup = _dedupe_record_rows([*existing_backup, *to_backup])
+                write_csv(merged_backup, backup_file)
+                log_artifact_written(
+                    logger,
+                    stage="cleanup",
+                    operation="cleanup_old_data",
+                    component="services.pipeline",
+                    artifact_path=backup_file,
+                    artifact_type="csv",
+                    artifact_rows=len(merged_backup),
+                )
+
+            removed = len(to_backup) + invalid_ts_rows
+            if invalid_ts_rows > 0:
+                logger.warning(
+                    "cleanup_invalid_timestamps_dropped",
+                    extra={
+                        "event": "cleanup_invalid_timestamps_dropped",
+                        "component": "services.pipeline",
+                        "operation": "cleanup_old_data",
+                        "stage": "cleanup",
+                        "status": "warning",
+                        "cleanup_filename": path.name,
+                        "dropped_invalid_timestamp_rows": invalid_ts_rows,
+                    },
+                )
+            total_input_rows += before
+            total_output_rows += len(kept)
+            total_removed_rows += removed
+            logger.info(
+                "cleanup_file_summary",
+                extra={
+                    "event": "cleanup_file_summary",
+                    "component": "services.pipeline",
+                    "operation": "cleanup_old_data",
+                    "stage": "cleanup",
+                    "status": "ok",
+                    "cleanup_filename": path.name,
+                    "input_rows": before,
+                    "output_rows": len(kept),
+                    "archived_rows": len(to_backup),
+                    "dropped_invalid_timestamp_rows": invalid_ts_rows,
+                    "cutoff_iso": cutoff.isoformat(),
+                    "retention_basis": retention_basis,
+                },
+            )
+
+        if processed_files == 0:
             end_stage("skipped", input_rows=0, output_rows=0, skip_reason="no_input_rows")
             return 0
-        rows = llm_rows_from_records(records)
-        before = len(rows)
-        kept = []
-        for row in rows:
-            if row.timestamp is None:
-                continue
-            ts = row.timestamp if isinstance(row.timestamp, datetime) else None
-            if ts is None:
-                continue
-            if ts >= cutoff:
-                kept.append(row)
-        write_csv(records_from_llm_rows(kept), path)
-        removed = before - len(kept)
-        log_artifact_written(
-            logger,
-            stage="cleanup",
-            operation="cleanup_old_data",
-            component="services.pipeline",
-            artifact_path=path,
-            artifact_type="csv",
-            artifact_rows=len(kept),
+        end_stage(
+            "succeeded",
+            input_rows=total_input_rows,
+            output_rows=total_output_rows,
+            deduped_rows=total_removed_rows,
         )
-        end_stage("succeeded", input_rows=before, output_rows=len(kept), deduped_rows=removed)
-        return removed
+        return total_removed_rows
 
 
 def export_dashboard() -> None:

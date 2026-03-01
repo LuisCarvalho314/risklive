@@ -76,6 +76,12 @@ export function Topbar() {
             Newsmap
           </Link>
           <Link
+            href="/newsmap-experimental"
+            className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-foreground transition hover:bg-accent hover:text-accent-foreground"
+          >
+            Newsmap Experimental
+          </Link>
+          <Link
             href="/alerts"
             className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-foreground transition hover:bg-accent hover:text-accent-foreground"
           >

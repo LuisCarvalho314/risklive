@@ -44,6 +44,13 @@ def main() -> None:
     full_cmd = sub.add_parser("full")
     full_cmd.add_argument("--hours", type=int, default=24)
     full_cmd.add_argument("--trending", type=int, default=1)
+    replay_cmd = sub.add_parser("replay-week")
+    replay_cmd.add_argument("--days", type=int, default=7)
+    replay_cmd.add_argument("--hours", type=int, default=24)
+    replay_cmd.add_argument("--trending", type=int, default=1)
+    replay_cmd.add_argument("--anchor-date", type=str, default=None)
+    replay_cmd.add_argument("--run-seca", type=int, default=1)
+    replay_cmd.add_argument("--run-cleanup", type=int, default=1)
 
     cleanup_cmd = sub.add_parser("cleanup")
     cleanup_cmd.add_argument("--days", type=int, default=3)
@@ -86,6 +93,17 @@ def main() -> None:
 
                 manual_fetch_and_process(hours=args.hours, include_trending=args.trending == 1)
                 export_dashboard()
+            elif args.command == "replay-week":
+                from services.replay import run_replay_days
+
+                run_replay_days(
+                    days=args.days,
+                    hours=args.hours,
+                    include_trending=args.trending == 1,
+                    anchor_date=args.anchor_date,
+                    run_seca=args.run_seca == 1,
+                    run_cleanup=args.run_cleanup == 1,
+                )
         logger.info(
             "pipeline_run_end",
             extra={

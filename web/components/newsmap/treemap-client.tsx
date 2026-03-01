@@ -20,6 +20,68 @@ type Meta = NonNullable<TreemapNode["meta"]>;
 
 type FlagFilter = "All" | "Red" | "Yellow";
 type LayoutMode = "squarify" | "binary";
+type SourceRef = { id: string; title?: string; url: string | null; isUrl: boolean };
+const TOOLTIP_LEAVE_GRACE_MS = 0;
+
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const clean = hex.trim().replace("#", "");
+  const full =
+    clean.length === 3
+      ? clean
+          .split("")
+          .map((char) => `${char}${char}`)
+          .join("")
+      : clean;
+  const value = Number.parseInt(full, 16);
+  if (Number.isNaN(value)) return { r: 0, g: 0, b: 0 };
+  return { r: (value >> 16) & 255, g: (value >> 8) & 255, b: value & 255 };
+}
+
+function mixWithWhite(hex: string, amount: number): string {
+  const clamped = Math.max(0, Math.min(1, amount));
+  const { r, g, b } = hexToRgb(hex);
+  const mix = (channel: number) => Math.round(channel + (255 - channel) * clamped);
+  return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+}
+
+function applyPaletteToHierarchy(
+  root: TreemapNode,
+  palette: string[],
+  baseFillColor: string,
+  singleColorMode = false
+): TreemapNode {
+  if (!palette.length) return root;
+  const representativeColor =
+    palette[Math.floor(palette.length / 2)] ?? palette[0] ?? baseFillColor;
+
+  const applyNode = (node: TreemapNode, depth: number, categoryColor: string | null, indexInParent: number): TreemapNode => {
+    const fallbackCategoryColor = categoryColor ?? (singleColorMode ? representativeColor : palette[indexInParent % palette.length] ?? baseFillColor);
+    const nextCategoryColor =
+      depth === 1
+        ? singleColorMode
+          ? representativeColor
+          : palette[indexInParent % palette.length] ?? baseFillColor
+        : fallbackCategoryColor;
+
+    let color = node.itemStyle?.color;
+    if (depth === 0) color = "transparent";
+    else if (depth === 1) color = nextCategoryColor;
+    else if (depth === 2) color = mixWithWhite(nextCategoryColor, 0.24);
+    else color = mixWithWhite(nextCategoryColor, 0.34);
+
+    const children = node.children?.map((child, childIndex) =>
+      applyNode(child, depth + 1, nextCategoryColor, childIndex)
+    );
+
+    return {
+      ...node,
+      itemStyle: { ...(node.itemStyle ?? {}), color },
+      ...(children ? { children } : {}),
+    };
+  };
+
+  return applyNode(root, 0, null, 0);
+}
 
 function formatTimestamp(value?: string | null): string {
   if (!value) return "";
@@ -32,7 +94,23 @@ function formatTimestamp(value?: string | null): string {
   }).format(date);
 }
 
-export function TreemapClient({ data }: { data: TreemapNode }) {
+export function TreemapClient({
+  data,
+  preserveHierarchy = false,
+  weightModeOverride,
+  experimentalInteractions = false,
+  singleHierarchyColor = false,
+  compactControls = false,
+  controlHint,
+}: {
+  data: TreemapNode;
+  preserveHierarchy?: boolean;
+  weightModeOverride?: "leafCount" | "value";
+  experimentalInteractions?: boolean;
+  singleHierarchyColor?: boolean;
+  compactControls?: boolean;
+  controlHint?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [flagFilter, setFlagFilter] = useState<FlagFilter>("All");
@@ -43,7 +121,11 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   const [themeId, setThemeId] = useState<string>("light");
   const [isDark, setIsDark] = useState<boolean>(true);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [showSourceList, setShowSourceList] = useState<boolean>(false);
+  const [tooltipHovered, setTooltipHovered] = useState<boolean>(false);
+  const [tooltipPinnedUntil, setTooltipPinnedUntil] = useState<number>(0);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipHideTimerRef = useRef<number | null>(null);
 
   const labelColor = useMemo(() => {
     if (themeId.startsWith("catppuccin-")) return "auto";
@@ -58,8 +140,10 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
       tileAlgorithmTopic: layoutMode,
       tileAlgorithmLeaf: layoutMode,
       labelColor,
+      allowMidWordWrap: preserveHierarchy,
+      ...(weightModeOverride ? { weightMode: weightModeOverride } : {}),
     }),
-    [layoutMode, labelColor]
+    [layoutMode, weightModeOverride, labelColor, preserveHierarchy]
   );
 
   useEffect(() => {
@@ -82,10 +166,10 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
     return treemapPalettes[themeId] ?? treemapPalettes.default;
   }, [themeId]);
 
-  const normalizedRoot = useMemo(
-    () => normalizeToNewsmapTree(data, tuning, palette),
-    [data, tuning, palette]
-  );
+  const normalizedRoot = useMemo(() => {
+    if (!preserveHierarchy) return normalizeToNewsmapTree(data, tuning, palette);
+    return applyPaletteToHierarchy(data, palette, tuning.baseFillColor, singleHierarchyColor);
+  }, [data, tuning, palette, preserveHierarchy, singleHierarchyColor]);
   const treeIndex = useMemo(() => indexTree(normalizedRoot), [normalizedRoot]);
 
   const focusPath = useMemo(() => {
@@ -98,6 +182,7 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   );
 
   const categories = useMemo(() => {
+    if (preserveHierarchy) return [];
     const children = normalizedRoot.children ?? [];
     return children
       .filter((node) => node.id?.startsWith("cat::"))
@@ -106,7 +191,7 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
         name: node.name || "Category",
         color: node.itemStyle?.color ?? defaultTuning.baseFillColor,
       }));
-  }, [normalizedRoot]);
+  }, [normalizedRoot, preserveHierarchy]);
 
   useEffect(() => {
     if (!categories.length) {
@@ -201,9 +286,9 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
   }, [focusId, focusRoot, getCategorySlugFromId, selectedCategorySlugs]);
 
   const finalRoot = useMemo(() => {
-    if (flagFilter === "All") return categoryFilteredRoot;
+    if (preserveHierarchy || flagFilter === "All") return categoryFilteredRoot;
     return buildFilteredTree(categoryFilteredRoot, emphasized);
-  }, [categoryFilteredRoot, emphasized, flagFilter]);
+  }, [categoryFilteredRoot, emphasized, flagFilter, preserveHierarchy]);
 
   const weightedRoot = useMemo(
     () => buildWeightedTree(finalRoot, emphasized, tuning),
@@ -242,28 +327,114 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
     setTooltipPos({ left, top });
   }, [tooltip]);
 
+  useEffect(() => {
+    setShowSourceList(false);
+    setTooltipPinnedUntil(0);
+  }, [tooltip?.node?.id]);
+
+  useEffect(() => {
+    return () => {
+      if (tooltipHideTimerRef.current != null) {
+        window.clearTimeout(tooltipHideTimerRef.current);
+      }
+    };
+  }, []);
+
+  const isTooltipPinned = useCallback(() => tooltipPinnedUntil > Date.now(), [tooltipPinnedUntil]);
+
+  const scheduleTooltipClose = useCallback(
+    (delayMs: number) => {
+      if (tooltipHideTimerRef.current != null) {
+        window.clearTimeout(tooltipHideTimerRef.current);
+      }
+      tooltipHideTimerRef.current = window.setTimeout(() => {
+        if (!tooltipHovered && !isTooltipPinned()) {
+          setTooltip(null);
+          setShowSourceList(false);
+        }
+      }, delayMs);
+    },
+    [tooltipHovered, isTooltipPinned]
+  );
+
+  const setTooltipWithHoverGrace = useCallback(
+    (
+      value: { x: number; y: number; node: TreemapNode } | null,
+      options?: { pinMs?: number; showSources?: boolean }
+    ) => {
+      if (tooltipHideTimerRef.current != null) {
+        window.clearTimeout(tooltipHideTimerRef.current);
+        tooltipHideTimerRef.current = null;
+      }
+      if (value) {
+        if (!options?.pinMs && isTooltipPinned()) {
+          if (tooltip?.node?.id && value.node.id && tooltip.node.id !== value.node.id) {
+            setTooltipPinnedUntil(0);
+          } else {
+            return;
+          }
+        }
+        setTooltip(value);
+        if (options?.pinMs && options.pinMs > 0) {
+          setTooltipPinnedUntil(Date.now() + options.pinMs);
+        }
+        if (options?.showSources === true) {
+          setShowSourceList(true);
+        }
+        return;
+      }
+      scheduleTooltipClose(TOOLTIP_LEAVE_GRACE_MS);
+    },
+    [isTooltipPinned, scheduleTooltipClose, tooltip?.node?.id]
+  );
+
+  useEffect(() => {
+    if (!tooltip || tooltipHovered) return;
+    if (!isTooltipPinned()) return;
+    const remaining = Math.max(0, tooltipPinnedUntil - Date.now());
+    const timer = window.setTimeout(() => {
+        if (!tooltipHovered && !isTooltipPinned()) {
+          setTooltip(null);
+          setShowSourceList(false);
+        }
+      }, remaining + 20);
+    return () => window.clearTimeout(timer);
+  }, [tooltip, tooltipHovered, tooltipPinnedUntil, isTooltipPinned]);
+
+  const controlHeightClass = compactControls ? "h-7" : "h-8";
+  const controlTextClass = compactControls ? "text-[10px]" : "text-[11px]";
+  const controlPadClass = compactControls ? "px-2" : "px-3";
+  const controlGroupGapClass = compactControls ? "gap-1.5" : "gap-2";
+  const controlStripGapClass = compactControls ? "gap-2" : "gap-3";
+
   const buttonClass = useCallback(
     (active: boolean) =>
     [
-      "inline-flex h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+      "inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-[0.14em] transition-colors",
+      controlHeightClass,
+      controlPadClass,
+      controlTextClass,
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       active
         ? "bg-accent text-foreground"
         : "bg-muted/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground",
     ].join(" "),
-    []
+    [controlHeightClass, controlPadClass, controlTextClass]
   );
 
   const modeButtonClass = useCallback(
     (active: boolean) =>
       [
-        "inline-flex h-8 items-center justify-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+        "inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-[0.14em] transition-colors",
+        controlHeightClass,
+        controlPadClass,
+        controlTextClass,
         "border border-border",
         active
           ? "bg-foreground text-background"
           : "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
       ].join(" "),
-    []
+    [controlHeightClass, controlPadClass, controlTextClass]
   );
 
   const breadcrumbNodes = useMemo(() => {
@@ -271,16 +442,38 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
     return ids.map((id) => treeIndex.byId.get(id)).filter(Boolean) as TreemapNode[];
   }, [focusPath, treeIndex]);
 
+  const tooltipSourceRefs = useMemo(() => {
+    const refs = tooltip?.node?.meta?.sourceRefs;
+    if (!Array.isArray(refs) || refs.length === 0) return [] as SourceRef[];
+    const parsed: SourceRef[] = [];
+    for (const entry of refs) {
+      const id = (entry?.id ?? "").trim();
+      if (!id) continue;
+      const title = typeof entry?.title === "string" && entry.title.trim() ? entry.title.trim() : undefined;
+      const url = typeof entry?.url === "string" && entry.url.trim() ? entry.url.trim() : null;
+      const isUrl = typeof entry?.isUrl === "boolean" ? entry.isUrl : Boolean(url);
+      parsed.push({ id, title, url, isUrl });
+    }
+    return parsed;
+  }, [tooltip?.node?.meta?.sourceRefs]);
+
+  const visibleSourceRefs = useMemo(() => tooltipSourceRefs.slice(0, 50), [tooltipSourceRefs]);
+
   return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
-      <div className="sticky top-0 z-10 border-b border-border/60 bg-background/95 p-2 backdrop-blur-sm">
-        <div className="flex min-w-0 items-center gap-2">
+    <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden">
+      <div
+        className={[
+          "sticky top-0 z-10 border-b border-border/60 bg-background/95 backdrop-blur-sm",
+          compactControls ? "px-2 py-1.5" : "p-2",
+        ].join(" ")}
+      >
+        <div className={["flex min-w-0 items-center", compactControls ? "gap-1.5" : "gap-2"].join(" ")}>
           <div className="newsmap-control-scroll min-w-0 flex-1 overflow-x-auto pr-2">
-            <div className="inline-flex items-center gap-3 whitespace-nowrap">
-              <div className="inline-flex items-center gap-2">
+            <div className={["inline-flex items-center whitespace-nowrap", controlStripGapClass].join(" ")}>
+              <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
                 <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Layout</span>
               </div>
-              <div className="inline-flex items-center gap-2">
+              <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
                 <button
                   type="button"
                   onClick={() => setLayoutMode("binary")}
@@ -297,44 +490,48 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
                 </button>
               </div>
 
+              {preserveHierarchy ? null : (
+                <>
+                  <span className="h-5 w-px bg-border/70" />
+
+                  <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
+                    <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Risk</span>
+                  </div>
+                  <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
+                    <button
+                      type="button"
+                      onClick={() => setFlagFilter("All")}
+                      className={[
+                        ...buttonClass(flagFilter === "All").split(" "),
+                        flagFilter === "All" ? "ring-2 ring-accent/60 ring-offset-2 ring-offset-background" : "",
+                      ].join(" ").trim()}
+                    >
+                      All
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFlagFilter("Red")}
+                      className={buttonClass(flagFilter === "Red")}
+                    >
+                      High Risk
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFlagFilter("Yellow")}
+                      className={buttonClass(flagFilter === "Yellow")}
+                    >
+                      Medium Risk
+                    </button>
+                  </div>
+                </>
+              )}
+
               <span className="h-5 w-px bg-border/70" />
 
-              <div className="inline-flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Risk</span>
-              </div>
-              <div className="inline-flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setFlagFilter("All")}
-                  className={[
-                    ...buttonClass(flagFilter === "All").split(" "),
-                    flagFilter === "All" ? "ring-2 ring-accent/60 ring-offset-2 ring-offset-background" : "",
-                  ].join(" ").trim()}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFlagFilter("Red")}
-                  className={buttonClass(flagFilter === "Red")}
-                >
-                  High Risk
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFlagFilter("Yellow")}
-                  className={buttonClass(flagFilter === "Yellow")}
-                >
-                  Medium Risk
-                </button>
-              </div>
-
-              <span className="h-5 w-px bg-border/70" />
-
-              <div className="inline-flex items-center gap-2">
+              <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
                 <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Path</span>
               </div>
-              <div className="relative inline-flex items-center gap-2">
+              <div className={["relative inline-flex items-center", controlGroupGapClass].join(" ")}>
                 {breadcrumbNodes.map((node) => {
                   const isLast = node.id === focusId;
                   const label = node.name || "All";
@@ -345,71 +542,92 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
                       onClick={() => setFocusId(node.id ?? "root::newsmap")}
                       disabled={isLast}
                       className={[
-                        "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold transition-colors",
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-full font-semibold transition-colors",
+                        controlHeightClass,
+                        controlPadClass,
+                        controlTextClass,
                         isLast
                           ? "bg-accent text-foreground"
                           : "bg-muted/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground",
                       ].join(" ")}
                       title={label}
                     >
-                      {label}
+                      <span className={compactControls ? "max-w-[9rem] truncate" : undefined}>{label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <span className="h-5 w-px bg-border/70" />
+              {preserveHierarchy ? null : (
+                <>
+                  <span className="h-5 w-px bg-border/70" />
 
-              <div className="inline-flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Categories</span>
-              </div>
-              <div className="inline-flex min-w-0 items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFocusId("root::newsmap");
-                    setSelectedCategoryIds(categories.map((c) => c.id));
-                  }}
-                  className={[
-                    "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
-                    "border border-border",
-                    selectedCategorySet.size === categories.length
-                      ? "bg-foreground text-background"
-                      : "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
-                  ].join(" ")}
-                  title="All categories"
-                >
-                  All Categories
-                </button>
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategoryIds((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(category.id)) next.delete(category.id);
-                        else next.add(category.id);
-                        if (!next.size) return categories.map((c) => c.id);
-                        return Array.from(next);
-                      });
-                    }}
-                    className="inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition"
-                    style={{
-                      backgroundColor: category.color,
-                      color: getCategoryTextColor(category.color),
-                      opacity: selectedCategorySet.has(category.id) ? 1 : 0.35,
-                      outline: selectedCategorySet.has(category.id)
-                        ? "2px solid rgba(0,0,0,0.15)"
-                        : "1px dashed rgba(0,0,0,0.2)",
-                      outlineOffset: 1,
-                    }}
-                    title={category.name}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-              </div>
+                  <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
+                    <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Categories</span>
+                  </div>
+                  <div className={["inline-flex min-w-0 items-center", controlGroupGapClass].join(" ")}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFocusId("root::newsmap");
+                        setSelectedCategoryIds(categories.map((c) => c.id));
+                      }}
+                      className={[
+                        "inline-flex items-center justify-center whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em] transition-colors",
+                        controlHeightClass,
+                        controlPadClass,
+                        controlTextClass,
+                        "border border-border",
+                        selectedCategorySet.size === categories.length
+                          ? "bg-foreground text-background"
+                          : "bg-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground",
+                      ].join(" ")}
+                      title="All categories"
+                    >
+                      All Categories
+                    </button>
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategoryIds((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(category.id)) next.delete(category.id);
+                            else next.add(category.id);
+                            if (!next.size) return categories.map((c) => c.id);
+                            return Array.from(next);
+                          });
+                        }}
+                        className={[
+                          "inline-flex items-center justify-center whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em] transition",
+                          controlHeightClass,
+                          controlPadClass,
+                          controlTextClass,
+                        ].join(" ")}
+                        style={{
+                          backgroundColor: category.color,
+                          color: getCategoryTextColor(category.color),
+                          opacity: selectedCategorySet.has(category.id) ? 1 : 0.35,
+                          outline: selectedCategorySet.has(category.id)
+                            ? "2px solid rgba(0,0,0,0.15)"
+                            : "1px dashed rgba(0,0,0,0.2)",
+                          outlineOffset: 1,
+                        }}
+                        title={category.name}
+                      >
+                        {category.name}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              {controlHint ? (
+                <>
+                  <span className="h-5 w-px bg-border/70" />
+                  <span className="pointer-events-none text-[10px] text-muted-foreground">{controlHint}</span>
+                </>
+              ) : null}
             </div>
           </div>
 
@@ -423,7 +641,10 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
                 setSelectedCategoryIds(categories.map((c) => c.id));
               }}
               className={[
-                "inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+                "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em] transition-colors",
+                controlHeightClass,
+                compactControls ? "px-2.5" : "px-3",
+                controlTextClass,
                 "border border-border",
                 focusId === "root::newsmap" && flagFilter === "All"
                   ? "bg-foreground text-background"
@@ -450,7 +671,8 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
                 tuning={tuning}
                 containerRef={containerRef}
                 setFocusId={setFocusId}
-                setTooltip={setTooltip}
+                setTooltip={setTooltipWithHoverGrace}
+                experimentalInteractions={experimentalInteractions}
               />
             );
           }}
@@ -460,8 +682,24 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
       {tooltip ? (
         <div
           ref={tooltipRef}
-          className="pointer-events-none absolute z-20 max-w-xs rounded-lg border border-border bg-popover p-3 text-xs text-foreground shadow-lg"
+          className="pointer-events-auto absolute z-20 max-w-xs rounded-lg border border-border bg-popover p-3 text-xs text-foreground shadow-lg"
           style={tooltipPos ? { left: tooltipPos.left, top: tooltipPos.top } : undefined}
+          onMouseEnter={() => {
+            if (tooltipHideTimerRef.current != null) {
+              window.clearTimeout(tooltipHideTimerRef.current);
+              tooltipHideTimerRef.current = null;
+            }
+            setTooltipHovered(true);
+          }}
+          onMouseLeave={() => {
+            setTooltipHovered(false);
+            if (isTooltipPinned()) {
+              const remaining = Math.max(0, tooltipPinnedUntil - Date.now());
+              scheduleTooltipClose(remaining + TOOLTIP_LEAVE_GRACE_MS);
+              return;
+            }
+            scheduleTooltipClose(TOOLTIP_LEAVE_GRACE_MS);
+          }}
         >
           {(() => {
             const meta = (tooltip.node.meta ?? {}) as Meta;
@@ -483,6 +721,81 @@ export function TreemapClient({ data }: { data: TreemapNode }) {
                 ) : null}
                 {time ? <div className="text-[11px] text-muted-foreground">{time}</div> : null}
                 {summary ? <div className="pt-2 text-[11px] text-foreground/90">{summary}</div> : null}
+                {tooltipSourceRefs.length > 0 && !experimentalInteractions ? (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowSourceList((value) => !value);
+                      }}
+                      className="inline-flex h-7 items-center rounded-full border border-border bg-background px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground"
+                    >
+                      Sources ({tooltipSourceRefs.length})
+                    </button>
+                  </div>
+                ) : null}
+                {tooltipSourceRefs.length > 0 && experimentalInteractions ? (
+                  <div className="pt-2">
+                    <span className="inline-flex h-7 items-center rounded-full border border-border bg-background px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      Sources ({tooltipSourceRefs.length})
+                    </span>
+                  </div>
+                ) : null}
+                {showSourceList && visibleSourceRefs.length > 0 ? (
+                  <div className="mt-2 space-y-1 rounded-md border border-border bg-background/90 p-2">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      Source List
+                    </div>
+                    <div className="max-h-40 space-y-1 overflow-y-auto">
+                      {visibleSourceRefs.map((source) =>
+                        source.url ? (
+                          <a
+                            key={source.id}
+                            href={source.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block rounded border border-border/70 px-2 py-1 hover:bg-accent/20"
+                            title={source.url}
+                          >
+                            <div className="truncate text-[11px] font-medium text-foreground">
+                              {source.title ?? source.id}
+                            </div>
+                            <div className="truncate text-[10px] text-muted-foreground">{source.url}</div>
+                          </a>
+                        ) : (
+                          <div
+                            key={source.id}
+                            className="flex items-center justify-between gap-2 rounded border border-border/70 px-2 py-1"
+                            title={source.id}
+                          >
+                            <div className="min-w-0">
+                              <div className="truncate text-[11px] font-medium text-foreground">
+                                {source.title ?? source.id}
+                              </div>
+                              <div className="truncate text-[10px] text-muted-foreground">{source.id}</div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                                  void navigator.clipboard.writeText(source.id);
+                                }
+                              }}
+                              className="inline-flex h-6 items-center rounded border border-border px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground"
+                            >
+                              Copy
+                            </button>
+                          </div>
+                        )
+                      )}
+                    </div>
+                    {tooltipSourceRefs.length > visibleSourceRefs.length ? (
+                      <div className="text-[10px] text-muted-foreground">
+                        +{tooltipSourceRefs.length - visibleSourceRefs.length} more sources not shown
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             );
           })()}

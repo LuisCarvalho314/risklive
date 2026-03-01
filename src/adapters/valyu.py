@@ -29,9 +29,30 @@ def _extract_source_price(data: dict) -> float | None:
     return None
 
 
+def _parse_publication_timestamp(value: object) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    normalized = raw[:-1] + "+00:00" if raw.endswith("Z") else raw
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        try:
+            parsed = datetime.strptime(raw, "%Y-%m-%d")
+        except ValueError:
+            return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
-def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
-        List[Article]:
+
+
+def fetch_news(
+    queries: Iterable[str],
+    hours: int = 24,
+    market: str = "GB",
+    reference_now_utc: datetime | None = None,
+) -> List[Article]:
     started = time.perf_counter()
     logger.info(
         "fetch_news_start",
@@ -56,10 +77,9 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
         client = Valyu(api_key)
     except Exception as exc:
         raise ExternalServiceError("Unable to initialize Valyu client", details={"exception": exc.__class__.__name__}) from exc
-    end_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    start_date = (datetime.now(timezone.utc) - timedelta(hours=hours)).strftime(
-        "%Y-%m-%d"
-    )
+    effective_now = reference_now_utc or datetime.now(timezone.utc)
+    end_date = effective_now.strftime("%Y-%m-%d")
+    start_date = (effective_now - timedelta(hours=hours)).strftime("%Y-%m-%d")
     excluded_sources = valyu_config.runtime.excluded_sources
     max_num_results = valyu_config.runtime.max_num_results
 
@@ -135,6 +155,9 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
                 "status": "ok",
                 "duration_ms": int((time.perf_counter() - query_started) * 1000),
                 "output_rows": len(resp.results),
+                "window_start_date": start_date,
+                "window_end_date": end_date,
+                "reference_now_utc": effective_now.isoformat(),
             },
         )
 
@@ -143,6 +166,8 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
         for result in resp.results:
             data = result.model_dump()
             source_price = _extract_source_price(data)
+            publication_ts = _parse_publication_timestamp(data.get("publication_date"))
+            article_timestamp = publication_ts or effective_now
             if source_price is not None:
                 query_priced_rows += 1
                 query_price_usd += source_price
@@ -151,7 +176,7 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
                     title=data.get("title", ""),
                     url=data.get("url"),
                     description=data.get("description", ""),
-                    timestamp=datetime.now(timezone.utc),
+                    timestamp=article_timestamp,
                     publication_date=data.get("publication_date"),
                     source_price=source_price,
                     source=ArticleSource.valyu,
@@ -173,6 +198,9 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
                 "output_rows": len(resp.results),
                 "valyu_rows_with_price": query_priced_rows,
                 "valyu_price_sum_usd": round(query_price_usd, 8),
+                "window_start_date": start_date,
+                "window_end_date": end_date,
+                "reference_now_utc": effective_now.isoformat(),
             },
         )
 
@@ -189,6 +217,9 @@ def fetch_news(queries: Iterable[str], hours: int = 24, market: str = "GB") ->\
             "valyu_rows_with_price": total_priced_rows,
             "valyu_price_sum_usd": round(total_price_usd, 8),
             "status": "ok",
+            "window_start_date": start_date,
+            "window_end_date": end_date,
+            "reference_now_utc": effective_now.isoformat(),
         },
     )
     return articles

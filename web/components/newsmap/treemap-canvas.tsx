@@ -1,9 +1,10 @@
-import { memo, type RefObject } from "react";
+import { memo, type RefObject, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { TreemapNode } from "@/lib/dashboard";
 import { TreemapTuning } from "@/lib/treemap/config";
 import { LayoutMap, useLayoutMap } from "@/lib/treemap/layout";
+import { resolveAnimationDuration } from "@/lib/treemap/perf";
 import {
   measureTextWidth,
   refineFontSizeToFitSingleLineMeasured,
@@ -20,8 +21,14 @@ type TreemapCanvasProps = {
   tuning: TreemapTuning;
   containerRef: RefObject<HTMLDivElement>;
   setFocusId: (id: string) => void;
-  setTooltip: (value: { x: number; y: number; node: TreemapNode } | null) => void;
+  setTooltip: (
+    value: { x: number; y: number; node: TreemapNode } | null,
+    options?: { pinMs?: number; showSources?: boolean }
+  ) => void;
+  experimentalInteractions?: boolean;
 };
+type HoverPayload = { x: number; y: number; node: TreemapNode };
+type LabelLayoutCache = Map<string, LabelLayout>;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -322,7 +329,9 @@ function computeLabelLayout(params: {
       fontSize,
       tuning.leafFontMin,
       maxLines,
-      tuning.lineHeight
+      tuning.lineHeight,
+      6,
+      tuning.allowMidWordWrap
     );
   } else {
     fontSize = refineFontSizeToFitSingleLineMeasured(title, availableWidth, fontSize, tuning.groupFontMin);
@@ -332,12 +341,19 @@ function computeLabelLayout(params: {
   const lines = isLeaf
     ? tuning.truncateLeafLabels
       ? [truncateToWidthMeasured(title, leafWidth, fontSize)]
-      : wrapTextLinesMeasured(title, availableWidth, fontSize, maxLines)
+      : wrapTextLinesMeasured(title, availableWidth, fontSize, maxLines, undefined, tuning.allowMidWordWrap)
     : forceSingleLine
     ? groupBandMaxLines > 1
-      ? wrapTextLinesMeasured(title, availableWidth, fontSize, Math.min(groupBandMaxLines, maxLines))
+      ? wrapTextLinesMeasured(
+          title,
+          availableWidth,
+          fontSize,
+          Math.min(groupBandMaxLines, maxLines),
+          undefined,
+          tuning.allowMidWordWrap
+        )
       : [truncateToWidthMeasured(title, availableWidth, fontSize)]
-    : wrapTextLinesMeasured(title, availableWidth, fontSize, maxLines);
+    : wrapTextLinesMeasured(title, availableWidth, fontSize, maxLines, undefined, tuning.allowMidWordWrap);
   const safeLines = lines.map((line) => truncateToWidthMeasured(line, availableWidth, fontSize));
 
   const showLabel =
@@ -368,17 +384,59 @@ function computeLabelLayout(params: {
   };
 }
 
+function quantize(value: number): number {
+  return Math.round(value * 2) / 2;
+}
+
+function makeLabelCacheKey(
+  node: LayoutMap["nodes"][number],
+  label: string,
+  tuningSignature: string
+): string {
+  return [
+    node.id,
+    label,
+    quantize(node.x0),
+    quantize(node.y0),
+    quantize(node.x1),
+    quantize(node.y1),
+    tuningSignature,
+  ].join("|");
+}
+
+function makeHoverKey(payload: HoverPayload): string {
+  return `${payload.node.id ?? "__none__"}|${Math.round(payload.x)}|${Math.round(payload.y)}`;
+}
+
 function renderNodes(params: {
-  layout: LayoutMap;
+  orderedNodes: LayoutMap["nodes"];
   visibility: Map<string, number>;
   tuning: TreemapTuning;
+  tuningSignature: string;
+  labelLayoutCache: LabelLayoutCache;
   containerRef: RefObject<HTMLDivElement>;
   setFocusId: (id: string) => void;
-  setTooltip: (value: { x: number; y: number; node: TreemapNode } | null) => void;
+  setTooltip: (
+    value: { x: number; y: number; node: TreemapNode } | null,
+    options?: { pinMs?: number; showSources?: boolean }
+  ) => void;
+  setTooltipThrottled: (value: HoverPayload | null) => void;
+  experimentalInteractions: boolean;
+  clickTimerRef: RefObject<number | null>;
 }) {
-  const { layout, visibility, tuning, containerRef, setFocusId, setTooltip } = params;
-
-  const orderedNodes = [...layout.nodes].sort((a, b) => a.depth - b.depth);
+  const {
+    orderedNodes,
+    visibility,
+    tuning,
+    tuningSignature,
+    labelLayoutCache,
+    containerRef,
+    setFocusId,
+    setTooltip,
+    setTooltipThrottled,
+    experimentalInteractions,
+    clickTimerRef,
+  } = params;
 
   return orderedNodes.map((node) => {
     if (node.depth === 0) return null;
@@ -417,6 +475,23 @@ function renderNodes(params: {
     const interactiveNow = interactive && vis > tuning.interactiveMinOpacity;
 
     const label = data.name || "";
+    const labelCacheKey = makeLabelCacheKey(node, label, tuningSignature);
+    let cachedLayout = labelLayoutCache.get(labelCacheKey);
+    if (!cachedLayout) {
+      cachedLayout = computeLabelLayout({
+        label,
+        isLeaf,
+        isCategory,
+        depth: node.depth,
+        x,
+        y,
+        w,
+        h,
+        tuning,
+      });
+      labelLayoutCache.set(labelCacheKey, cachedLayout);
+    }
+
     const {
       fontSize,
       adjustedLineHeight,
@@ -426,22 +501,55 @@ function renderNodes(params: {
       showLabel,
       labelBandHeight,
       groupOverlapAllowance,
-    } = computeLabelLayout({
-      label,
-      isLeaf,
-      isCategory,
-      depth: node.depth,
-      x,
-      y,
-      w,
-      h,
-      tuning,
-    });
+    } = cachedLayout;
 
     return (
       <g
         key={node.id}
-        onClick={() => {
+        onClick={(event) => {
+          const bounds = containerRef.current?.getBoundingClientRect();
+          if (bounds) {
+            setTooltip(
+              {
+                x: event.clientX - bounds.left,
+                y: event.clientY - bounds.top,
+                node: data,
+              }
+            );
+          }
+          if (experimentalInteractions && data.id && !isLeaf) {
+            if (clickTimerRef.current != null) {
+              window.clearTimeout(clickTimerRef.current);
+            }
+            clickTimerRef.current = window.setTimeout(() => {
+              setFocusId(data.id ?? "root::newsmap");
+              clickTimerRef.current = null;
+            }, 220);
+            return;
+          }
+          if (!experimentalInteractions && data.id && !isLeaf) {
+            setFocusId(data.id);
+          }
+        }}
+        onDoubleClick={(event) => {
+          if (clickTimerRef.current != null) {
+            window.clearTimeout(clickTimerRef.current);
+            clickTimerRef.current = null;
+          }
+          if (experimentalInteractions) {
+            const bounds = containerRef.current?.getBoundingClientRect();
+            if (bounds) {
+              setTooltip(
+                {
+                  x: event.clientX - bounds.left,
+                  y: event.clientY - bounds.top,
+                  node: data,
+                },
+                { pinMs: 8000, showSources: true }
+              );
+            }
+            return;
+          }
           if (!data.id) return;
           if (!isLeaf) {
             setFocusId(data.id);
@@ -453,13 +561,13 @@ function renderNodes(params: {
         onMouseMove={(event) => {
           const bounds = containerRef.current?.getBoundingClientRect();
           if (!bounds) return;
-          setTooltip({
+          setTooltipThrottled({
             x: event.clientX - bounds.left,
             y: event.clientY - bounds.top,
             node: data,
           });
         }}
-        onMouseLeave={() => setTooltip(null)}
+        onMouseLeave={() => setTooltipThrottled(null)}
         style={{
           cursor: !isLeaf || (isLeaf && data.meta?.url) ? "pointer" : "default",
           pointerEvents: interactiveNow ? "auto" : "none",
@@ -642,9 +750,86 @@ function TreemapCanvasImpl({
   containerRef,
   setFocusId,
   setTooltip,
+  experimentalInteractions = false,
 }: TreemapCanvasProps) {
   const targetLayout = useLayoutMap(root, width, height, tuning);
-  const animated = useMorphLayout(targetLayout, tuning.animationDurationMs);
+  const nodeCount = targetLayout?.nodes.length ?? 0;
+  const animationDurationMs = useMemo(
+    () => resolveAnimationDuration(tuning.animationDurationMs, nodeCount),
+    [nodeCount, tuning.animationDurationMs]
+  );
+  const animated = useMorphLayout(targetLayout, animationDurationMs);
+  const clickTimerRef = useRef<number | null>(null);
+  const hoverFrameRef = useRef<number | null>(null);
+  const lastHoverKeyRef = useRef<string | null>(null);
+  const pendingHoverRef = useRef<HoverPayload | null>(null);
+  const labelLayoutCacheRef = useRef<LabelLayoutCache>(new Map());
+  const orderedNodes = useMemo(
+    () => [...(animated?.layout.nodes ?? [])].sort((a, b) => a.depth - b.depth),
+    [animated?.layout.nodes]
+  );
+  const tuningSignature = useMemo(
+    () =>
+      [
+        tuning.lineHeight,
+        tuning.labelPaddingLeaf,
+        tuning.leafTextPaddingX,
+        tuning.leafTextPaddingY,
+        tuning.maxLeafLines,
+        tuning.maxGroupLines,
+        tuning.tileRadius,
+        tuning.labelColor,
+        tuning.allowMidWordWrap,
+        tuning.truncateLeafLabels,
+        tuning.leafTruncationFactor,
+      ].join("|"),
+    [tuning]
+  );
+
+  const setTooltipThrottled = useMemo(
+    () =>
+      (value: HoverPayload | null) => {
+        if (!value) {
+          pendingHoverRef.current = null;
+          lastHoverKeyRef.current = null;
+          if (hoverFrameRef.current != null) {
+            cancelAnimationFrame(hoverFrameRef.current);
+            hoverFrameRef.current = null;
+          }
+          setTooltip(null);
+          return;
+        }
+        const key = makeHoverKey(value);
+        if (key === lastHoverKeyRef.current) return;
+        pendingHoverRef.current = value;
+        if (hoverFrameRef.current != null) return;
+        hoverFrameRef.current = requestAnimationFrame(() => {
+          hoverFrameRef.current = null;
+          const next = pendingHoverRef.current;
+          if (!next) return;
+          const nextKey = makeHoverKey(next);
+          if (nextKey === lastHoverKeyRef.current) return;
+          lastHoverKeyRef.current = nextKey;
+          setTooltip(next);
+        });
+      },
+    [setTooltip]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (clickTimerRef.current != null) {
+        window.clearTimeout(clickTimerRef.current);
+      }
+      if (hoverFrameRef.current != null) {
+        cancelAnimationFrame(hoverFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    labelLayoutCacheRef.current.clear();
+  }, [root]);
 
   if (!animated) return null;
 
@@ -654,20 +839,26 @@ function TreemapCanvasImpl({
       height={height}
       role="img"
       aria-label="Newsmap"
-      onMouseLeave={() => setTooltip(null)}
+      style={{ userSelect: "none", WebkitUserSelect: "none" }}
+      onMouseLeave={() => setTooltipThrottled(null)}
       onMouseMove={(event) => {
         if (event.target === event.currentTarget) {
-          setTooltip(null);
+          setTooltipThrottled(null);
         }
       }}
     >
       {renderNodes({
-        layout: animated.layout,
+        orderedNodes,
         visibility: animated.visibility,
         tuning,
+        tuningSignature,
+        labelLayoutCache: labelLayoutCacheRef.current,
         containerRef,
         setFocusId,
         setTooltip,
+        setTooltipThrottled,
+        experimentalInteractions,
+        clickTimerRef,
       })}
     </svg>
   );
