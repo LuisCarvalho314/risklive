@@ -417,17 +417,17 @@ def main() -> None:
         artifact_type="json",
     )
 
-    web_schema_path = settings_module.ROOT_DIR / "web" / "schema" / "dashboard.schema.json"
-    web_schema_path.parent.mkdir(parents=True, exist_ok=True)
-    web_schema_path.write_text(json.dumps(schema, indent=2), encoding="utf-8")
-    log_artifact_written(
-        logger,
-        stage="dashboard_export",
-        operation="export_dashboard",
-        component="services.dashboard_export",
-        artifact_path=web_schema_path,
-        artifact_type="json",
-    )
+    # web_schema_path = settings_module.ROOT_DIR / "web" / "schema" / "dashboard.schema.json"
+    # web_schema_path.parent.mkdir(parents=True, exist_ok=True)
+    # web_schema_path.write_text(json.dumps(schema, indent=2), encoding="utf-8")
+    # log_artifact_written(
+    #     logger,
+    #     stage="dashboard_export",
+    #     operation="export_dashboard",
+    #     component="services.dashboard_export",
+    #     artifact_path=web_schema_path,
+    #     artifact_type="json",
+    # )
 
 
 if __name__ == "__main__":  # pragma: no cover
