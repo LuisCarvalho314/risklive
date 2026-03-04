@@ -23,9 +23,9 @@ COPY prompts ./prompts
 
 RUN uv sync --frozen --no-dev
 
-RUN mkdir -p /app/results /app/logs /app/runtime \
- && useradd -m -u 10001 risklive \
- && chown -R risklive:risklive /app
+RUN useradd -m -u 10001 risklive \
+ && mkdir -p /app/results /app/logs /app/runtime \
+ && chown -R risklive:risklive /app/results /app/logs /app/runtime
 
 USER risklive
 
