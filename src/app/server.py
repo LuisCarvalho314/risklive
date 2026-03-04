@@ -128,6 +128,13 @@ def create_app() -> Flask:
     def home():
         return jsonify({"status": "ok"})
 
+    @app.route("/trigger/seca-light")
+    def trigger_seca_light():
+        with log_context(component="app.server",
+                         operation="trigger_seca_light"):
+            run_seca_light()
+        return jsonify({"status": "triggered", "task": "seca_light"})
+
     @app.route("/trigger/regular")
     def trigger_regular():
         hours = request.args.get("hours", default=1, type=int)
@@ -226,12 +233,14 @@ def _run_job(name: str, fn) -> None:
             extra={"event": "job_complete", "job": name, "duration_ms": int((time.perf_counter() - started) * 1000)},
         )
 
+def run_seca_light() -> None:
+    run_seca_light_timeline()
 
 def fetch_and_process(_app: Flask) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
     export_dashboard()
     try:
-        run_seca_light_timeline()
+        run_seca_light()
     except Exception:
         logger.exception(
             "seca_light_non_blocking_error",
