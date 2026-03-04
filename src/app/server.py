@@ -188,15 +188,16 @@ def create_app() -> Flask:
 def start_scheduler(app: Flask) -> BackgroundScheduler:
     cfg = get_config()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(lambda: _run_job("fetch_and_process", lambda: fetch_and_process(app)), "cron", hour=7)
+    scheduler.add_job(lambda: _run_job("fetch_and_process", lambda:
+    fetch_and_process(app)), "cron", hour=8, minute=20)
     scheduler.add_job(
         lambda: _run_job(
             "cleanup_old_data",
             lambda: cleanup_old_data(cfg.cleanup_days_to_keep),
         ),
         "cron",
-        hour=6,
-        minute=30,
+        hour=8,
+        minute=18,
     )
     scheduler.start()
     return scheduler
