@@ -7,6 +7,7 @@ import uuid
 
 from flask import Flask, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
+import traceback
 
 from config.settings import get_config
 from models.errors import AppError, from_exception
