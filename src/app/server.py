@@ -175,7 +175,7 @@ def create_app() -> Flask:
         hours = request.args.get("hours", default=24, type=int)
         include_trending = request.args.get("trending", default=1, type=int) == 1
         with log_context(component="app.server", operation="trigger_full"):
-            manual_fetch_and_process(hours=hours, include_trending=include_trending)
+            fetch_and_process(app)
         return jsonify({"status": "triggered", "task": "full", "hours": hours, "trending": include_trending})
 
     @app.route("/trigger/cleanup")
@@ -192,15 +192,15 @@ def start_scheduler(app: Flask) -> BackgroundScheduler:
     cfg = get_config()
     scheduler = BackgroundScheduler()
     scheduler.add_job(lambda: _run_job("fetch_and_process", lambda:
-    fetch_and_process(app)), "cron", hour=8, minute=20)
+    fetch_and_process(app)), "cron", hour=6, minute=20)
     scheduler.add_job(
         lambda: _run_job(
             "cleanup_old_data",
             lambda: cleanup_old_data(cfg.cleanup_days_to_keep),
         ),
         "cron",
-        hour=8,
-        minute=18,
+        hour=6,
+        minute=00,
     )
     scheduler.start()
     return scheduler
