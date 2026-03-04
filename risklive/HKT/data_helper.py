@@ -187,23 +187,56 @@ class DataHelper:
     def load_sources(self) -> Dict[int, Source]:
         """Load sources from a CSV file.
 
-        Returns a mapping of source id to :class:`Source` objects.  The CSV
-        file must contain ``sourceId``, ``sourceText`` and ``categoryId``
-        columns which mirror the fields used by the original application.
+        Returns a mapping of source id to :class:`Source` objects.  The loader
+        accepts two schemas:
+
+        1) Original dataset format with ``sourceId``, ``sourceText`` and
+           ``categoryId`` columns.
+        2) News dataset format with ``Title``, ``Description`` and ``Query``
+           columns. ``sourceId`` values are generated from the row order and
+           ``categoryId`` values are generated from the unique ``Query``
+           strings in order of first appearance.
         """
 
         df = pd.read_csv(self.csv_path)
         sources: Dict[int, Source] = {}
 
-        for row in df.itertuples(index=False):
-            tokens = self.tokenise(str(row.sourceText))
-            sources[int(row.sourceId)] = Source(
-                source_id=int(row.sourceId),
-                text=str(row.sourceText),
-                category_id=int(row.categoryId),
-                words=tokens,
-            )
-        return sources
+        if {"sourceId", "sourceText", "categoryId"}.issubset(df.columns):
+            for row in df.itertuples(index=False):
+                tokens = self.tokenise(str(row.sourceText))
+                sources[int(row.sourceId)] = Source(
+                    source_id=int(row.sourceId),
+                    text=str(row.sourceText),
+                    category_id=int(row.categoryId),
+                    words=tokens,
+                )
+            return sources
+
+        if {"Title", "Description", "Query"}.issubset(df.columns):
+            category_map: Dict[str, int] = {}
+
+            def category_id(query: str) -> int:
+                if query not in category_map:
+                    category_map[query] = len(category_map) + 1
+                return category_map[query]
+
+            for idx, row in enumerate(df.itertuples(index=False), start=1):
+                title = "" if pd.isna(row.Title) else str(row.Title)
+                description = "" if pd.isna(row.Description) else str(row.Description)
+                text = f"{title} {description}".strip()
+                tokens = self.tokenise(text)
+                sources[idx] = Source(
+                    source_id=idx,
+                    text=text,
+                    category_id=category_id(str(row.Query)),
+                    words=tokens,
+                )
+            return sources
+
+        raise ValueError(
+            "CSV schema not recognised. Expected columns: "
+            "sourceId/sourceText/categoryId or Title/Description/Query."
+        )
 
     # ------------------------------------------------------------------
     def tokenise(self, text: str) -> List[str]:

@@ -2,6 +2,14 @@
 
 RiskLive is a real-time risk analysis dashboard for the nuclear industry. It aggregates news and data from various sources, processes the information using advanced natural language processing techniques, and presents insights through an interactive web interface.
 
+## Status
+
+RiskLive currently runs on the `src/` + `web/` stack documented under `docs/onboarding/`.
+
+- `Current Runtime`: `src/` services pipeline and `web/` Next.js app with `/ops`
+- `Legacy Baseline`: historical `risklive/` implementation retained for context
+- `Future Paths` (separate, not active runtime): Agentic Workflow, LangExtract, and SECA
+
 ## Features
 
 - Real-time news aggregation from multiple sources
@@ -22,78 +30,86 @@ RiskLive is a real-time risk analysis dashboard for the nuclear industry. It agg
 ## Project Structure
 ```
 risklive/
-├── src/
-│   └── risklive/
-│       ├── data_extraction/
-│       ├── data_processing/
-│       ├── topic_modeling/
-│       └── server/
-├── tests/
-├── notebooks/
-├── config/
+├── apps/                 # Entry points (api, worker, scheduler, dashboard)
+├── config/               # Defaults, logging, prompts
+├── docs/                 # Architecture notes
+├── src/                  # Python package (risklive)
+├── tests/                # Unit and integration tests
+├── runtime/              # Local runtime data (ignored by git)
 ├── .env
-├── setup.py
-├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
 └── README.md
 ```
 
-- `src/risklive/`: Main package source code
-- `tests/`: Unit and integration tests
-- `notebooks/`: Jupyter notebooks for analysis and development
-- `config/`: Configuration files
-- `.env`: Environment variables (not version controlled)
+- `apps/`: Runtime entry points for services
+- `src/`: Main package source code (services pipeline, adapters, models, app entrypoints)
+- `config/`: Configuration files and prompts
+- `runtime/`: Generated data and artifacts (ignored)
 
 ## Installation
 
-You can install RiskLive using either `pip` with the `requirements.txt` file or by using `setup.py`. Choose the method that best suits your needs.
+RiskLive uses `uv` for environment and dependency management.
 
-### Method 1: Using requirements.txt
+1. Install `uv` (if not already installed):
+   ```
+   pip install uv
+   ```
 
-1. Clone the repository:
+2. Clone the repository:
    ```
    git clone https://github.com/yourusername/risklive.git
    cd risklive
    ```
 
-2. Create and activate a virtual environment (optional but recommended):
+3. Create the virtual environment and sync dependencies from `pyproject.toml`/`uv.lock`:
    ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
-
-3. Install the required packages:
-   ```
-   pip install -r requirements.txt
+   uv sync
    ```
 
-### Method 2: Using setup.py
-
-1. Clone the repository:
+4. Run commands inside the managed environment:
    ```
-   git clone https://github.com/yourusername/risklive.git
-   cd risklive
+   uv run risklive --help
    ```
 
-2. Create and activate a virtual environment (optional but recommended):
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
-
-3. Install the package:
-   ```
-   pip install .
-   ```
-
-   Or, for development mode:
-   ```
-   pip install -e .
-   ```
+If you need a shell in the virtual environment, use:
+```
+uv shell
+```
 
 ## Configuration
 
 - `config/config.yml`: Main configuration file
 - `.env`: Environment-specific secrets and API keys
+
+## Operations Access Control
+
+If you expose an operations UI (for example `/ops`), protect it at the reverse proxy.
+
+- Caddy template: [`deployment/caddy/Caddyfile.ops.example`](/Users/lcarv/PycharmProjects/risklive/deployment/caddy/Caddyfile.ops.example)
+- Setup guide: [`docs/ops-auth-caddy.md`](/Users/lcarv/PycharmProjects/risklive/docs/ops-auth-caddy.md)
+
+## Docker Deployment
+
+For single-VPS Docker orchestration (Python app + Next web + Caddy), use:
+
+- Runbook: [`docs/deployment-docker.md`](/Users/lcarv/PycharmProjects/risklive/docs/deployment-docker.md)
+- Compose stack: `deployment/compose/docker-compose.prod.yml`
+
+## Onboarding Documentation
+
+For legacy and current implementation onboarding, start with:
+
+- [`docs/onboarding/index.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/index.md)
+- [`docs/onboarding/legacy-baseline.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/legacy-baseline.md)
+- [`docs/onboarding/current-architecture.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/current-architecture.md)
+- [`docs/onboarding/improvements-over-legacy.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/improvements-over-legacy.md)
+- [`docs/onboarding/agentic-groundwork.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/agentic-groundwork.md)
+- [`docs/onboarding/langextract-path.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/langextract-path.md)
+- [`docs/onboarding/seca-path.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/seca-path.md)
+- [`docs/onboarding/seca-evaluation-blueprint.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/seca-evaluation-blueprint.md)
+- [`docs/onboarding/future-path-intersections.md`](/Users/lcarv/PycharmProjects/risklive/docs/onboarding/future-path-intersections.md)
 
 ## Contributing
 
@@ -101,4 +117,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+© 2025 University of Aberdeen. All rights reserved

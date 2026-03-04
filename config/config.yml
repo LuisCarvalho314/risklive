@@ -31,11 +31,6 @@ TRENDING:
   - news
 
 
-EXCLUDED_SOURCES:
-  - wikipedia.org
-
-
-
 
 PROMPT_PATHS:
   EXTRACTION_PROMPT: 'prompts/info_extraction.txt'
@@ -47,3 +42,7 @@ SAVE_DIR:
   TOPIC_MODEL_DIR: 'results/models/'
   TOPIC_MODEL_IMAGE_DIR: 'results/images/' 
 CLEANUP_DAYS_TO_KEEP: 3
+VALYU:
+  VALYU_EXCLUDED_SOURCES:
+  - wikipedia.org
+  VALYU_MAX_NUM_RESULTS: 5

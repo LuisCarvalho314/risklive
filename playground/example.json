@@ -1,0 +1,254 @@
+{
+  "document_id": "risk_assessment_new_start_termination_2026-02-05",
+  "text": "RISK ASSESSMENT REPORT: IMPACT OF NEW START TREATY TERMINATION\n\nBRIEF SUMMARY:\nThe New START Treaty, a key arms control agreement between the two largest nuclear powers, has officially expired as of February 5, 2026. This development raises concerns about a potential arms race, increased geopolitical tensions, and heightened risks to global nuclear security.\n\n1. RISK ASSESSMENT:\nSeverity: High\nThe expiration of the treaty removes critical limitations on nuclear arsenals, increasing the risk of proliferation, miscalculation, and destabilization of global security.\n\nGeographic Scope: Global\nThe impact extends beyond the two primary nations involved, affecting global nuclear security, international relations, and non-proliferation efforts.\n\nTime Sensitivity: Immediate\nThe absence of the treaty creates an urgent need for monitoring and mitigation to prevent rapid escalation or mismanagement of nuclear materials.\n\nPotential Cascading Effects:\n\nIncreased nuclear stockpiling and testing by major powers.\nErosion of trust in international arms control frameworks.\nPotential for other nations to pursue nuclear capabilities.\nHeightened risk of accidents or unauthorized use of nuclear weapons.\n2. KEY RISKS & IMPACTS:\nTechnical/Safety Risks:\n\nIncreased risk of nuclear accidents due to expanded arsenals and testing.\nPotential for mismanagement or theft of nuclear materials.\nRegulatory/Compliance Issues:\n\nChallenges in maintaining international non-proliferation commitments.\nPressure on the UK to reassess its own nuclear policies and compliance with global frameworks.\nEnvironmental Concerns:\n\nPotential for environmental contamination from increased nuclear testing or accidents.\nLong-term ecological damage from radioactive fallout.\nImpact on NDA Operations:\n\nIncreased scrutiny of the UK’s nuclear decommissioning activities.\nPotential delays or changes in decommissioning priorities due to shifting geopolitical dynamics.\nIndustry-Wide Implications:\n\nStrain on international collaboration in nuclear safety and security.\nIncreased costs for monitoring, compliance, and risk mitigation.\n3. ACTIONS & STAKEHOLDERS:\nImmediate Actions (24-48 hrs):\nRisk Communication:\n\nNotify UK government departments (e.g., BEIS, MOD) and relevant regulatory bodies (ONR, EA) of potential implications for UK nuclear policy and security.\nIssue an internal advisory to NDA leadership and operational teams on potential impacts.\nEnhanced Monitoring:\n\nIncrease surveillance of global nuclear developments, including stockpiling and testing activities.\nCoordinate with international agencies (e.g., IAEA) to assess risks to nuclear materials and facilities.\nRegulatory Review:\n\nInitiate a review of NDA compliance with international nuclear agreements and identify any vulnerabilities.\nShort-term Actions (1 week):\nScenario Planning:\n\nDevelop contingency plans for potential geopolitical or security escalations affecting NDA operations.\nAssess the impact of increased nuclear activity on decommissioning timelines and budgets.\nStakeholder Engagement:\n\nConvene discussions with government, industry partners, and international bodies to align on risk mitigation strategies.\nEngage with environmental groups to address potential concerns about nuclear testing and contamination.\nResource Allocation:\n\nAllocate resources for enhanced monitoring, risk analysis, and emergency preparedness.\nIdentify funding needs for potential adjustments to decommissioning plans.\nKey Stakeholders to Notify:\nUK Government (BEIS, MOD, FCDO)\nOffice for Nuclear Regulation (ONR)\nEnvironment Agency (EA)\nInternational Atomic Energy Agency (IAEA)\nIndustry partners and contractors\nLocal communities near NDA sites\nRequired Resources:\nEnhanced monitoring and intelligence tools.\nAdditional staff for risk analysis and scenario planning.\nBudget for potential operational adjustments.\n4. MONITORING:\nKey Metrics to Track:\nChanges in global nuclear stockpiles and testing activities.\nGeopolitical developments and military posturing by nuclear powers.\nUpdates from international regulatory bodies (e.g., IAEA, UN).\nPublic and media sentiment regarding nuclear risks.\nWarning Indicators:\nReports of increased nuclear testing or stockpiling.\nBreakdown of other arms control agreements.\nEscalation of geopolitical tensions involving nuclear powers.\nReporting Requirements:\nWeekly updates to NDA leadership on global nuclear developments.\nImmediate reporting to ONR and BEIS of any significant changes",
+  "extraction_schema": {
+    "entity_types": [
+      { "type": "REPORT_TITLE", "description": "The report title." },
+      { "type": "DATE", "description": "A calendar date referenced in the report." },
+      { "type": "SEVERITY", "description": "Overall severity level for the risk assessment (e.g., Low/Medium/High)." },
+      { "type": "GEOGRAPHIC_SCOPE", "description": "Geographic scope of impact (e.g., UK, Europe, Global)." },
+      { "type": "TIME_SENSITIVITY", "description": "Time sensitivity/urgency (e.g., Immediate, Short-term, Long-term)." },
+      { "type": "CASCADING_EFFECT", "description": "A potential cascading effect." },
+      { "type": "RISK_CATEGORY", "description": "A risk category header (e.g., Technical/Safety, Regulatory/Compliance, Environmental)." },
+      { "type": "RISK_ITEM", "description": "A specific risk/impact item within a category." },
+      { "type": "ACTION_WINDOW", "description": "Time window for actions (e.g., 24-48 hrs, 1 week)." },
+      { "type": "ACTION_CATEGORY", "description": "Action grouping (e.g., Risk Communication, Enhanced Monitoring)." },
+      { "type": "ACTION_ITEM", "description": "A specific action item." },
+      { "type": "STAKEHOLDER", "description": "A stakeholder or organisation to notify/engage." },
+      { "type": "RESOURCE", "description": "A required resource (tools, staffing, budget)." },
+      { "type": "METRIC", "description": "A monitoring metric to track." },
+      { "type": "WARNING_INDICATOR", "description": "A warning indicator/trigger." },
+      { "type": "REPORTING_REQUIREMENT", "description": "A reporting requirement (cadence + audience)." }
+    ]
+  },
+  "expected_extractions": [
+    {
+      "type": "REPORT_TITLE",
+      "value": "RISK ASSESSMENT REPORT: IMPACT OF NEW START TREATY TERMINATION",
+      "span": { "start": 0, "end": 62 }
+    },
+    {
+      "type": "DATE",
+      "value": "February 5, 2026",
+      "span": { "start": 199, "end": 215 }
+    },
+    {
+      "type": "SEVERITY",
+      "value": "High",
+      "span": { "start": 392, "end": 396 }
+    },
+    {
+      "type": "GEOGRAPHIC_SCOPE",
+      "value": "Global",
+      "span": { "start": 589, "end": 595 }
+    },
+    {
+      "type": "TIME_SENSITIVITY",
+      "value": "Immediate",
+      "span": { "start": 766, "end": 775 }
+    },
+    {
+      "type": "CASCADING_EFFECT",
+      "value": "Increased nuclear stockpiling and testing by major powers.",
+      "span": { "start": 953, "end": 1011 }
+    },
+    {
+      "type": "CASCADING_EFFECT",
+      "value": "Erosion of trust in international arms control frameworks.",
+      "span": { "start": 1012, "end": 1070 }
+    },
+    {
+      "type": "CASCADING_EFFECT",
+      "value": "Potential for other nations to pursue nuclear capabilities.",
+      "span": { "start": 1071, "end": 1130 }
+    },
+    {
+      "type": "CASCADING_EFFECT",
+      "value": "Heightened risk of accidents or unauthorized use of nuclear weapons.",
+      "span": { "start": 1131, "end": 1199 }
+    },
+    {
+      "type": "RISK_CATEGORY",
+      "value": "Technical/Safety Risks",
+      "span": { "start": 1224, "end": 1246 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Increased risk of nuclear accidents due to expanded arsenals and testing.",
+      "span": { "start": 1249, "end": 1322 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Potential for mismanagement or theft of nuclear materials.",
+      "span": { "start": 1323, "end": 1381 }
+    },
+    {
+      "type": "RISK_CATEGORY",
+      "value": "Regulatory/Compliance Issues",
+      "span": { "start": 1382, "end": 1410 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Challenges in maintaining international non-proliferation commitments.",
+      "span": { "start": 1413, "end": 1483 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Pressure on the UK to reassess its own nuclear policies and compliance with global frameworks.",
+      "span": { "start": 1484, "end": 1578 }
+    },
+    {
+      "type": "RISK_CATEGORY",
+      "value": "Environmental Concerns",
+      "span": { "start": 1579, "end": 1601 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Potential for environmental contamination from increased nuclear testing or accidents.",
+      "span": { "start": 1604, "end": 1690 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Long-term ecological damage from radioactive fallout.",
+      "span": { "start": 1691, "end": 1744 }
+    },
+    {
+      "type": "RISK_CATEGORY",
+      "value": "Impact on NDA Operations",
+      "span": { "start": 1745, "end": 1769 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Increased scrutiny of the UK’s nuclear decommissioning activities.",
+      "span": { "start": 1772, "end": 1838 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Potential delays or changes in decommissioning priorities due to shifting geopolitical dynamics.",
+      "span": { "start": 1839, "end": 1935 }
+    },
+    {
+      "type": "RISK_CATEGORY",
+      "value": "Industry-Wide Implications",
+      "span": { "start": 1936, "end": 1962 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Strain on international collaboration in nuclear safety and security.",
+      "span": { "start": 1965, "end": 2034 }
+    },
+    {
+      "type": "RISK_ITEM",
+      "value": "Increased costs for monitoring, compliance, and risk mitigation.",
+      "span": { "start": 2035, "end": 2099 }
+    },
+    {
+      "type": "ACTION_WINDOW",
+      "value": "Immediate Actions (24-48 hrs)",
+      "span": { "start": 2127, "end": 2156 }
+    },
+    {
+      "type": "ACTION_CATEGORY",
+      "value": "Risk Communication",
+      "span": { "start": 2158, "end": 2176 }
+    },
+    {
+      "type": "ACTION_ITEM",
+      "value": "Notify UK government departments (e.g., BEIS, MOD) and relevant regulatory bodies (ONR, EA) of potential implications for UK nuclear policy and security.",
+      "span": { "start": 2179, "end": 2332 }
+    },
+    {
+      "type": "ACTION_ITEM",
+      "value": "Issue an internal advisory to NDA leadership and operational teams on potential impacts.",
+      "span": { "start": 2333, "end": 2421 }
+    },
+    {
+      "type": "ACTION_CATEGORY",
+      "value": "Enhanced Monitoring",
+      "span": { "start": 2422, "end": 2441 }
+    },
+    {
+      "type": "ACTION_ITEM",
+      "value": "Increase surveillance of global nuclear developments, including stockpiling and testing activities.",
+      "span": { "start": 2444, "end": 2543 }
+    },
+    {
+      "type": "ACTION_ITEM",
+      "value": "Coordinate with international agencies (e.g., IAEA) to assess risks to nuclear materials and facilities.",
+      "span": { "start": 2544, "end": 2648 }
+    },
+    {
+      "type": "ACTION_CATEGORY",
+      "value": "Regulatory Review",
+      "span": { "start": 2649, "end": 2666 }
+    },
+    {
+      "type": "ACTION_ITEM",
+      "value": "Initiate a review of NDA compliance with international nuclear agreements and identify any vulnerabilities.",
+      "span": { "start": 2669, "end": 2776 }
+    },
+    {
+      "type": "ACTION_WINDOW",
+      "value": "Short-term Actions (1 week)",
+      "span": { "start": 2777, "end": 2804 }
+    },
+    {
+      "type": "STAKEHOLDER",
+      "value": "UK Government (BEIS, MOD, FCDO)",
+      "span": { "start": 3481, "end": 3512 }
+    },
+    {
+      "type": "STAKEHOLDER",
+      "value": "Office for Nuclear Regulation (ONR)",
+      "span": { "start": 3513, "end": 3548 }
+    },
+    {
+      "type": "STAKEHOLDER",
+      "value": "Environment Agency (EA)",
+      "span": { "start": 3549, "end": 3572 }
+    },
+    {
+      "type": "STAKEHOLDER",
+      "value": "International Atomic Energy Agency (IAEA)",
+      "span": { "start": 3573, "end": 3614 }
+    },
+    {
+      "type": "RESOURCE",
+      "value": "Enhanced monitoring and intelligence tools.",
+      "span": { "start": 3702, "end": 3745 }
+    },
+    {
+      "type": "RESOURCE",
+      "value": "Additional staff for risk analysis and scenario planning.",
+      "span": { "start": 3746, "end": 3803 }
+    },
+    {
+      "type": "RESOURCE",
+      "value": "Budget for potential operational adjustments.",
+      "span": { "start": 3804, "end": 3849 }
+    },
+    {
+      "type": "METRIC",
+      "value": "Changes in global nuclear stockpiles and testing activities.",
+      "span": { "start": 3887, "end": 3947 }
+    },
+    {
+      "type": "WARNING_INDICATOR",
+      "value": "Reports of increased nuclear testing or stockpiling.",
+      "span": { "start": 4151, "end": 4203 }
+    },
+    {
+      "type": "REPORTING_REQUIREMENT",
+      "value": "Weekly updates to NDA leadership on global nuclear developments.",
+      "span": { "start": 4334, "end": 4398 }
+    },
+    {
+      "type": "REPORTING_REQUIREMENT",
+      "value": "Immediate reporting to ONR and BEIS of any significant changes",
+      "span": { "start": 4399, "end": 4461 }
+    }
+  ],
+  "notes": {
+    "span_offsets": "These span offsets were computed against this exact 'text' string. If the text changes (even whitespace), recompute spans programmatically."
+  }
+}

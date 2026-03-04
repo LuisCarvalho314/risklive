@@ -1,19 +1,13 @@
 """© 2025 University of Aberdeen. All rights reserved"""
 
 import os
-import requests
-from pathlib import Path
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Dict, Any
-from itertools import chain
-from typing import Iterable
-
-from fontTools.misc.plistlib import end_date
 from pandas import DataFrame
-from sympy.logic.algorithms.z3_wrapper import known_functions
+
 from valyu import Valyu, SearchResponse
-from valyu.types import SearchResult
+
 
 from risklive.config import (VALYU_API_KEY, CATEGORIES, QUERIES,
                              EXCLUDED_SOURCES, TRENDING, SAVE_DIR)

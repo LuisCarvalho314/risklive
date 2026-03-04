@@ -1,6 +1,9 @@
 # Environments
 .env
+.env.*
 .venv
+web/node_modules/
+web/.next
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -64,5 +67,10 @@ Thumbs.db
 
 # Results files are too large
 results/
+runtime/
+data/
+logs/
 
 .env.txt
+deployment/env/*.env
+!deployment/env/*.env.example

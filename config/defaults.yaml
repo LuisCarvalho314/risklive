@@ -1,0 +1,54 @@
+app:
+  name: risklive
+  timezone: UTC
+
+sources:
+  valyu:
+    enabled: true
+
+categories:
+#  - Business
+#  - Politics
+#  - World
+#  - ScienceAndTechnology
+#  - Health
+#  - UK
+
+queries:
+#  - nuclear industry
+#  - nuclear decommissioning
+#  - nuclear decommissioning authority
+#  - nuclear energy
+#  - nuclear power
+#  - nuclear plant
+#  - nuclear waste
+#  - nuclear
+#  - sellafield
+#  - decommissioning
+  - 'Find articles on incidents, regulations, or studies impacting safety in nuclear facilities. Include: "Nuclear Decommissioning Authority", ONR, HSE, radiological, contamination, worker exposure, safety case, Sellafield, Magnox.'
+  - 'Find threats, breaches, ransomware, or ICS/OT vulns affecting UK nuclear IT/OT, NDA sites, or contractors. Include: "Nuclear Decommissioning Authority", NCSC, SCADA, APT, data breach, phishing, OT security.'
+  - 'Find articles directly tied to the "Nuclear Decommissioning Authority" or UK nuclear decommissioning sites or programmes touching any of safety, cybersecurity, supply chain, industry risk, workforce, or strategic UK policy.'
+  - 'Find disruptions or dependencies for fuel, waste, decommissioning equipment, specialty steel, transport, sanctions, or strikes. Include: "Nuclear Decommissioning Authority", Sellafield, Magnox, suppliers, procurement, logistics.'
+  - 'Find conflicts, export controls, sanctions, energy prices, uranium market, rare earths, maritime chokepoints, or global cyber campaigns that could affect UK nuclear safety, cybersecurity, or supply chains.'
+  - 'Find tech developments, plant status, regulatory or policy changes, financing, waste strategy, or decommissioning methods affecting NDA remit. Include: ONR, DESNZ policy, GDF, SMR, decommissioning.'
+  - 'Find labour actions, skills shortages, training, clearances, pay, safety culture, or major policy changes affecting NDA or key suppliers. Include: "Nuclear Decommissioning Authority", unions, apprenticeships.'
+  - 'Find significant UK news in military, national security, health, or safety policy that could impact NDA operations or strategy. Include: Civil Contingencies, CNI, emergency planning, radiation protection, defence policy.'
+
+prompts:
+  extraction: config/prompts/info_extraction.txt
+  report: config/prompts/report_prompt.txt
+
+storage:
+  data_dir: runtime/data
+  artifacts_dir: runtime/artifacts
+  checkpoints_dir: runtime/checkpoints
+  logs_dir: runtime/logs
+
+retention_days: 3
+
+topic_model:
+  min_docs: 50
+  embedding_model: BAAI/bge-large-en-v1.5
+
+alerts:
+  notify_on_red: false

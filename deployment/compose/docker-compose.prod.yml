@@ -1,0 +1,69 @@
+services:
+  app:
+    image: ${APP_IMAGE:-risklive-app:latest}
+    container_name: risklive-app
+    restart: unless-stopped
+    env_file:
+      - ${APP_ENV_FILE:-../env/app.env.example}
+    volumes:
+      - ../../results:/app/results
+      - ../../logs:/app/logs
+      - ../../runtime:/app/runtime
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:5001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  web:
+    image: ${WEB_IMAGE:-risklive-web:latest}
+    container_name: risklive-web
+    restart: unless-stopped
+    env_file:
+      - ${WEB_ENV_FILE:-../env/web.env.example}
+    volumes:
+      - ../../results:/app/results:ro
+      - ../../logs:/app/logs:ro
+    networks:
+      - internal
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: risklive-caddy
+    restart: unless-stopped
+    env_file:
+      - ${CADDY_ENV_FILE:-../env/caddy.env.example}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - internal
+    depends_on:
+      app:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,7 +1,7 @@
 services:
-  backend:
+  api:
     build: .
-    command: python -m risklive.server.app
+    command: python apps/api.py
     ports:
       - "5000:5000"
     restart: unless-stopped
@@ -16,17 +16,16 @@ services:
     build: .
     command: >
       sh -c "
-      echo 'Waiting for backend to be ready...';
-      until curl -f http://backend:5000/health 2>/dev/null; do
-        echo 'Backend not ready yet, waiting...';
+      echo 'Waiting for api to be ready...';
+      until curl -f http://api:5000/health 2>/dev/null; do
+        echo 'API not ready yet, waiting...';
         sleep 2;
       done;
-      echo 'Backend is ready! Starting dashboard...';
-      streamlit run risklive/dashboard/TopicModel.py --server.port=8501 --server.address=0.0.0.0
+      echo 'API is ready! Starting dashboard...';
+      streamlit run apps/dashboard.py --server.port=8501 --server.address=0.0.0.0
       "
     ports:
       - "8501:8501"
     depends_on:
-      - backend
+      - api
     restart: unless-stopped
-
