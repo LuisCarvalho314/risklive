@@ -1,7 +1,7 @@
 //© 2025 University of Aberdeen. All rights reserved
 
 
-import { memo, type RefObject, useMemo } from "react";
+import { memo, type MutableRefObject, type RefObject, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { TreemapNode } from "@/lib/dashboard";
@@ -425,7 +425,7 @@ function renderNodes(params: {
   ) => void;
   setTooltipThrottled: (value: HoverPayload | null) => void;
   experimentalInteractions: boolean;
-  clickTimerRef: RefObject<number | null>;
+clickTimerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
 }) {
   const {
     orderedNodes,
@@ -521,10 +521,11 @@ function renderNodes(params: {
             );
           }
           if (experimentalInteractions && data.id && !isLeaf) {
-            if (clickTimerRef.current != null) {
-              window.clearTimeout(clickTimerRef.current);
+            if (clickTimerRef.current !== null) {
+              clearTimeout(clickTimerRef.current);
             }
-            clickTimerRef.current = window.setTimeout(() => {
+
+            clickTimerRef.current = setTimeout(() => {
               setFocusId(data.id ?? "root::newsmap");
               clickTimerRef.current = null;
             }, 220);
@@ -762,7 +763,7 @@ function TreemapCanvasImpl({
     [nodeCount, tuning.animationDurationMs]
   );
   const animated = useMorphLayout(targetLayout, animationDurationMs);
-  const clickTimerRef = useRef<number | null>(null);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverFrameRef = useRef<number | null>(null);
   const lastHoverKeyRef = useRef<string | null>(null);
   const pendingHoverRef = useRef<HoverPayload | null>(null);
