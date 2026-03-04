@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { buildOpsOverview } from "@/lib/ops/status-aggregator";
 
 export const dynamic = "force-dynamic";

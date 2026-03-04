@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import { describe, expect, it } from "vitest";
 
 import { normalizeToNewsmapTree } from "@/lib/treemap/normalize";

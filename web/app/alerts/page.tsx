@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import { AlertsDashboard } from "@/components/alerts/alerts-dashboard";
 import { loadDashboard } from "@/lib/dashboard";
 

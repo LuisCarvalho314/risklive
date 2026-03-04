@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

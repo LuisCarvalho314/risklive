@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/ops/status-aggregator", () => ({

@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { TreemapClient } from "@/components/newsmap/treemap-client";
 import { loadDashboard } from "@/lib/dashboard";
 

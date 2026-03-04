@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { expect, test } from "@playwright/test";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";

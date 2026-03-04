@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import type { Metadata } from "next";
 import { Sora, Manrope } from "next/font/google";
 

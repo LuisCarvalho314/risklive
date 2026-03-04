@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";

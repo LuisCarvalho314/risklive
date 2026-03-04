@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { inspectArtifacts } from "@/lib/ops/artifact-inspector";
 
 export const dynamic = "force-dynamic";
