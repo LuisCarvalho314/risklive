@@ -306,6 +306,8 @@ def _run_timeline_variant(
 def run_seca_light_timeline(*, timeout_seconds: int = 600) -> Path | None:
     root = _project_root()
     seca_root = root / "experimental" / "RealtimeSECA"
+    if not seca_root.exists():
+        seca_root = root / "experimental"
 
     if not seca_root.exists():
         with pipeline_stage(
