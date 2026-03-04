@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from __future__ import annotations
 
 from agents.extraction import agent as extraction_agent

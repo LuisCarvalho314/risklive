@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { OpsAutoRefresh } from "@/components/ops/auto-refresh";
 import { CostTrendTable } from "@/components/ops/cost-trend-table";
 import { ArtifactTable } from "@/components/ops/artifact-table";

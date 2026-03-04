@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { TopicBrowser } from "@/components/topics/topic-browser";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadDashboard } from "@/lib/dashboard";

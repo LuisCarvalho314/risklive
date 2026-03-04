@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from __future__ import annotations
 
 from adapters import valyu as valyu_adapter

@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from agents.extraction import reset_extraction_agent
 from agents.report import reset_report_agent
 

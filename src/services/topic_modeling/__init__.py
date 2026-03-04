@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from services.topic_modeling.modeling import compute_topic_modeling
 from services.topic_modeling.visualization import compute_topic_visualizations
 

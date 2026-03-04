@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { readFile } from "fs/promises";
 import { getDashboardPath } from "@/lib/dashboard-path";
 

@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 """Streamlit dashboard for alert summaries."""
 from __future__ import annotations
 

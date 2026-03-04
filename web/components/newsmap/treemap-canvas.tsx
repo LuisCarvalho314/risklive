@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { memo, type RefObject, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 

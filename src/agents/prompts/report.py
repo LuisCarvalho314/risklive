@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 REPORT_PROMPT = (
     """As an expert risk analyst at the Nuclear Decommissioning Authority (NDA), analyze these news articles and provide a risk assessment:
 

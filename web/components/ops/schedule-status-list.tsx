@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OpsScheduleStatus } from "@/lib/ops/types";

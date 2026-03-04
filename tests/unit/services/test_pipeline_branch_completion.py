@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from __future__ import annotations
 
 from datetime import datetime, timezone

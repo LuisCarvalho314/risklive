@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 EXTRACTION_PROMPT = (
 """
 Your task is to meticulously analyze a news article to accomplish several objectives that will aid in understanding its implications for the Nuclear Decommissioning Authority (NDA). These objectives include identifying key themes through relevant keywords, summarizing the article concisely, determining its relevance to the NDA, providing a rationale for its relevance or lack thereof, classifying the news with an alert flag based on its importance and potential impact on the NDA, and and categorizing the news into a specific category. The alert flag should indicate the urgency or significance of the article's content with respect to the Nuclear Decommissioning Authority's interests and responsibilities, using a color-coded system: Red (high importance), Yellow (moderate importance), Green (low importance). The main pillars to check for are risks related to Supply Chain, Health and Safety, Cybersecurity, and news related to the Nuclear Industry and relevant news related to the United Kingdom.

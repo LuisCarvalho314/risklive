@@ -1,3 +1,6 @@
+//© 2025 University of Aberdeen. All rights reserved
+
+
 import type { DashboardData } from "@/lib/dashboard";
 
 export const sampleDashboard: DashboardData = {

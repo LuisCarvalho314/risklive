@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from __future__ import annotations
 
 from services.storage import data_path, read_csv, write_csv

@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import React from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildOpsOverview } from "@/lib/ops/status-aggregator";

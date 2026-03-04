@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 """Streamlit dashboard for topic modeling artifacts."""
 from __future__ import annotations
 

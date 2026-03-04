@@ -1,3 +1,5 @@
+"""© 2025 University of Aberdeen. All rights reserved"""
+
 from models.article import Article, ArticleSource
 from models.csv import LLMEnrichedRow, NewsRow
 from models.extraction import AlertFlag, ExtractionRecord, ExtractionResult, LLMCallMetrics, Relevance, TokenUsage

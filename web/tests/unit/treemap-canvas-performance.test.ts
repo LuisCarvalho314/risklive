@@ -1,3 +1,5 @@
+//© 2025 University of Aberdeen. All rights reserved
+
 import { describe, expect, it } from "vitest";
 
 import { resolveAnimationDuration } from "@/lib/treemap/perf";
