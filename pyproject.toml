@@ -1,9 +1,9 @@
 [project]
 name = "risklive"
-version = "0.2.0"
+version = "2.0.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [{ name = "Your Name" }]
+authors = [{ name = "Luis Carvalho" }]
 classifiers = [
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -35,7 +35,7 @@ dependencies = [
         "seaborn>=0.13.2",
         "sentence-transformers>=3.0.1",
         "streamlit>=1.36.0",
-        "torch>=2.3.1",
+        "torch==2.9.1",
         "transformers>=4.42.4",
         "streamlit-analytics2",
         "valyu>=2.2.2",
@@ -71,6 +71,14 @@ build-backend = "setuptools.build_meta"
 
 [tool.uv]
 package = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.setuptools]
 package-dir = {"" = "src"}
