@@ -1,3 +1,12 @@
+FROM rust:1.85-slim AS seca-builder
+
+WORKDIR /build
+
+COPY experimental ./experimental
+
+RUN cargo build --manifest-path /build/experimental/Cargo.toml -p realtime-seca-cli --release
+
+
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -20,6 +29,8 @@ COPY README.md ./README.md
 COPY src ./src
 COPY config ./config
 COPY prompts ./prompts
+COPY experimental ./experimental
+COPY --from=seca-builder /build/experimental/target/release/realtime-seca-cli /usr/local/bin/realtime-seca-cli
 
 RUN uv sync --frozen --no-dev
 

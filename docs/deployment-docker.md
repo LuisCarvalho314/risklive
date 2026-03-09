@@ -56,7 +56,8 @@ Recommended paths:
 sudo mkdir -p /opt/risklive
 sudo chown -R $USER:$USER /opt/risklive
 
-git clone <your-repo-url> /opt/risklive/repo
+git clone --recurse-submodules <your-repo-url> /opt/risklive/repo
+git -C /opt/risklive/repo submodule update --init --recursive
 
 mkdir -p /opt/risklive/data/env
 mkdir -p /opt/risklive/data/results
@@ -150,6 +151,7 @@ cd /opt/risklive/repo
 Build the app and web images:
 
 ```bash
+git -C /opt/risklive/repo submodule update --init --recursive
 docker build -f docker/Dockerfile.app -t risklive-app:latest .
 docker build -f docker/Dockerfile.web -t risklive-web:latest .
 ```
@@ -417,4 +419,3 @@ and use a pull-based deploy flow.
 * For local testing, `http://localhost` or `http://localhost/topics` is appropriate
 * For internet-facing deployments, use HTTPS with a real domain where possible
 * Prefer absolute host paths on the VM rather than relative bind mounts
-

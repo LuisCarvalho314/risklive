@@ -9,12 +9,6 @@ This guide is the fastest path to understand how RiskLive works and why the curr
 - `Future Path`: documented direction that is not active runtime
 - `External Validated Prototype`: implemented outside this repository, validated externally, not integrated here
 
-## How to read this set
-
-- Management track: this page -> [Improvements Over Legacy](./improvements-over-legacy.md) -> [SECA Evaluation Blueprint](./seca-evaluation-blueprint.md)
-- Domain expert track: [Current Architecture](./current-architecture.md) -> [LangExtract Path](./langextract-path.md) -> [SECA Path](./seca-path.md)
-- New hire engineering track: [Legacy Baseline](./legacy-baseline.md) -> [Current Architecture](./current-architecture.md) -> future-path docs as needed
-
 ## What Is Legacy vs Current
 
 - Legacy implementation (`Legacy Baseline`): `risklive/` package (older Flask/Streamlit/script-oriented flow)
