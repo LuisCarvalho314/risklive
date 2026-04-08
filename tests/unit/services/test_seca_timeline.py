@@ -36,6 +36,8 @@ def test_run_seca_light_timeline_generates_30d_and_7d(monkeypatch, tmp_path, cap
     thirty_manifest = thirty_out_dir / "timeline_manifest.json"
     seven_out_dir = root / "results" / "web" / "newsmap" / "seca-light-7d"
     seven_manifest = seven_out_dir / "timeline_manifest.json"
+    three_out_dir = root / "results" / "web" / "newsmap" / "seca-light-3d"
+    three_manifest = three_out_dir / "timeline_manifest.json"
     data_csv = root / "results" / "data" / "news_data_with_llm_info.csv"
     backup_csv = root / "results" / "backup_data" / "news_data_with_llm_info.csv"
     seca_root.mkdir(parents=True)
@@ -106,10 +108,13 @@ def test_run_seca_light_timeline_generates_30d_and_7d(monkeypatch, tmp_path, cap
     def _run(*args, **kwargs):
         cmd = args[0]
         calls.append(cmd)
-        if "timeline" in cmd and "seca-light-7d" in " ".join(cmd):
+        if "timeline-many" in cmd and "seca-light-7d" in " ".join(cmd):
             seven_out_dir.mkdir(parents=True, exist_ok=True)
             seven_manifest.write_text('{"total_batches":1,"files":["tree_batch_0000.json"]}')
-        if "timeline" in cmd and "seca-light-7d" not in " ".join(cmd):
+        if "timeline-many" in cmd and "seca-light-3d" in " ".join(cmd):
+            three_out_dir.mkdir(parents=True, exist_ok=True)
+            three_manifest.write_text('{"total_batches":1,"files":["tree_batch_0000.json"]}')
+        if "timeline-many" in cmd and "seca-light-7d" not in " ".join(cmd) and "seca-light-3d" not in " ".join(cmd):
             thirty_out_dir.mkdir(parents=True, exist_ok=True)
             thirty_manifest.write_text('{"total_batches":2,"files":["tree_batch_0000.json","tree_batch_0001.json"]}')
         return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="ok", stderr="")
@@ -120,11 +125,16 @@ def test_run_seca_light_timeline_generates_30d_and_7d(monkeypatch, tmp_path, cap
     out = seca_timeline.run_seca_light_timeline()
 
     assert out == thirty_manifest
-    assert len(calls) == 4
+    assert len(calls) == 9
     assert "from-csv" in calls[0]
-    assert "timeline" in calls[1]
+    assert "from-csv" in calls[1]
     assert "from-csv" in calls[2]
-    assert "timeline" in calls[3]
+    assert "timeline-many" in calls[3]
+    assert "from-csv" in calls[4]
+    assert "from-csv" in calls[5]
+    assert "timeline-many" in calls[6]
+    assert "from-csv" in calls[7]
+    assert "timeline-many" in calls[8]
 
     thirty_csv = root / "runtime" / "seca" / "relevant_news_data_30d.csv"
     seven_csv = root / "runtime" / "seca" / "relevant_news_data_7d.csv"
@@ -139,6 +149,18 @@ def test_run_seca_light_timeline_generates_30d_and_7d(monkeypatch, tmp_path, cap
     assert len(thirty_rows) == 3
     assert len(seven_rows) == 2
     assert {row["URL"] for row in seven_rows} == {"https://example.com/r1", "https://example.com/r2"}
+    assert [part for part in calls[3] if "relevant_news_data_30d_" in part and part.endswith("_batch.json")] == [
+        str(root / "runtime" / "seca" / "relevant_news_data_30d_2026-02-10_batch.json"),
+        str(root / "runtime" / "seca" / "relevant_news_data_30d_2026-02-23_batch.json"),
+        str(root / "runtime" / "seca" / "relevant_news_data_30d_2026-02-27_batch.json"),
+    ]
+    assert [part for part in calls[6] if "relevant_news_data_7d_" in part and part.endswith("_batch.json")] == [
+        str(root / "runtime" / "seca" / "relevant_news_data_7d_2026-02-23_batch.json"),
+        str(root / "runtime" / "seca" / "relevant_news_data_7d_2026-02-27_batch.json"),
+    ]
+    assert [part for part in calls[8] if "relevant_news_data_3d_" in part and part.endswith("_batch.json")] == [
+        str(root / "runtime" / "seca" / "relevant_news_data_3d_2026-02-27_batch.json"),
+    ]
 
     stage_end_ops = [
         (getattr(r, "operation", ""), getattr(r, "stage_status", ""))

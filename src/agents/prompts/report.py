@@ -39,3 +39,19 @@ Give only the report, no extra content. Think step by step.
 [News Articles Content Below]
 """
 )
+
+REPORT_MERGE_PROMPT = (
+    """As an expert risk analyst at the Nuclear Decommissioning Authority (NDA), merge these partial topic reports into a single consolidated risk assessment.
+
+Your task:
+- Combine overlapping findings into one coherent final report.
+- Remove duplicated points.
+- Resolve minor wording differences by choosing the clearest, most actionable phrasing.
+- Preserve concrete risks, actions, timelines, and stakeholders that appear across the partial reports.
+- Produce one final keyword field that best represents the combined topic.
+
+Give only the merged report, no extra content. Think step by step.
+
+[Partial Topic Reports Below]
+"""
+)

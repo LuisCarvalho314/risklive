@@ -63,6 +63,29 @@ def test_generate_report_backfills_empty_keyword(monkeypatch):
     assert reports[0]["keyword"] == "ransomware, zero-day, OT"
 
 
+def test_generate_report_keeps_single_row_per_topic_after_chunk_merge(monkeypatch):
+    def _fake_generate_reports_from_rows(rows, model_name="gpt-4o"):
+        return [ReportEntry(keyword="merged", input_prompt="merged-prompt", response="merged-response", topic=4)]
+
+    monkeypatch.setattr(pipeline_service, "generate_reports_from_rows", _fake_generate_reports_from_rows)
+
+    rows = [
+        LLMEnrichedRow(Title="A", AlertFlag="Red", ShortSummary="s1", topic=4),
+        LLMEnrichedRow(Title="B", AlertFlag="Red", ShortSummary="s2", topic=4),
+    ]
+
+    reports = pipeline_service.generate_report(rows)
+
+    assert reports == [
+        {
+            "topic": 4,
+            "keyword": "merged",
+            "input_prompt": "merged-prompt",
+            "response": "merged-response",
+        }
+    ]
+
+
 def test_fallback_report_keyword_summary_title_and_topic_default():
     summary_rows = [LLMEnrichedRow(Title="", AlertFlag="Red", ShortSummary="summary fallback", RelevantKeywords="", topic=7)]
     assert pipeline_service._fallback_report_keyword(summary_rows, 7) == "summary fallback"

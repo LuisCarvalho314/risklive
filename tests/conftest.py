@@ -23,6 +23,7 @@ def _write_config(root: Path) -> None:
 
     (prompts_dir / "info_extraction.txt").write_text("EXTRACTION_PROMPT")
     (prompts_dir / "report_prompt.txt").write_text("REPORT_PROMPT")
+    (prompts_dir / "report_merge_prompt.txt").write_text("REPORT_MERGE_PROMPT")
 
     cfg = """CATEGORIES:
   - CatA
@@ -35,6 +36,7 @@ EXCLUDED_SOURCES:
 PROMPT_PATHS:
   EXTRACTION_PROMPT: 'prompts/info_extraction.txt'
   REPORT_PROMPT: 'prompts/report_prompt.txt'
+  REPORT_MERGE_PROMPT: 'prompts/report_merge_prompt.txt'
 INTERVAL: 15
 SAVE_DIR:
   CSV_DATA_DIR: 'results/data/'
