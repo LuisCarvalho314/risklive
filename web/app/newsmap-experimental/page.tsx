@@ -1,14 +1,26 @@
 //© 2025 University of Aberdeen. All rights reserved
 
-import { NewsmapExperimentalLivePage } from "@/components/dashboard/newsmap-experimental-live-page";
+
+import { TreemapExperimentalClient } from "@/components/newsmap/treemap-experimental-client";
+import { loadDashboard } from "@/lib/dashboard";
 import { loadExperimentalNewsmap } from "@/lib/newsmap-experimental";
 
-export const dynamic = "force-dynamic";
-
 export default async function NewsmapExperimentalPage() {
-  const timelineResult = await loadExperimentalNewsmap();
+  const [dashboard, timelineResult] = await Promise.all([
+    loadDashboard(),
+    loadExperimentalNewsmap(),
+  ]);
 
   return (
-    <NewsmapExperimentalLivePage timelineResult={timelineResult} />
+    <div className="h-full min-h-0 p-1">
+      <div className="h-full w-full overflow-hidden rounded-2xl">
+        <div className="h-full w-full p-1.5">
+          <TreemapExperimentalClient
+            fallbackTree={dashboard.newsmap}
+            timelineResult={timelineResult}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
