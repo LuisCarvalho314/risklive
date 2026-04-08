@@ -100,6 +100,15 @@ function buildStageStatus(stage: OpsStage, events: OpsLogEvent[], runId: string 
   const latest = latestByTs(stageEvents);
 
   if (!latest) {
+    if (stage === "seca_light") {
+      return {
+        stage,
+        status: "healthy",
+        lastSuccessTs: null,
+        lastRunDurationMs: null,
+        evidence: ["optional stage absent in latest run"]
+      };
+    }
     return {
       stage,
       status: "missing",
@@ -253,7 +262,7 @@ function overallFromRunAndStages(
   const coreAllHealthy = coreStatuses.every((status) => status === "healthy");
   if (runStatus === "succeeded" && coreAllHealthy) {
     const secaStatus = byStage.get("seca_light")?.status ?? "missing";
-    return secaStatus === "healthy" ? "healthy" : "degraded";
+    return secaStatus === "error" || secaStatus === "degraded" ? "degraded" : "healthy";
   }
   if (coreStatuses.some((status) => status === "missing")) return "degraded";
   if (coreStatuses.some((status) => status !== "healthy")) return "degraded";

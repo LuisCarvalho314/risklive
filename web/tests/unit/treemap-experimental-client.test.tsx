@@ -1,8 +1,10 @@
 //© 2025 University of Aberdeen. All rights reserved
 
 import React from "react";
-import { cleanup, render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { createRoot, type Root } from "react-dom/client";
+import { flushSync } from "react-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TreemapExperimentalClient } from "@/components/newsmap/treemap-experimental-client";
@@ -25,15 +27,34 @@ vi.mock("@/components/newsmap/treemap-client", () => ({
   ),
 }));
 
+const mountedRoots: Array<{ root: Root; container: HTMLDivElement }> = [];
+
+function renderIntoDom(node: React.ReactNode) {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  const root = createRoot(container);
+  flushSync(() => {
+    root.render(node);
+  });
+  mountedRoots.push({ root, container });
+}
+
 afterEach(() => {
-  cleanup();
+  while (mountedRoots.length) {
+    const mounted = mountedRoots.pop();
+    if (!mounted) continue;
+    flushSync(() => {
+      mounted.root.unmount();
+    });
+    mounted.container.remove();
+  }
 });
 
 describe("TreemapExperimentalClient", () => {
   it("renders timeline selector and switches between 30-day and 7-day views", async () => {
     const user = userEvent.setup();
 
-    render(
+    renderIntoDom(
       <TreemapExperimentalClient
         fallbackTree={{ id: "fallback", name: "Fallback Tree" }}
         timelineResult={{
@@ -110,7 +131,7 @@ describe("TreemapExperimentalClient", () => {
 
   it("allows selecting the experimental size metric", async () => {
     const user = userEvent.setup();
-    render(
+    renderIntoDom(
       <TreemapExperimentalClient
         fallbackTree={{ id: "fallback", name: "Fallback Tree" }}
         timelineResult={{

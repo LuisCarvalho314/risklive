@@ -1,31 +1,9 @@
 //© 2025 University of Aberdeen. All rights reserved
 
+import { TopicsLivePage } from "@/components/dashboard/topics-live-page";
 
-import { TopicBrowser } from "@/components/topics/topic-browser";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { loadDashboard } from "@/lib/dashboard";
-
-export default async function TopicsPage() {
-  const dashboard = await loadDashboard();
-
+export default function TopicsPage() {
   return (
-    <div className="h-full min-h-0 overflow-y-auto p-6">
-      <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Daily Report</CardTitle>
-          <CardDescription>Keyword-to-response summaries.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {dashboard.topics.length ? (
-            <TopicBrowser topics={dashboard.topics} />
-          ) : (
-            <p className="text-sm text-muted-foreground">No high risk reports available.</p>
-          )}
-        </CardContent>
-      </Card>
-
-      </div>
-    </div>
+    <TopicsLivePage />
   );
 }
