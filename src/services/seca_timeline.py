@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import os
+import json
 import shutil
 import subprocess
 from datetime import datetime, timedelta, timezone
@@ -128,6 +129,17 @@ def _rolling_window_rows(rows: list[dict[str, str]], *, days: int) -> list[dict[
     return [row for row, ts in stamped if ts >= cutoff]
 
 
+def _group_rows_by_utc_day(rows: list[dict[str, str]]) -> list[tuple[str, list[dict[str, str]]]]:
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        parsed = _row_timestamp(row)
+        if parsed is None:
+            continue
+        day = parsed.date().isoformat()
+        grouped.setdefault(day, []).append(row)
+    return [(day, grouped[day]) for day in sorted(grouped.keys())]
+
+
 def _write_relevant_csv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
@@ -146,6 +158,17 @@ def _write_relevant_csv(path: Path, rows: list[dict[str, str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _augment_manifest_days(manifest_path: Path, days: list[str]) -> None:
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception:
+        return
+    if not isinstance(payload, dict):
+        return
+    payload["days"] = days
+    manifest_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 def _run_timeline_variant(
@@ -172,9 +195,9 @@ def _run_timeline_variant(
         manifest_path = out_dir / "timeline_manifest.json"
         runtime_dir = root / "runtime" / "seca"
         filtered_csv_path = runtime_dir / f"relevant_news_data_{variant_name}.csv"
-        filtered_batch_path = runtime_dir / f"relevant_news_data_{variant_name}_batch.json"
+        daily_batches = _group_rows_by_utc_day(rows)
 
-        if not rows:
+        if not rows or not daily_batches:
             end_stage(
                 "skipped",
                 input_rows=total_rows,
@@ -196,41 +219,58 @@ def _run_timeline_variant(
         )
 
         try:
-            from_csv = subprocess.run(
-                [
-                    *command,
-                    "from-csv",
-                    str(filtered_csv_path),
-                    str(filtered_batch_path),
-                    "--batch-index",
-                    "0",
-                    "--min-tokens",
-                    "1",
-                ],
-                cwd=seca_root,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
-            )
-            if from_csv.returncode != 0:
-                stderr_tail = (from_csv.stderr or "").strip().splitlines()
-                reason = stderr_tail[-1] if stderr_tail else f"exit_code={from_csv.returncode}"
-                end_stage(
-                    "failed",
-                    error_code="seca_from_csv_failed",
-                    skip_reason=reason[:240],
-                    input_rows=total_rows,
-                    output_rows=len(rows),
-                    deduped_rows=deduped_rows,
+            batch_paths: list[Path] = []
+            batch_days: list[str] = []
+            for batch_index, (day, day_rows) in enumerate(daily_batches):
+                day_csv_path = runtime_dir / f"relevant_news_data_{variant_name}_{day}.csv"
+                day_batch_path = runtime_dir / f"relevant_news_data_{variant_name}_{day}_batch.json"
+                _write_relevant_csv(day_csv_path, day_rows)
+                log_artifact_written(
+                    logger,
+                    stage="seca_light",
+                    operation=operation,
+                    component="services.seca_timeline",
+                    artifact_path=day_csv_path,
+                    artifact_type="csv",
+                    artifact_rows=len(day_rows),
                 )
-                return None
+                from_csv = subprocess.run(
+                    [
+                        *command,
+                        "from-csv",
+                        str(day_csv_path),
+                        str(day_batch_path),
+                        "--batch-index",
+                        str(batch_index),
+                        "--min-tokens",
+                        "1",
+                    ],
+                    cwd=seca_root,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=timeout_seconds,
+                )
+                if from_csv.returncode != 0:
+                    stderr_tail = (from_csv.stderr or "").strip().splitlines()
+                    reason = stderr_tail[-1] if stderr_tail else f"exit_code={from_csv.returncode}"
+                    end_stage(
+                        "failed",
+                        error_code="seca_from_csv_failed",
+                        skip_reason=reason[:240],
+                        input_rows=total_rows,
+                        output_rows=len(rows),
+                        deduped_rows=deduped_rows,
+                    )
+                    return None
+                batch_paths.append(day_batch_path)
+                batch_days.append(day)
 
             timeline = subprocess.run(
                 [
                     *command,
-                    "timeline",
-                    str(filtered_batch_path),
+                    "timeline-many",
+                    *[str(path) for path in batch_paths],
                     "--out-dir",
                     str(out_dir),
                     "--clean-out-dir",
@@ -286,6 +326,7 @@ def _run_timeline_variant(
             )
             return None
 
+        _augment_manifest_days(manifest_path, batch_days)
         log_artifact_written(
             logger,
             stage="seca_light",
