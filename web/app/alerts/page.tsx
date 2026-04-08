@@ -1,14 +1,9 @@
 //© 2025 University of Aberdeen. All rights reserved
 
-import { AlertsDashboard } from "@/components/alerts/alerts-dashboard";
-import { loadDashboard } from "@/lib/dashboard";
+import { AlertsLivePage } from "@/components/dashboard/alerts-live-page";
 
-export default async function AlertsPage() {
-  const dashboard = await loadDashboard();
-
+export default function AlertsPage() {
   return (
-    <div className="h-full min-h-0 overflow-y-auto p-6">
-      <AlertsDashboard flagged={dashboard.flagged_alerts} />
-    </div>
+    <AlertsLivePage />
   );
 }

@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,16 @@ export function TopicBrowser({ topics }: { topics: TopicEntry[] }) {
   }, [topics, query]);
 
   const active = topics.find((topic) => topic.keyword === selected) ?? filtered[0];
+
+  useEffect(() => {
+    if (!filtered.length) {
+      setSelected("");
+      return;
+    }
+    if (!filtered.some((topic) => topic.keyword === selected)) {
+      setSelected(filtered[0]?.keyword ?? "");
+    }
+  }, [filtered, selected]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_3fr]">
