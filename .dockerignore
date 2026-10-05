@@ -15,3 +15,21 @@ notebooks/
 .DS_Store
 .idea/
 .vscode/
+
+.container-test/
+.git/
+web/.next/
+web/node_modules/
+**/*.env
+**/*.env.*
+!**/*.env.example
+.aws/
+.codex/
+.agents/
+*.pem
+*.key
+*.p12
+
+# Local Rust/compiler state is never a build input.
+**/target/
+**/.git

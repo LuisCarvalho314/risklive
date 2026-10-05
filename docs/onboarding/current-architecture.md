@@ -11,7 +11,7 @@ The current stack preserves the same business workflow as legacy while improving
 ### Backend and pipeline
 
 - Python 3.11
-- Flask (`src/app/server.py`) for trigger endpoints and scheduler host
+- Flask (`src/app/server.py`) for trigger endpoints; containers use Gunicorn (`app.wsgi:app`) and a separate foreground scheduler (`python -m app.scheduler`)
 - APScheduler for scheduled jobs
 - Services architecture in `src/services/*`
 - Typed models in `src/models/*`
@@ -157,7 +157,8 @@ Primary file: `deployment/caddy/Caddyfile.prod`
 
 Compose stack in `deployment/compose/docker-compose.prod.yml`:
 
-- `app`: Python service exposing trigger and scheduler runtime
+- `app`: Gunicorn HTTP service exposing trigger endpoints, without scheduler startup
+- `scheduler`: one dedicated foreground APScheduler process using the same Python image; `src/app/schedules.json` defines fetch 06:20 and cleanup 06:00 Europe/London, shared with ops status
 - `web`: Next.js service serving UI and API routes
 - `caddy`: reverse proxy and ops auth boundary
 
@@ -174,7 +175,8 @@ flowchart LR
     I[Internet client]
     C[Caddy]
     W[web container]
-    A[app container]
+    A[app: Gunicorn]
+    S[scheduler: foreground APScheduler]
     R[results volume]
     L[logs volume]
     T[runtime volume]
@@ -187,6 +189,9 @@ flowchart LR
     A --> R
     A --> L
     A --> T
+    S --> R
+    S --> L
+    S --> T
 ```
 
 ## UI Outputs

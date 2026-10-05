@@ -386,8 +386,8 @@ describe("ops status aggregator", () => {
         { ts: "2026-02-27T11:50:02.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "topic", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
         { ts: "2026-02-27T11:50:03.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "report", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
         { ts: "2026-02-27T11:50:04.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "dashboard_export", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
-        { ts: "2026-02-26T07:05:00.000Z", event: "job_complete", component: "scheduler", job: "fetch_and_process", level: "INFO" },
-        { ts: "2026-02-27T06:35:00.000Z", event: "job_complete", component: "scheduler", job: "cleanup_old_data", level: "INFO" }
+        { ts: "2026-02-26T06:25:00.000Z", event: "job_complete", component: "scheduler", job: "fetch_and_process", level: "INFO" },
+        { ts: "2026-02-27T06:05:00.000Z", event: "job_complete", component: "scheduler", job: "cleanup_old_data", level: "INFO" }
       ]
     });
 
@@ -411,12 +411,40 @@ describe("ops status aggregator", () => {
         { ts: "2026-02-27T07:59:52.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "topic", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
         { ts: "2026-02-27T07:59:53.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "report", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
         { ts: "2026-02-27T07:59:54.000Z", event: "pipeline_stage_end", run_id: "run-1", stage: "dashboard_export", stage_status: "succeeded", duration_ms: 100, level: "INFO" },
-        { ts: "2026-02-27T07:10:00.000Z", event: "job_failed", component: "scheduler", job: "fetch_and_process", level: "ERROR" }
+        { ts: "2026-02-27T06:30:00.000Z", event: "job_failed", component: "scheduler", job: "fetch_and_process", level: "ERROR" }
       ]
     });
 
     const overview = await buildOpsOverview(now);
     expect(overview.overallStatus).toBe("error");
     expect(overview.schedule.find((item) => item.job === "fetch_and_process")?.status).toBe("error");
+  });
+});
+
+
+describe("canonical scheduler timing", () => {
+  it.each([
+    ["2026-01-15T12:00:00Z", "2026-01-16T06:20:00.000Z", "2026-01-16T06:00:00.000Z"],
+    ["2026-07-15T12:00:00Z", "2026-07-16T05:20:00.000Z", "2026-07-16T05:00:00.000Z"],
+    ["2026-03-28T12:00:00Z", "2026-03-29T05:20:00.000Z", "2026-03-29T05:00:00.000Z"],
+    ["2026-10-24T12:00:00Z", "2026-10-25T06:20:00.000Z", "2026-10-25T06:00:00.000Z"],
+    ["2026-07-15T04:00:00Z", "2026-07-15T05:20:00.000Z", "2026-07-15T05:00:00.000Z"]
+  ])("computes London daily runs at %s independently of server timezone", async (now, fetch, cleanup) => {
+    const { readLogEvents } = await import("@/lib/ops/log-parser");
+    vi.mocked(readLogEvents).mockResolvedValue({ events: [], parseErrors: 0 });
+    const overview = await buildOpsOverview(new Date(now));
+    expect(overview.schedule.find((job) => job.job === "fetch_and_process")?.nextExpectedTs).toBe(fetch);
+    expect(overview.schedule.find((job) => job.job === "cleanup_old_data")?.nextExpectedTs).toBe(cleanup);
+  });
+
+  it("marks a missing 06:20 London fetch overdue after its existing grace window", async () => {
+    const { readLogEvents } = await import("@/lib/ops/log-parser");
+    vi.mocked(readLogEvents).mockResolvedValue({ parseErrors: 0, events: [
+      { ts: "2026-06-30T05:25:00Z", event: "job_complete", component: "scheduler", job: "fetch_and_process" },
+      { ts: "2026-07-01T05:05:00Z", event: "job_complete", component: "scheduler", job: "cleanup_old_data" }
+    ] });
+    const overview = await buildOpsOverview(new Date("2026-07-01T08:00:00Z"));
+    expect(overview.schedule.find((job) => job.job === "fetch_and_process")?.status).toBe("overdue");
+    expect(overview.schedule.find((job) => job.job === "cleanup_old_data")?.status).toBe("healthy");
   });
 });

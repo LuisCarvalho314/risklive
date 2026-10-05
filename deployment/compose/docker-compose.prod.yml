@@ -1,14 +1,28 @@
+name: ${COMPOSE_PROJECT_NAME:?Set an explicit deployment project name}
+
 services:
   app:
-    image: ${APP_IMAGE:-risklive-app:latest}
-    container_name: risklive-app
+    image: ${APP_IMAGE:?Set an explicit versioned app image}
+    command: ["gunicorn", "app.wsgi:app", "--bind", "0.0.0.0:5001", "--workers", "2", "--timeout", "0", "--access-logfile", "-", "--error-logfile", "-"]
     restart: unless-stopped
     env_file:
-      - ${APP_ENV_FILE:-../env/app.env.example}
+      - ${APP_ENV_FILE:?Set an absolute app env file path}
     volumes:
-      - ../../results:/app/results
-      - ../../logs:/app/logs
-      - ../../runtime:/app/runtime
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/results
+        target: /app/results
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/logs
+        target: /app/logs
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/runtime
+        target: /app/runtime
+        bind:
+          create_host_path: false
     networks:
       - internal
     healthcheck:
@@ -18,15 +32,52 @@ services:
       retries: 5
       start_period: 40s
 
+  scheduler:
+    image: ${APP_IMAGE:?Set an explicit versioned app image}
+    command: ["python", "-m", "app.scheduler"]
+    restart: unless-stopped
+    stop_grace_period: 5m
+    deploy:
+      replicas: 1
+    env_file:
+      - ${APP_ENV_FILE:?Set an absolute app env file path}
+    volumes:
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/results
+        target: /app/results
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/logs
+        target: /app/logs
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/runtime
+        target: /app/runtime
+        bind:
+          create_host_path: false
+    networks:
+      - internal
+
   web:
-    image: ${WEB_IMAGE:-risklive-web:latest}
-    container_name: risklive-web
+    image: ${WEB_IMAGE:?Set an explicit versioned web image}
     restart: unless-stopped
     env_file:
-      - ${WEB_ENV_FILE:-../env/web.env.example}
+      - ${WEB_ENV_FILE:?Set an absolute web env file path}
     volumes:
-      - ../../results:/app/results:ro
-      - ../../logs:/app/logs:ro
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/results
+        target: /app/results
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set an absolute persistent data root}/logs
+        target: /app/logs
+        read_only: true
+        bind:
+          create_host_path: false
     networks:
       - internal
     depends_on:
@@ -40,14 +91,18 @@ services:
       start_period: 40s
 
   caddy:
-    image: caddy:2.8-alpine
-    container_name: risklive-caddy
+    image: caddy:2.8.4-alpine
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
     env_file:
-      - ${CADDY_ENV_FILE:-../env/caddy.env.example}
+      - ${CADDY_ENV_FILE:?Set an absolute caddy env file path}
     ports:
-      - "80:80"
-      - "443:443"
+      - "${CADDY_HTTP_BIND:-0.0.0.0:80}:80"
+      - "${CADDY_HTTPS_BIND:-0.0.0.0:443}:443"
     volumes:
       - ../caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

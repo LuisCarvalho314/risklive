@@ -1,3 +1,4 @@
+import canonicalSchedule from "../../../src/app/schedules.json";
 import { readLogEvents } from "@/lib/ops/log-parser";
 import { buildOpsCosts } from "@/lib/ops/cost-aggregator";
 import type {
@@ -34,10 +35,30 @@ const OPS_STAGES: OpsStage[] = [
   "seca_light",
 ];
 const CORE_STAGES: OpsStage[] = ["ingestion", "extraction", "topic_modeling", "report", "dashboard_export"];
-const SCHEDULE_CONFIG = [
-  { job: "fetch_and_process", hour: 7, minute: 0, intervalMs: 24 * 60 * 60 * 1000 },
-  { job: "cleanup_old_data", hour: 6, minute: 30, intervalMs: 24 * 60 * 60 * 1000 }
-] as const;
+const SCHEDULE_CONFIG = canonicalSchedule.jobs.map(({ id, hour, minute }) => ({
+  job: id, hour, minute, intervalMs: 24 * 60 * 60 * 1000
+}));
+const scheduleCalendar = new Intl.DateTimeFormat("en-GB", {
+  timeZone: canonicalSchedule.timezone,
+  year: "numeric", month: "2-digit", day: "2-digit",
+  hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+});
+
+function localCalendar(date: Date) {
+  const parts = Object.fromEntries(scheduleCalendar.formatToParts(date).map((part) => [part.type, part.value]));
+  return {
+    year: Number(parts.year), month: Number(parts.month), day: Number(parts.day),
+    hour: Number(parts.hour), minute: Number(parts.minute), second: Number(parts.second)
+  };
+}
+
+// Jobs are at 06:00/06:20, outside London's ambiguous/nonexistent DST-change hours.
+function scheduledInstant(day: Date, hour: number, minute: number): Date {
+  const nominal = Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hour, minute);
+  const local = localCalendar(new Date(nominal));
+  const offset = Date.UTC(local.year, local.month - 1, local.day, local.hour, local.minute, local.second) - nominal;
+  return new Date(nominal - offset);
+}
 
 function asDate(value: string | null | undefined): Date | null {
   if (!value) return null;
@@ -151,12 +172,18 @@ function countByWindow(events: OpsLogEvent[], level: string, now: Date): WindowC
 }
 
 function previousScheduledInstant(now: Date, hour: number, minute: number): Date {
-  const expected = new Date(now);
-  expected.setHours(hour, minute, 0, 0);
-  if (expected.getTime() > now.getTime()) {
-    expected.setDate(expected.getDate() - 1);
-  }
-  return expected;
+  const local = localCalendar(now);
+  const day = new Date(Date.UTC(local.year, local.month - 1, local.day));
+  const today = scheduledInstant(day, hour, minute);
+  if (today.getTime() <= now.getTime()) return today;
+  day.setUTCDate(day.getUTCDate() - 1);
+  return scheduledInstant(day, hour, minute);
+}
+
+function nextScheduledInstant(previous: Date, hour: number, minute: number): Date {
+  const local = localCalendar(previous);
+  const day = new Date(Date.UTC(local.year, local.month - 1, local.day + 1));
+  return scheduledInstant(day, hour, minute);
 }
 
 function buildScheduleStatus(events: OpsLogEvent[], now: Date): OpsScheduleStatus[] {
@@ -170,7 +197,7 @@ function buildScheduleStatus(events: OpsLogEvent[], now: Date): OpsScheduleStatu
     const lastComplete = latestByTs(completes);
     const lastFailed = latestByTs(failures);
     const prevExpected = previousScheduledInstant(now, cfg.hour, cfg.minute);
-    const nextExpected = new Date(prevExpected.getTime() + cfg.intervalMs);
+    const nextExpected = nextScheduledInstant(prevExpected, cfg.hour, cfg.minute);
     const graceMs = Math.max(5 * 60 * 1000, Math.floor(cfg.intervalMs * 0.1));
     const dueBy = new Date(prevExpected.getTime() + graceMs);
     const evidence: string[] = [];

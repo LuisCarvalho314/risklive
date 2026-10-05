@@ -11,21 +11,48 @@ import traceback
 
 from config.settings import get_config, get_server_config
 from models.errors import AppError, from_exception
-from services.pipeline import (
-    cleanup_old_data,
-    extract_news_info,
-    export_dashboard,
-    fetch_news,
-    generate_report,
-    run_topic_modeling,
-    save_news,
-)
 from services.seca_timeline import run_seca_light_timeline
 from services.storage import data_path, read_csv
 from utils.logging import configure_logging, get_logger, log_context, set_correlation_id, set_run_id
 from utils.rows import llm_rows_from_records, news_rows_from_records
 
 logger = get_logger(__name__)
+
+
+# Import operational dependencies only when a route or scheduled job executes.
+def cleanup_old_data(*args, **kwargs):
+    from services.pipeline import cleanup_old_data as operation
+    return operation(*args, **kwargs)
+
+
+def extract_news_info(*args, **kwargs):
+    from services.pipeline import extract_news_info as operation
+    return operation(*args, **kwargs)
+
+
+def export_dashboard(*args, **kwargs):
+    from services.pipeline import export_dashboard as operation
+    return operation(*args, **kwargs)
+
+
+def fetch_news(*args, **kwargs):
+    from services.pipeline import fetch_news as operation
+    return operation(*args, **kwargs)
+
+
+def generate_report(*args, **kwargs):
+    from services.pipeline import generate_report as operation
+    return operation(*args, **kwargs)
+
+
+def run_topic_modeling(*args, **kwargs):
+    from services.pipeline import run_topic_modeling as operation
+    return operation(*args, **kwargs)
+
+
+def save_news(*args, **kwargs):
+    from services.pipeline import save_news as operation
+    return operation(*args, **kwargs)
 
 
 def create_app() -> Flask:
@@ -196,19 +223,10 @@ def create_app() -> Flask:
 
 
 def start_scheduler(app: Flask) -> BackgroundScheduler:
-    cfg = get_config()
+    from app.scheduler_jobs import register_jobs
+
     scheduler = BackgroundScheduler()
-    scheduler.add_job(lambda: _run_job("fetch_and_process", lambda:
-    fetch_and_process(app)), "cron", hour=6, minute=20)
-    scheduler.add_job(
-        lambda: _run_job(
-            "cleanup_old_data",
-            lambda: cleanup_old_data(cfg.cleanup_days_to_keep),
-        ),
-        "cron",
-        hour=6,
-        minute=00,
-    )
+    register_jobs(scheduler, app)
     scheduler.start()
     return scheduler
 
@@ -236,7 +254,7 @@ def _run_job(name: str, fn) -> None:
 def run_seca_light() -> None:
     run_seca_light_timeline()
 
-def fetch_and_process(_app: Flask) -> None:
+def fetch_and_process(_app: Flask | None) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
     export_dashboard()
     try:

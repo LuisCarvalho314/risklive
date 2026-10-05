@@ -19,28 +19,34 @@ def _project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def _resolve_seca_command(seca_root: Path) -> list[str]:
+def _resolve_seca_command(seca_root: Path | None) -> list[str]:
+    """Prefer standalone installs; Cargo is only a source-workspace fallback."""
     override = os.getenv("RISKLIVE_SECA_CLI", "").strip()
     if override:
         return [override]
-
-    for candidate in (
-        seca_root / "target" / "release" / "realtime-seca-cli",
-        seca_root / "target" / "debug" / "realtime-seca-cli",
-    ):
-        if candidate.exists():
-            return [str(candidate)]
 
     installed = shutil.which("realtime-seca-cli")
     if installed:
         return [installed]
 
-    if shutil.which("cargo"):
-        return ["cargo", "run", "-p", "realtime-seca-cli", "--"]
+    if seca_root is not None:
+        for profile in ("release", "debug"):
+            candidate = seca_root / "target" / profile / "realtime-seca-cli"
+            if candidate.is_file():
+                return [str(candidate)]
+        if (seca_root / "Cargo.toml").is_file() and shutil.which("cargo"):
+            return ["cargo", "run", "-p", "realtime-seca-cli", "--"]
 
     raise FileNotFoundError(
-        "realtime-seca-cli not found (set RISKLIVE_SECA_CLI, install realtime-seca-cli, or install cargo)"
+        "realtime-seca-cli not found (set RISKLIVE_SECA_CLI, install realtime-seca-cli, "
+        "or use a SECA source workspace with cargo)"
     )
+
+
+def _seca_working_directory(command: list[str], seca_root: Path | None) -> Path | None:
+    # Explicit/PATH/source binaries consume absolute inputs and need no source cwd.
+    # Only cargo needs the workspace manifest in its working directory.
+    return seca_root if command[:2] == ["cargo", "run"] else None
 
 
 def _llm_input_paths(root: Path) -> list[Path]:
@@ -174,7 +180,7 @@ def _augment_manifest_days(manifest_path: Path, days: list[str]) -> None:
 def _run_timeline_variant(
     *,
     root: Path,
-    seca_root: Path,
+    seca_root: Path | None,
     command: list[str],
     variant_name: str,
     operation: str,
@@ -245,7 +251,7 @@ def _run_timeline_variant(
                         "--min-tokens",
                         "1",
                     ],
-                    cwd=seca_root,
+                    cwd=_seca_working_directory(command, seca_root),
                     capture_output=True,
                     text=True,
                     check=False,
@@ -275,7 +281,7 @@ def _run_timeline_variant(
                     str(out_dir),
                     "--clean-out-dir",
                 ],
-                cwd=seca_root,
+                cwd=_seca_working_directory(command, seca_root),
                 capture_output=True,
                 text=True,
                 check=False,
@@ -346,19 +352,11 @@ def _run_timeline_variant(
 
 def run_seca_light_timeline(*, timeout_seconds: int = 600) -> Path | None:
     root = _project_root()
-    seca_root = root / "experimental" / "RealtimeSECA"
-    if not seca_root.exists():
-        seca_root = root / "experimental"
-
-    if not seca_root.exists():
-        with pipeline_stage(
-            logger,
-            stage="seca_light",
-            component="services.seca_timeline",
-            operation="timeline_prepare",
-        ) as end_stage:
-            end_stage("failed", error_code="seca_root_missing", skip_reason=f"missing:{seca_root}")
-        return None
+    seca_root = next(
+        (candidate for candidate in (root / "experimental" / "RealtimeSECA", root / "experimental")
+         if candidate.is_dir()),
+        None,
+    )
 
     llm_paths = _llm_input_paths(root)
     if not any(path.exists() for path in llm_paths):

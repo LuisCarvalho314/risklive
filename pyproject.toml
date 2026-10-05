@@ -19,6 +19,7 @@ dependencies = [
         "beautifulsoup4>=4.12.3",
         "bertopic>=0.16.3",
         "Flask>=3.0.3",
+        "gunicorn==23.0.0",
         "httpx>=0.27.0",
         "matplotlib>=3.9.1",
         "nltk>=3.8.1",
@@ -81,6 +82,9 @@ explicit = true
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+app = ["schedules.json"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

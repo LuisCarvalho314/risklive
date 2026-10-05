@@ -305,3 +305,101 @@ def test_run_seca_light_timeline_timeout(monkeypatch, tmp_path, caplog):
     assert out is None
     end_logs = [r for r in caplog.records if getattr(r, "event", "") == "pipeline_stage_end"]
     assert any(getattr(r, "error_code", "") == "seca_timeout" for r in end_logs)
+
+
+def test_explicit_cli_override_wins(monkeypatch, tmp_path):
+    monkeypatch.setenv("RISKLIVE_SECA_CLI", "/custom/bin/seca")
+    monkeypatch.setattr(seca_timeline.shutil, "which", lambda name: (_ for _ in ()).throw(AssertionError("PATH lookup after override")))
+    assert seca_timeline._resolve_seca_command(tmp_path) == ["/custom/bin/seca"]
+    assert seca_timeline._seca_working_directory(["/custom/bin/seca"], None) is None
+
+
+def test_installed_cli_wins_without_source_or_cargo_lookup(monkeypatch, tmp_path):
+    monkeypatch.delenv("RISKLIVE_SECA_CLI", raising=False)
+    looked_up = []
+
+    def which(name):
+        looked_up.append(name)
+        assert name == "realtime-seca-cli", "Cargo must not be considered for installed CLI"
+        return "/usr/local/bin/realtime-seca-cli"
+
+    monkeypatch.setattr(seca_timeline.shutil, "which", which)
+    assert seca_timeline._resolve_seca_command(None) == ["/usr/local/bin/realtime-seca-cli"]
+    # Installed CLI also takes precedence over a source binary.
+    release = tmp_path / "target" / "release" / "realtime-seca-cli"
+    release.parent.mkdir(parents=True)
+    release.write_text("source binary placeholder")
+    assert seca_timeline._resolve_seca_command(tmp_path) == ["/usr/local/bin/realtime-seca-cli"]
+    assert looked_up == ["realtime-seca-cli", "realtime-seca-cli"]
+
+
+def test_source_release_then_debug_fallback(monkeypatch, tmp_path):
+    monkeypatch.delenv("RISKLIVE_SECA_CLI", raising=False)
+    monkeypatch.setattr(seca_timeline.shutil, "which", lambda name: None)
+    debug = tmp_path / "target" / "debug" / "realtime-seca-cli"
+    debug.parent.mkdir(parents=True)
+    debug.write_text("debug binary placeholder")
+    assert seca_timeline._resolve_seca_command(tmp_path) == [str(debug)]
+    release = tmp_path / "target" / "release" / "realtime-seca-cli"
+    release.parent.mkdir(parents=True)
+    release.write_text("release binary placeholder")
+    assert seca_timeline._resolve_seca_command(tmp_path) == [str(release)]
+    assert seca_timeline._seca_working_directory([str(release)], tmp_path) is None
+
+
+def test_cargo_fallback_requires_source_workspace(monkeypatch, tmp_path):
+    import pytest
+
+    monkeypatch.delenv("RISKLIVE_SECA_CLI", raising=False)
+    monkeypatch.setattr(seca_timeline.shutil, "which", lambda name: "/usr/bin/cargo" if name == "cargo" else None)
+    with pytest.raises(FileNotFoundError, match="realtime-seca-cli not found"):
+        seca_timeline._resolve_seca_command(None)
+    with pytest.raises(FileNotFoundError):
+        seca_timeline._resolve_seca_command(tmp_path)
+    (tmp_path / "Cargo.toml").write_text("[workspace]\n")
+    command = seca_timeline._resolve_seca_command(tmp_path)
+    assert command == ["cargo", "run", "-p", "realtime-seca-cli", "--"]
+    assert seca_timeline._seca_working_directory(command, tmp_path) == tmp_path
+
+
+def test_missing_cli_controlled_failure_without_source(monkeypatch, tmp_path, caplog):
+    monkeypatch.delenv("RISKLIVE_SECA_CLI", raising=False)
+    monkeypatch.setattr(seca_timeline, "_project_root", lambda: tmp_path)
+    monkeypatch.setattr(seca_timeline.shutil, "which", lambda name: None)
+    _write_llm_csv(tmp_path / "results/data/news_data_with_llm_info.csv", [])
+    monkeypatch.setattr(seca_timeline.subprocess, "run", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("Unexpected subprocess")))
+    caplog.set_level(logging.INFO)
+    assert seca_timeline.run_seca_light_timeline() is None
+    assert any(getattr(r, "error_code", "") == "seca_cli_missing" for r in caplog.records)
+
+
+def test_packaged_cli_runs_all_variants_without_source_or_cargo(monkeypatch, tmp_path):
+    import json
+
+    monkeypatch.delenv("RISKLIVE_SECA_CLI", raising=False)
+    monkeypatch.setattr(seca_timeline, "_project_root", lambda: tmp_path)
+    monkeypatch.setattr(seca_timeline.shutil, "which", lambda name: "/usr/local/bin/realtime-seca-cli" if name == "realtime-seca-cli" else None)
+    _write_llm_csv(tmp_path / "results/data/news_data_with_llm_info.csv", [{
+        "Title": "Fixture risk", "URL": "https://fixture.example/one",
+        "Timestamp": "2026-01-15T12:00:00Z", "Relevance": "Yes"
+    }])
+    calls = []
+
+    def run(command, **kwargs):
+        assert command[0] == "/usr/local/bin/realtime-seca-cli"
+        assert kwargs["cwd"] is None
+        assert "cargo" not in command
+        calls.append(command)
+        if command[1] == "timeline-many":
+            out = tmp_path / command[command.index("--out-dir") + 1]
+            out.mkdir(parents=True)
+            (out / "timeline_manifest.json").write_text(json.dumps({"total_batches": 1, "files": ["tree_batch_0000.json"]}))
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(seca_timeline.subprocess, "run", run)
+    assert seca_timeline.run_seca_light_timeline() == tmp_path / "results/web/newsmap/seca-light-30d/timeline_manifest.json"
+    assert len(calls) == 6
+    assert not (tmp_path / "experimental").exists()
+    for window in ("30d", "7d", "3d"):
+        manifest = json.loads((tmp_path / f"results/web/newsmap/seca-light-{window}/timeline_manifest.json").read_text())
+        assert manifest["days"] == ["2026-01-15"]

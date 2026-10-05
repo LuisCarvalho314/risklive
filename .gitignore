@@ -73,3 +73,5 @@ Thumbs.db
 .env.txt
 deployment/env/*.env
 !deployment/env/*.env.example
+
+.container-test/

@@ -21,7 +21,7 @@ RiskLive currently runs on the `src/` + `web/` stack documented under `docs/onbo
 ## Technology Stack
 
 - Python
-- Flask for web server
+- Flask served by Gunicorn in containers; dedicated foreground APScheduler process
 - Pandas for data manipulation
 - OpenAI's API for LLM-based processing
 - Bing API for news aggregation
@@ -37,8 +37,8 @@ risklive/
 ├── tests/                # Unit and integration tests
 ├── runtime/              # Local runtime data (ignored by git)
 ├── .env
-├── Dockerfile
-├── docker-compose.yml
+├── docker/
+├── deployment/
 ├── pyproject.toml
 └── README.md
 ```
@@ -87,7 +87,7 @@ uv shell
 
 If you expose an operations UI (for example `/ops`), protect it at the reverse proxy.
 
-- Caddy template: [`deployment/caddy/Caddyfile.ops.example`](/Users/lcarv/PycharmProjects/risklive/deployment/caddy/Caddyfile.ops.example)
+- Caddy template: [`deployment/caddy/Caddyfile.prod`](deployment/caddy/Caddyfile.prod)
 - Setup guide: [`docs/ops-auth-caddy.md`](/Users/lcarv/PycharmProjects/risklive/docs/ops-auth-caddy.md)
 
 ## Docker Deployment

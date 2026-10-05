@@ -1,17 +1,22 @@
-{
-	auto_https off
-}
-
-:8888 {
+{$CADDY_SITE_ADDRESS} {
 	encode gzip zstd
 
-	@ops path /ops /ops/* /api/ops /api/ops/*
-	basic_auth @ops bcrypt {
-		{$OPS_USER:opsadmin} $2a$14$siC0hN4BjhbndwQDjTUm0uV2g6IiBx6SUCV7UHWn8GjoXE0CVp2gi
+	@protected path /ops /ops/* /api/ops /api/ops/* /trigger /trigger/*
+	basic_auth @protected bcrypt {
+		{$OPS_USER} {$OPS_PASSWORD_HASH}
 	}
 
-	@app path /trigger /trigger/* /health /healthz
-	reverse_proxy @app 127.0.0.1:5001
-
-	reverse_proxy 127.0.0.1:3000
+	# The app currently exposes its health response at /.
+	@health path /health /healthz
+	handle @health {
+		rewrite * /
+		reverse_proxy app:5001
+	}
+	@trigger path /trigger /trigger/*
+	handle @trigger {
+		reverse_proxy app:5001
+	}
+	handle {
+		reverse_proxy web:3000
+	}
 }
