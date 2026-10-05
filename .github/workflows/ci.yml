@@ -29,15 +29,29 @@ jobs:
           version: '0.9.15'
       - name: Install locked Python dependencies, including the dev group
         run: uv sync --locked --group dev
-      - name: Run isolated config and server entry-point tests
-        # Explicit files avoid legacy task modules and broader pipeline tests.
-        # The full-suite 100% coverage gate does not apply to this initial subset.
-        # Server entry-point tests mock app.run and start_scheduler.
+      - name: Run isolated backend tests
+        # Explicit files avoid operational task modules and tests that still
+        # depend on runtime archives or checkout-relative side effects.
+        # Coverage remains disabled while CI coverage is expanded incrementally.
         run: >-
           uv run --frozen --no-sync pytest --no-cov
           tests/unit/config/test_config.py
           tests/unit/config/test_settings_edges.py
           tests/unit/app/test_server_main.py
+          tests/unit/models/test_models.py
+          tests/unit/models/test_models_edges.py
+          tests/unit/models/test_csv_dashboard_edges.py
+          tests/unit/services/test_storage.py
+          tests/unit/services/test_storage_backup.py
+          tests/unit/services/test_storage_extra.py
+          tests/unit/services/test_storage_and_server_edges.py
+          tests/unit/utils/test_pricing.py
+          tests/unit/utils/test_utils_rows.py
+          tests/unit/utils/test_logging.py
+          tests/unit/utils/test_logging_redaction_edges.py
+          tests/unit/utils/test_runtime_edges.py
+          tests/unit/services/test_seca_timeline.py
+          tests/unit/app/test_server_process.py
 
   frontend:
     runs-on: ubuntu-24.04
