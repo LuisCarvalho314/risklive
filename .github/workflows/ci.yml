@@ -29,10 +29,10 @@ jobs:
           version: '0.9.15'
       - name: Install locked Python dependencies, including the dev group
         run: uv sync --locked --group dev
-      - name: Run isolated backend unit tests
-        # tests/unit is fully isolated from operational services and production state.
-        # Integration/regression suites remain excluded because they require archive fixtures.
-        run: uv run --frozen --no-sync pytest --no-cov tests/unit
+      - name: Run isolated backend tests
+        # The full test tree is repository-reproducible and isolated from
+        # operational services, production state, and external APIs.
+        run: uv run --frozen --no-sync pytest --no-cov tests
 
 
   frontend:
