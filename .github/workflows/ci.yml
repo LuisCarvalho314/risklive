@@ -29,56 +29,11 @@ jobs:
           version: '0.9.15'
       - name: Install locked Python dependencies, including the dev group
         run: uv sync --locked --group dev
-      - name: Run isolated backend tests
-        # Explicit files avoid operational task modules and tests that still
-        # depend on runtime archives or checkout-relative side effects.
-        # Coverage remains disabled while CI coverage is expanded incrementally.
-        run: >-
-          uv run --frozen --no-sync pytest --no-cov
-          tests/unit/config/test_config.py
-          tests/unit/config/test_settings_edges.py
-          tests/unit/app/test_server_main.py
-          tests/unit/models/test_models.py
-          tests/unit/models/test_models_edges.py
-          tests/unit/models/test_csv_dashboard_edges.py
-          tests/unit/services/test_storage.py
-          tests/unit/services/test_storage_backup.py
-          tests/unit/services/test_storage_extra.py
-          tests/unit/services/test_storage_and_server_edges.py
-          tests/unit/utils/test_pricing.py
-          tests/unit/utils/test_utils_rows.py
-          tests/unit/utils/test_logging.py
-          tests/unit/utils/test_logging_redaction_edges.py
-          tests/unit/utils/test_runtime_edges.py
-          tests/unit/services/test_seca_timeline.py
-          tests/unit/app/test_server_process.py
-          tests/unit/app/test_cli_branch_completion.py
-          tests/unit/app/test_cli_more.py
-          tests/unit/app/test_cli_server.py
-          tests/unit/app/test_runtime_edges.py
-          tests/unit/app/test_server_branch_completion.py
-          tests/unit/app/test_server_error_handling.py
-          tests/unit/app/test_server_scheduler.py
-          tests/unit/adapters/test_adapters.py
-          tests/unit/adapters/test_adapters_branch_completion.py
-          tests/unit/adapters/test_runtime_edges.py
-          tests/unit/adapters/test_valyu_branches.py
-          tests/unit/agents/test_agents.py
-          tests/unit/agents/test_agents_reset.py
-          tests/unit/agents/test_runtime_edges.py
-          tests/unit/app/test_app_main.py
-          tests/unit/services/test_dashboard_export.py
-          tests/unit/services/test_dashboard_export_edges_extra.py
-          tests/unit/services/test_ingestion.py
-          tests/unit/services/test_pipeline_branch_completion.py
-          tests/unit/services/test_pipeline_branches.py
-          tests/unit/services/test_pipeline_cleanup_archive.py
-          tests/unit/services/test_replay.py
-          tests/unit/services/test_reporting_branch_completion.py
-          tests/unit/services/test_services.py
-          tests/unit/services/test_topic_modeling.py
-          tests/unit/services/test_topic_modeling_thresholds.py
-          tests/unit/services/test_topic_visualization_deep.py
+      - name: Run isolated backend unit tests
+        # tests/unit is fully isolated from operational services and production state.
+        # Integration/regression suites remain excluded because they require archive fixtures.
+        run: uv run --frozen --no-sync pytest --no-cov tests/unit
+
 
   frontend:
     runs-on: ubuntu-24.04
