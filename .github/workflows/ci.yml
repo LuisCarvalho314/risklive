@@ -32,7 +32,7 @@ jobs:
       - name: Run isolated backend tests
         # The full test tree is repository-reproducible and isolated from
         # operational services, production state, and external APIs.
-        run: uv run --frozen --no-sync pytest --no-cov tests
+        run: uv run --frozen --no-sync pytest -p no:cacheprovider --no-cov tests
 
 
   frontend:
