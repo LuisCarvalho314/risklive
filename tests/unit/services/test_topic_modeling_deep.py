@@ -31,7 +31,7 @@ def test_get_sentence_model_cache(monkeypatch):
             self.name = name
 
     monkeypatch.setattr(tm, "SentenceTransformer", DummySentenceModel)
-    tm._SENTENCE_MODEL_CACHE.clear()
+    monkeypatch.setattr(tm, "_SENTENCE_MODEL_CACHE", {})
     first = tm._get_sentence_model("m", cache=True)
     second = tm._get_sentence_model("m", cache=True)
     assert first is second

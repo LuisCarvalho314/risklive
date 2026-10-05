@@ -34,7 +34,7 @@ def test_dedupe_helpers():
 
 
 def test_fetch_news_includes_trending(monkeypatch):
-    def _fake_collect_news(queries, hours):
+    def _fake_collect_news(queries, hours, reference_now_utc=None):
         assert "TrendA" in queries
         return [Article(title="A", source_price=0.42)]
 
