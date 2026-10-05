@@ -52,6 +52,13 @@ jobs:
           tests/unit/utils/test_runtime_edges.py
           tests/unit/services/test_seca_timeline.py
           tests/unit/app/test_server_process.py
+          tests/unit/app/test_cli_branch_completion.py
+          tests/unit/app/test_cli_more.py
+          tests/unit/app/test_cli_server.py
+          tests/unit/app/test_runtime_edges.py
+          tests/unit/app/test_server_branch_completion.py
+          tests/unit/app/test_server_error_handling.py
+          tests/unit/app/test_server_scheduler.py
 
   frontend:
     runs-on: ubuntu-24.04
