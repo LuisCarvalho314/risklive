@@ -40,6 +40,12 @@ class RiskLiveConfig(BaseModel):
     valyu: ValyuRuntimeConfig = Field(default_factory=ValyuRuntimeConfig)
 
 
+class ServerConfig(BaseModel):
+    host: str = "0.0.0.0"
+    port: int = Field(default=5001, ge=1, le=65535)
+    disable_scheduler: bool = False
+
+
 @dataclass(frozen=True)
 class Settings:
     valyu_config: ValyuConfig
@@ -91,6 +97,15 @@ def get_settings() -> Settings:
 
 def _load_environment_variables() -> None:
     load_dotenv(ROOT_DIR / ".env")
+
+def get_server_config() -> ServerConfig:
+    _load_environment_variables()
+    return ServerConfig(
+        host=os.getenv("HOST", "0.0.0.0"),
+        port=os.getenv("PORT", "5001"),
+        disable_scheduler=os.getenv("DISABLE_SCHEDULER", "false"),
+    )
+
 
 def _require_environment_variable(name: str) -> str:
     value = os.getenv(name)

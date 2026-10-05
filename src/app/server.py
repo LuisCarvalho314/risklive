@@ -9,7 +9,7 @@ from flask import Flask, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
 import traceback
 
-from config.settings import get_config
+from config.settings import get_config, get_server_config
 from models.errors import AppError, from_exception
 from services.pipeline import (
     cleanup_old_data,
@@ -308,9 +308,11 @@ def manual_fetch_and_process(hours: int = 24, include_trending: bool = True) -> 
 
 def main() -> None:
     configure_logging()
+    server_config = get_server_config()
     app = create_app()
-    start_scheduler(app)
-    app.run(host="0.0.0.0", port=5001)
+    if not server_config.disable_scheduler:
+        start_scheduler(app)
+    app.run(host=server_config.host, port=server_config.port)
 
 
 if __name__ == "__main__":  # pragma: no cover
