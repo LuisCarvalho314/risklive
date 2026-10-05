@@ -8,8 +8,7 @@ from models.report import ReportEntry
 from services import pipeline as pipeline_service
 from services.storage import data_path, read_csv
 from tests.fixtures.archive_loader import (
-    extract_archive_to_workspace,
-    latest_backup_archive,
+    load_frozen_archive,
     stage_backup_csvs_to_data,
 )
 from tests.fixtures.contracts import assert_report_contract
@@ -31,8 +30,7 @@ def _stub_reports_from_rows(group):
 
 
 def test_generate_report_from_archived_data(monkeypatch, tmp_path):
-    archive = latest_backup_archive()
-    backup_dir = extract_archive_to_workspace(archive, tmp_path)
+    backup_dir = load_frozen_archive(tmp_path)
     stage_backup_csvs_to_data(tmp_path, backup_dir)
 
     records = read_csv(data_path("df_with_response_and_topics.csv"))

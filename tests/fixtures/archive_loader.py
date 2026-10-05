@@ -7,16 +7,19 @@ import shutil
 import tarfile
 
 
-def project_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+def load_frozen_archive(workspace_root: Path) -> Path:
+    """Copy the tracked snapshot; never discover runtime or production archives."""
+    backup_dir = prepare_results_layout(workspace_root)["backup_dir"]
+    for name in REQUIRED_CSVS:
+        shutil.copyfile(Path(__file__).with_name("archive") / name, backup_dir / name)
+    return backup_dir
 
 
-def latest_backup_archive(base_dir: Path | None = None) -> Path:
-    root = base_dir or (project_root() / "results" / "test_archives")
-    archives = sorted(root.glob("backup_data_*.tar.gz"))
-    if not archives:
-        raise FileNotFoundError(f"No backup archives found in {root}")
-    return archives[-1]
+REQUIRED_CSVS = (
+    "news_data.csv",
+    "news_data_with_llm_info.csv",
+    "df_with_response_and_topics.csv",
+)
 
 
 def prepare_results_layout(workspace_root: Path) -> dict[str, Path]:
@@ -52,6 +55,7 @@ def _validate_archive_members(members: list[tarfile.TarInfo]) -> None:
 
 
 def extract_archive_to_workspace(archive_path: Path, workspace_root: Path) -> Path:
+    # Manual helper only: caller must supply an explicit archive path.
     layout = prepare_results_layout(workspace_root)
     results_dir = layout["results_dir"]
 

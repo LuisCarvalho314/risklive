@@ -9,8 +9,7 @@ from services import dashboard_export as dashboard_export_service
 from services import pipeline as pipeline_service
 from services.storage import data_path, read_csv, write_csv
 from tests.fixtures.archive_loader import (
-    extract_archive_to_workspace,
-    latest_backup_archive,
+    load_frozen_archive,
     stage_backup_csvs_to_data,
 )
 from tests.fixtures.contracts import assert_csv_has_columns, assert_dashboard_contract
@@ -45,8 +44,7 @@ def _ensure_report_file(monkeypatch) -> None:
 
 
 def test_dashboard_export_from_archived_data(monkeypatch, tmp_path):
-    archive = latest_backup_archive()
-    backup_dir = extract_archive_to_workspace(archive, tmp_path)
+    backup_dir = load_frozen_archive(tmp_path)
     layout = stage_backup_csvs_to_data(tmp_path, backup_dir)
 
     _ensure_report_file(monkeypatch)
