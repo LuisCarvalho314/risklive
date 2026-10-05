@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+      - 'dev/**'
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      DISABLE_SCHEDULER: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.9.15'
+      - name: Install locked Python dependencies, including the dev group
+        run: uv sync --locked --group dev
+      - name: Run isolated config and server entry-point tests
+        # Explicit files avoid legacy task modules and broader pipeline tests.
+        # The full-suite 100% coverage gate does not apply to this initial subset.
+        # Server entry-point tests mock app.run and start_scheduler.
+        run: >-
+          uv run --frozen --no-sync pytest --no-cov
+          tests/unit/config/test_config.py
+          tests/unit/config/test_settings_edges.py
+          tests/unit/app/test_server_main.py
+
+  frontend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.30.3'
+      - name: Install locked frontend dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Type check
+        run: pnpm typecheck
+      - name: Run frontend unit tests
+        run: pnpm test
+      - name: Build Next.js
+        run: pnpm build
