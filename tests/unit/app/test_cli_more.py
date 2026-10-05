@@ -5,7 +5,12 @@ from __future__ import annotations
 import sys
 from types import SimpleNamespace
 
+import pytest
+
 from app import cli as cli_app
+
+
+pytestmark = pytest.mark.usefixtures("isolated_app")
 
 
 def test_cli_extract(monkeypatch):
