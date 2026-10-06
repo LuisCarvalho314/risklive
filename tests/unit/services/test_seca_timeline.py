@@ -329,6 +329,19 @@ def test_source_identity_cannot_resolve_to_unrelated_historical_row(tmp_path):
     assert sources[1]["source_id"].startswith("article:")
 
 
+def test_real_converter_url_less_articles_with_same_timestamp_keep_distinct_ids(tmp_path):
+    batch = tmp_path / "batch.json"
+    batch.write_text(json.dumps({"sources": [
+        {"source_id": "row_000001", "metadata": {"Timestamp": "2026-10-06"}, "text": "Nuclear energy"},
+        {"source_id": "row_000002", "metadata": {"Timestamp": "2026-10-06"}, "text": "Reactor safety"},
+    ]}))
+    seca_timeline._identify_sources(batch, variant_name="stream", batch_index=0)
+    first = json.loads(batch.read_text())
+    assert len({source["source_id"] for source in first["sources"]}) == 2
+    seca_timeline._identify_sources(batch, variant_name="stream", batch_index=1)
+    assert json.loads(batch.read_text()) == first
+
+
 def test_overlapping_generation_is_skipped(fake_cli, tmp_path, monkeypatch):
     def locked(*args):
         raise BlockingIOError("already running")

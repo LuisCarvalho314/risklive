@@ -14,7 +14,7 @@ Implementation references:
 - RealtimeSECA commit: `a03e2ba3385d328a10eacbf584c57cddc6f40a62` — persistent engine state and selective evolution, on `fix/seca-light-stream`.
 - [Investigation, paper mapping, design and operational guide](seca-light-stream.md).
 
-Verification: 145 Rust tests, 29 Python tests, 20 frontend tests, and an isolated eight-process continuation probe with identical deterministic replay. Tests cover unchanged topology below thresholds, targeted reconstruction, bounded source membership, forgetting, restart equivalence, empty batches and failure isolation.
+Verification: 145 Rust tests, 30 Python tests, 20 frontend tests, and an isolated eight-process continuation probe with identical deterministic replay. Tests cover unchanged topology below thresholds, targeted reconstruction, bounded source membership, forgetting, restart equivalence, empty batches and failure isolation.
 
 CI gate: the `Persistent SECA-Light` job in `.github/workflows/ci.yml` checks the pinned submodule revision and source hashes, tests core and CLI with the production toolchain/lockfile, runs the persistence/replay probe with the real CSV converter, and builds the app image without deploying. Existing backend and frontend jobs remain required checks for this work. The workflow runs on pull requests and pushes to `main`, `develop` and `dev/**`, including `dev/isolation`.
 

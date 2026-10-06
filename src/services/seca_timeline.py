@@ -219,6 +219,10 @@ def _identify_sources(batch_path: Path, *, variant_name: str, batch_index: int) 
     for source in payload["sources"]:
         metadata = source.get("metadata") or {}
         url = (metadata.get("URL") or "").strip()
+        # The Rust CSV converter omits Title from metadata. Its original text
+        # keeps distinct URL-less articles from sharing a timestamp-only ID.
+        if not url and not metadata.get("Title"):
+            metadata = {**metadata, "Title": source.get("text") or " ".join(source.get("tokens", []))}
         source["source_id"] = (
             url or "article:" + hashlib.sha256(_row_key(metadata).encode()).hexdigest()
         )
