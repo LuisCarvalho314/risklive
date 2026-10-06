@@ -17,6 +17,24 @@ The four services are `app` (Gunicorn), `scheduler` (foreground APScheduler),
 image. Only Caddy publishes host ports. It proxies app routes using `app:5001` and
 frontend/ops routes using `web:3000`.
 
+## Recent changes and release status
+
+The recent commits available in this checkout are:
+
+| Commit | Change |
+|---|---|
+| `f14b049` | Production Docker images, persistent mounts, dedicated scheduler and deployment helper. |
+| `6b2550b` | Preserve plain HTTP on host port 8888 and remove Caddy basic authentication. |
+| `a97b653` | Bound experimental web inputs, coalesce concurrent loads and reduce ops CSV allocations. |
+
+These are local commit references, not a verified remote push or CI-success record.
+The latest SECA generator fix, 128 MiB request budget and compatibility-patch
+header correction are working-tree changes at the time of this documentation
+update. See [SECA hardening](seca-timeline-hardening.md) for measurements and the
+reported image-build/scratch-regeneration status. Commit and push the intended
+release changes and require CI success for that exact revision before production
+promotion. Preserve the existing production Compose project name during updates.
+
 ## HTTP and scheduler lifecycle
 
 The HTTP command is:
@@ -85,13 +103,22 @@ articles on different days from merging; custom source IDs remain unchanged.
 The patch includes tests for unequal batch sizes, row identity and ordering.
 The pinned core's existing algorithm limitations are preserved.
 
+The fixed RiskLive timeline generator uses the packaged `from-csv` and `baseline`
+commands to build fresh daily cumulative prefixes from bounded source windows;
+it no longer calls the incremental `timeline-many` path. It supplies
+`config/seca_timeline.json` explicitly, including branch threshold 10. The
+compatibility command remains packaged for other consumers. Its final patch
+hunk header was corrected to `@@ -588,5 +715,6 @@`; this fixes patch parsing
+without changing Rust code.
+
 CLI resolution is explicit `RISKLIVE_SECA_CLI`, then installed CLI on PATH,
 then source release/debug binaries, then Cargo only with a source workspace.
 The image sets `RISKLIVE_SECA_CLI=/usr/local/bin/realtime-seca-cli`. Standalone
 execution uses absolute data/output paths and no source cwd; only the Cargo
 fallback needs a workspace cwd. `/app/experimental` is not required at runtime.
-The 30d/7d/3d filters remain relative to the latest input timestamp; daily batch
-grouping remains UTC, independent of the scheduler's Europe/London clock.
+The 30d/7d/3d filters select exactly N UTC calendar days including the latest
+source day, independently of the scheduler's Europe/London clock. Regeneration
+uses the existing enriched CSVs and does not require fetching or LLM credits.
 
 ## Prepare a new deployment
 
@@ -118,22 +145,39 @@ constructs the Flask application and never calls scheduler startup.
 Keep web on port 3000. The web mounts results/logs read-only; app-created files
 must remain readable by its UID 1000 (normally directory 0755/file 0644).
 
-Set `CADDY_SITE_ADDRESS=example.domain` to your actual domain for automatic HTTPS;
-point DNS to the host and permit TCP 80/443. No real hostname is committed.
-For local HTTP only use `CADDY_SITE_ADDRESS=http://:80`: this refers to the
-container port, regardless of the host port mapping. Caddy admin is not published.
+The current deployment uses `CADDY_SITE_ADDRESS=http://:80` and publishes
+container port 80 on host port **8888**. The host binding is controlled by
+`CADDY_HTTP_BIND`, whose default is `0.0.0.0:8888`. Caddy admin and app/web ports
+are not published. HTTPS is not configured by the current deployment.
 
-Generate an ops password hash with `caddy hash-password` (interactive prompt),
-or a one-off `docker run --rm -it caddy:2.8.4-alpine caddy hash-password`.
-Set `OPS_USER` and **single-quote** `OPS_PASSWORD_HASH` in `caddy.env` to preserve
-bcrypt dollar signs during Compose interpolation. Never commit real env files.
-Authentication covers `/ops`, `/ops/*`, `/api/ops`, `/api/ops/*`, `/trigger`, and
-`/trigger/*`. `/health` and `/healthz` proxy the app's existing `/` health response.
+The current Caddyfile has **no basic authentication** and does not consume
+`OPS_USER` or `OPS_PASSWORD_HASH`. Access follows the existing Azure/network
+boundary; changing that policy is a separate deployment change. `/trigger/*`
+routes proxy the app, while frontend/ops routes proxy the web container.
+`/health` and `/healthz` proxy the app's existing `/` health response. Never
+commit real env files. See [access configuration](ops-auth-caddy.md).
+
+## CI gate before release
+
+The repository's [CI workflow](../.github/workflows/ci.yml) runs on pull requests
+and pushes to `main`, `develop` and `dev/**`. It runs the full isolated backend
+suite, frontend type checks and unit tests, and a Next.js production build using
+locked dependencies. Local checks supplement these checks; they do not establish
+that a GitHub Actions run passed.
+
+Before promotion, commit all required source, configuration, tests and documentation,
+push the release branch, and verify both CI jobs passed for that exact commit.
+Build versioned Docker images from the same revision. This workflow currently
+does not build/publish Docker images or deploy production; those remain separate
+steps. A previously built image from uncommitted changes is scratch validation
+evidence, not a CI-verified release. Do not create a replacement deployment
+pipeline without reviewing the existing release process.
 
 ## Build and deploy local images
 
-Use a unique, deliberate project name and versioned image tags. Do not retag
-images used by current production containers during development.
+Use the existing project name for an update, a unique project name for a new
+deployment, and versioned image tags. Do not retag images used by current
+production containers during development. Complete the CI gate above first.
 
 ```bash
 export COMPOSE_PROJECT_NAME=risklive-prod
@@ -141,8 +185,11 @@ export RISKLIVE_DATA_DIR=/opt/risklive/data
 export APP_ENV_FILE="$RISKLIVE_DATA_DIR/env/app.env"
 export WEB_ENV_FILE="$RISKLIVE_DATA_DIR/env/web.env"
 export CADDY_ENV_FILE="$RISKLIVE_DATA_DIR/env/caddy.env"
-export APP_IMAGE=risklive-app:<release>
-export WEB_IMAGE=risklive-web:<release>
+# Run from a clean checkout of the exact revision that passed CI.
+test -z "$(git status --porcelain)"
+export RELEASE_REV="$(git rev-parse --short=12 HEAD)"
+export APP_IMAGE="risklive-app:$RELEASE_REV"
+export WEB_IMAGE="risklive-web:$RELEASE_REV"
 
 docker build -f docker/Dockerfile.app -t "$APP_IMAGE" .
 docker build -f docker/Dockerfile.web -t "$WEB_IMAGE" .
@@ -157,8 +204,25 @@ and prebuilt images. It rejects example files and placeholder credentials,
 validates Caddy in a one-off container, starts with `--no-build --pull never
 --wait`, and prints status. It never deletes persistent data or unrelated
 containers. Compose itself requires env/data variables and refuses to create
-missing bind directories. `CADDY_HTTP_BIND` and `CADDY_HTTPS_BIND` default to
-`0.0.0.0:80` and `0.0.0.0:443`; app/web ports are never published.
+missing bind directories. `CADDY_HTTP_BIND` defaults to `0.0.0.0:8888`;
+there is no HTTPS host binding in the current Compose file. App/web ports are
+never published.
+
+The helper starts **all services, including the fetching scheduler**. When API
+credits are unavailable, keep that scheduler stopped and update only serving
+containers after scratch regeneration and validation:
+
+```bash
+export SECA_COMPOSE=deployment/compose/docker-compose.prod.yml
+docker compose -f "$SECA_COMPOSE" stop scheduler
+docker compose -f "$SECA_COMPOSE" up -d \
+  --no-deps --no-build --pull never --wait app web
+```
+
+This does not regenerate existing SECA artifacts. Follow the
+[offline regeneration procedure](seca-timeline-hardening.md#safe-offline-regeneration-and-promotion)
+to validate scratch outputs, quarantine old directories and promote complete
+replacements. Keep the scheduler stopped until fetching/LLM credits are available.
 
 Keep these exports for all day-to-day commands:
 
@@ -169,7 +233,9 @@ docker compose -f deployment/compose/docker-compose.prod.yml logs --tail 100
 
 Back up results/logs/runtime/env and Caddy certificate storage (the project-scoped
 `caddy_data` volume) before cutover or updates. Protect backups containing secrets.
-For rollback, select previous versioned image tags and rerun the same helper.
+For rollback, select previous versioned image tags and restore any quarantined
+artifact directories while readers/writers are stopped. Use the serving-only
+command above if the scheduler must remain stopped; otherwise use the helper.
 Never use `down -v` to operate on production. Do not restore backups over live data
 without an approved recovery plan.
 
@@ -182,7 +248,7 @@ the `scheduler-disabled-in-smoke` profile; never enable that profile, select the
 scheduler service, or set `COMPOSE_PROFILES` during smoke validation. The explicit
 service list plus `--no-deps` below prevents scheduler startup even if profiles
 are set externally. Do not start any smoke containers until runtime testing is
-authorized. Check port 8188 is free first. The override replaces **both** production bindings
+authorized. Check port 8188 is free first. The override replaces the production binding
 with one loopback HTTP binding and isolates Caddy storage. App, web and scheduler
 attach only to the internal network, which blocks outbound traffic. Caddy also
 attaches to a separate edge bridge so Docker can publish its loopback port;
@@ -205,8 +271,8 @@ cp deployment/env/app.env.example "$APP_ENV_FILE"
 cp deployment/env/web.env.example "$WEB_ENV_FILE"
 cp deployment/env/caddy.env.example "$CADDY_ENV_FILE"
 # Edit app.env: dummy keys, OPENAI_API_BASE=https://disabled.invalid/,
-# DISABLE_SCHEDULER=true. Edit caddy.env: CADDY_SITE_ADDRESS=http://:80,
-# dummy OPS_USER/password hash (single-quoted). Never use production secrets.
+# DISABLE_SCHEDULER=true. Keep caddy.env: CADDY_SITE_ADDRESS=http://:80.
+# No basic-auth variables are needed. Never use production secrets.
 compose=(docker compose -f deployment/compose/docker-compose.prod.yml \
   -f deployment/compose/docker-compose.smoke.yml)
 "${compose[@]}" config
@@ -224,10 +290,7 @@ curl -i http://127.0.0.1:8188/topics
 curl -i http://127.0.0.1:8188/health
 curl -i http://127.0.0.1:8188/ops
 curl -i http://127.0.0.1:8188/api/ops/overview
-curl -i http://127.0.0.1:8188/trigger/full
-# Above protected requests must return 401. Test only read-only auth access:
-curl -u '<dummy-user>:<dummy-password>' -i http://127.0.0.1:8188/api/ops/overview
-# NEVER request an authenticated trigger endpoint.
+# The current proxy has no basic auth. NEVER invoke trigger routes as a smoke check.
 "${compose[@]}" exec -T app sh -c \
   'id; test "$DISABLE_SCHEDULER" = true; for d in results logs runtime; do echo harmless > /app/$d/container-smoke.txt; done'
 "${compose[@]}" exec -T web sh -c \
@@ -244,7 +307,7 @@ UV_CACHE_DIR=/tmp/risklive-uv-cache DISABLE_SCHEDULER=true \
 ```
 
 A successful Next.js build or static config validation does not prove container
-health, runtime permissions, auth responses, or restart persistence. Those require
+health, runtime permissions, proxy routing, or restart persistence. Those require
 the running isolated stack. Initial smoke testing deliberately excludes the dedicated
 scheduler; it validates HTTP serving without operational execution. Scheduler
 runtime validation requires a separate explicitly authorized isolated exercise.

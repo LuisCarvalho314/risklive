@@ -11,6 +11,8 @@ import {
 } from "@/lib/newsmap-experimental";
 import { applyExperimentalSizeMetric } from "@/lib/newsmap-experimental-shared";
 
+const simulatedSizes = vi.hoisted(() => new Map<string, number>());
+
 vi.mock("fs/promises", () => ({
   readFile: vi.fn(),
   default: {
@@ -24,7 +26,7 @@ vi.mock("@/lib/bounded-file", () => ({
   readBoundedText: async (filePath: string, maxBytes: number, budget: { remainingBytes: number }) => {
     const fs = await import("fs/promises");
     const raw = String(await fs.default.readFile(filePath, "utf-8"));
-    const bytes = Buffer.byteLength(raw);
+    const bytes = simulatedSizes.get(filePath) ?? Buffer.byteLength(raw);
     if (bytes > Math.min(maxBytes, budget.remainingBytes)) throw new Error("safe size limit");
     budget.remainingBytes -= bytes;
     return raw;
@@ -34,6 +36,7 @@ vi.mock("@/lib/bounded-file", () => ({
 describe("newsmap experimental loader", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    simulatedSizes.clear();
   });
 
   it("uses the dashboard fallback for oversized experimental inputs", async () => {
@@ -41,6 +44,29 @@ describe("newsmap experimental loader", () => {
     vi.mocked(fs.default.readFile).mockResolvedValue("x".repeat(8 * 1024 * 1024 + 1));
     const out = await loadExperimentalNewsmap();
     expect(out.mode).toBe("fallback");
+    if (out.mode === "fallback") expect(out.reason).toContain("safe size limit");
+  });
+
+  it.each([
+    { batches: 16, expected: "timeline" }, // 112 MiB fits the expanded request budget.
+    { batches: 19, expected: "fallback" }, // 133 MiB still exceeds the shared budget.
+  ])("enforces the aggregate request budget for $batches bounded batches", async ({ batches, expected }) => {
+    const fs = await import("fs/promises");
+    const files = Array.from({ length: batches }, (_, index) => `tree_batch_${String(index).padStart(4, "0")}.json`);
+    vi.mocked(fs.default.readFile).mockImplementation(async (filePathLike) => {
+      const filePath = String(filePathLike);
+      if (!filePath.includes("seca-light-30d")) {
+        throw Object.assign(new Error("missing"), { code: "ENOENT" });
+      }
+      if (filePath.endsWith("manifest.json")) {
+        return JSON.stringify({ total_batches: batches, files });
+      }
+      simulatedSizes.set(filePath, 7 * 1024 * 1024);
+      return JSON.stringify({ hkts: [], nodes: [] });
+    });
+    const out = await loadExperimentalNewsmap();
+    expect(out.mode).toBe(expected);
+    if (out.mode === "timeline") expect(out.timelines["30d"]?.totalBatches).toBe(batches);
     if (out.mode === "fallback") expect(out.reason).toContain("safe size limit");
   });
 

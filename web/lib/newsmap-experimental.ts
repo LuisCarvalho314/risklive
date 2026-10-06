@@ -614,7 +614,7 @@ function getSecaTimelineDirectory(key: ExperimentalTimelineKey): string {
 }
 
 const MAX_INPUT_BYTES = 8 * 1024 * 1024;
-const MAX_LOAD_BYTES = 32 * 1024 * 1024;
+const MAX_LOAD_BYTES = 128 * 1024 * 1024;
 
 async function readJson(filePath: string, budget: FileReadBudget): Promise<unknown> {
   const raw = await readBoundedText(filePath, MAX_INPUT_BYTES, budget);

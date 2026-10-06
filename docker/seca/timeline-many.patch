@@ -141,7 +141,7 @@
  }
 
  fn split_batch_into_sequential_chunks(
-@@ -588,6 +715,7 @@
+@@ -588,5 +715,6 @@
      eprintln!("Usage:");
      eprintln!("  {executable_name} baseline <input_batch.json> [--config <config.json>] [--snapshot-out <snapshot.json>] [--dump-tree <tree.json>] [--dump-tree-verbose <tree_verbose.json>] [--print-tree]");
      eprintln!("  {executable_name} timeline <input_batch.json> --out-dir <dir> [--chunk-count <n> | --chunk-size <n>] [--config <config.json>] [--clean-out-dir]");

@@ -1,5 +1,24 @@
 # Next.js heap investigation — 6 October 2026
 
+## Subsequent SECA work and rollout
+
+The original containment below was committed as `a97b653`. Subsequent work
+fixes SECA generation with pre-construction source-window filtering, explicit
+configuration and fresh daily baseline snapshots. At the operator's request,
+the experimental aggregate read budget is now **128 MiB** in the working tree;
+the individual-file limit remains **8 MiB**, with fallback and concurrent-load
+coalescing retained. The 32 MiB figures below describe the original containment
+patch and its measurements, not the revised budget.
+
+The isolated regenerated snapshot sets total 102,626,134 bytes across 30d/7d/3d.
+See [SECA timeline hardening](seca-timeline-hardening.md) for source/node counts,
+artifact sizes, the compatibility-patch correction and reported host build/
+scratch-generation status. Production promotion and remote CI success remain
+unconfirmed. Require the existing CI workflow to pass for the release revision
+before promotion; successful local tests or Docker builds do not replace it.
+
+## Original investigation
+
 Source patch only, in `/home/azureuser/risklive-dev` (HEAD `6b2550b`, containing
 production image revision `f14b049`). The web code and Dockerfile have no changes
 between these two commits before this patch. No production container, image,
