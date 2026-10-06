@@ -24,5 +24,9 @@
   },
   "trigger_policy_mode": "PaperDiagnosticScaffold",
   "memory_mode": "SlidingWindow",
-  "max_batches_in_memory": 30
+  "horizon_gamma_batches": {
+    "3d": 3,
+    "7d": 7,
+    "30d": 30
+  }
 }

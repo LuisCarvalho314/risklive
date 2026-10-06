@@ -86,10 +86,10 @@ def _manifest(root, days=30):
     return directory, json.loads((directory / "timeline_manifest.json").read_text())
 
 
-def _state(root):
+def _state(root, variant="30d"):
     import sqlite3
     with sqlite3.connect(root / "runtime/seca/stream.sqlite3") as db:
-        return json.loads(db.execute("SELECT state FROM model").fetchone()[0])
+        return json.loads(db.execute("SELECT state FROM models WHERE variant=?", (variant,)).fetchone()[0])
 
 
 def test_second_run_loads_persisted_model_and_keeps_historical_snapshot(fake_cli, tmp_path):
@@ -102,11 +102,11 @@ def test_second_run_loads_persisted_model_and_keeps_historical_snapshot(fake_cli
     assert seca_timeline.run_seca_light_timeline(batch_id="batch-two")
     updates = [c for c in fake_cli if c[1] == "update"]
     assert "--state-in" not in updates[0]
-    assert "--state-in" in updates[1]
+    assert "--state-in" in updates[3]
     assert _state(tmp_path)["last_processed_batch_index"] == 1
     assert (directory / first_manifest["files"][0]).read_bytes() == first_tree
     for days in (30, 7, 3):
-        assert _manifest(tmp_path, days)[1]["batch_ids"] == ["batch-one", "batch-two"]
+        assert _manifest(tmp_path, days)[1]["batch_ids"][-1] == "batch-two"
 
 
 def test_batch_id_retry_is_idempotent(fake_cli, tmp_path):
@@ -127,7 +127,7 @@ def test_duplicate_article_is_not_reingested_after_source_window_expires(fake_cl
     for n in range(2, 6):
         assert seca_timeline.run_seca_light_timeline(batch_id=str(n))
     assert _state(tmp_path)["state"]["processed_batches"][0]["sources"] == []
-    assert len([c for c in fake_cli if c[1] == "from-csv"]) == 1
+    assert len([c for c in fake_cli if c[1] == "from-csv"]) == 3
 
 
 def test_gamma_three_bounds_active_batches_and_preserves_history(fake_cli, tmp_path, monkeypatch):
@@ -349,3 +349,107 @@ def test_overlapping_generation_is_skipped(fake_cli, tmp_path, monkeypatch):
     monkeypatch.setattr(seca_timeline.fcntl, "flock", locked)
     assert seca_timeline.run_seca_light_timeline() is None
     assert not fake_cli
+
+
+def _database(root):
+    import sqlite3
+    return sqlite3.connect(root / "runtime/seca/stream.sqlite3")
+
+
+def test_independent_historical_windows_and_sequential_replay(fake_cli, tmp_path):
+    source = tmp_path / "results/data/news_data_with_llm_info.csv"
+    _write_llm_csv(source, [_row(f"2026-09-{n:02}") for n in range(1, 31)])
+    assert seca_timeline.run_seca_light_timeline(batch_id="bootstrap")
+    with _database(tmp_path) as db:
+        assert db.execute("PRAGMA user_version").fetchone()[0] == 2
+        assert db.execute("SELECT COUNT(*) FROM models").fetchone()[0] == 3
+        for variant, count in [("30d", 30), ("7d", 7), ("3d", 3)]:
+            history = db.execute("SELECT sequence, logical_timestamp, processed_timestamp FROM batches WHERE variant=? ORDER BY sequence", (variant,)).fetchall()
+            assert [r[0] for r in history] == list(range(count))
+            assert [r[1][:10] for r in history] == [f"2026-09-{n:02}" for n in range(31-count, 31)]
+            assert all(r[1] != r[2] for r in history)
+            state = _state(tmp_path, variant)
+            assert state["config"]["max_batches_in_memory"] == count
+            assert len(state["state"]["processed_batches"]) == count
+            assert all(len(b["sources"]) == 1 for b in state["state"]["processed_batches"])
+            assert _manifest(tmp_path, int(variant[:-1]))[1]["days"] == [r[1][:10] for r in history]
+    before = {v: _state(tmp_path, v) for v in ("3d", "7d", "30d")}
+    fake_cli.clear()
+    assert seca_timeline.run_seca_light_timeline(batch_id="bootstrap")
+    assert not fake_cli
+    _write_llm_csv(source, [_row("2026-10-01")])
+    assert seca_timeline.run_seca_light_timeline(batch_id="live")
+    with _database(tmp_path) as db:
+        for variant, count in [("30d", 30), ("7d", 7), ("3d", 3)]:
+            assert db.execute("SELECT COUNT(*) FROM ingested WHERE variant=? AND source_key=?", (variant, "url:https://fixture/2026-10-01")).fetchone()[0] == 1
+            state = _state(tmp_path, variant)
+            assert state["last_processed_batch_index"] == count
+            assert len(state["state"]["processed_batches"]) == count
+            assert state["state"]["processed_batches"][0]["batch_index"] == 1
+        db.execute("UPDATE models SET state=? WHERE variant='3d'", (json.dumps(before["3d"]),))
+    assert _state(tmp_path, "30d")["last_processed_batch_index"] == 30
+    assert _state(tmp_path, "7d")["last_processed_batch_index"] == 7
+
+
+def test_failure_late_in_bootstrap_rolls_back_all_models(fake_cli, tmp_path, monkeypatch):
+    _write_llm_csv(tmp_path / "results/data/news_data_with_llm_info.csv", [_row(f"2026-10-0{n}") for n in range(1, 4)])
+    original = seca_timeline.subprocess.run
+    def fail(command, **kwargs):
+        if command[1] == "update" and "/3d-" in command[2]:
+            raise RuntimeError("third model fails")
+        return original(command, **kwargs)
+    monkeypatch.setattr(seca_timeline.subprocess, "run", fail)
+    assert seca_timeline.run_seca_light_timeline(batch_id="bootstrap") is None
+    with _database(tmp_path) as db:
+        for table in ("models", "batches", "ingested", "invocations"):
+            assert db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0] == 0
+    monkeypatch.setattr(seca_timeline.subprocess, "run", original)
+    assert seca_timeline.run_seca_light_timeline(batch_id="bootstrap")
+
+
+def test_singleton_schema_is_rejected_unchanged(tmp_path):
+    with _database_for_legacy(tmp_path) as db:
+        db.executescript("CREATE TABLE model (state TEXT); INSERT INTO model VALUES ('old'); PRAGMA user_version=1;")
+    with pytest.raises(ValueError, match="explicit backup and replay"):
+        seca_timeline._open_stream(tmp_path)
+    with _database(tmp_path) as db:
+        assert db.execute("SELECT state FROM model").fetchone()[0] == "old"
+        assert db.execute("PRAGMA user_version").fetchone()[0] == 1
+
+
+def _database_for_legacy(root):
+    (root / "runtime/seca").mkdir(parents=True)
+    return _database(root)
+
+
+def test_three_model_restart_matches_uninterrupted_execution(fake_cli, tmp_path):
+    states = []
+    for label in ("uninterrupted", "reopened"):
+        root = tmp_path / label
+        source = root / "results/data/news_data_with_llm_info.csv"
+        _write_llm_csv(source, [_row(f"2026-10-0{n}") for n in range(1, 4)])
+        assert seca_timeline._run_seca_light_timeline(root=root, timeout_seconds=10, batch_id="bootstrap")
+        if label == "reopened":
+            # Close and reopen SQLite exactly as a fresh service process does.
+            with seca_timeline._open_stream(root) as db:
+                assert db.execute("SELECT COUNT(*) FROM models").fetchone()[0] == 3
+            db.close()
+        _write_llm_csv(source, [_row("2026-10-04")])
+        assert seca_timeline._run_seca_light_timeline(root=root, timeout_seconds=10, batch_id="D")
+        states.append({v: _state(root, v) for v in ("3d", "7d", "30d")})
+        with _database(root) as db:
+            assert db.execute("SELECT COUNT(*) FROM ingested WHERE source_key='url:https://fixture/2026-10-04'").fetchone()[0] == 3
+            before = db.execute("SELECT COUNT(*) FROM batches").fetchone()[0]
+        assert seca_timeline._run_seca_light_timeline(root=root, timeout_seconds=10, batch_id="D")
+        with _database(root) as db:
+            assert db.execute("SELECT COUNT(*) FROM batches").fetchone()[0] == before
+    assert states[0] == states[1]
+
+
+def test_per_variant_gamma_override_is_independent(fake_cli, tmp_path, monkeypatch):
+    monkeypatch.setenv("RISKLIVE_SECA_GAMMA_BATCHES_3D", "1")
+    _write_llm_csv(tmp_path / "results/data/news_data_with_llm_info.csv", [_row(f"2026-10-0{n}") for n in range(1, 4)])
+    assert seca_timeline.run_seca_light_timeline(batch_id="bootstrap")
+    assert len(_state(tmp_path, "3d")["state"]["processed_batches"]) == 1
+    assert len(_state(tmp_path, "7d")["state"]["processed_batches"]) == 3
+    assert len(_state(tmp_path, "30d")["state"]["processed_batches"]) == 3

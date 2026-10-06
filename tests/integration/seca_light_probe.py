@@ -58,16 +58,16 @@ Path(sys.argv[3]).write_text(json.dumps({'batch_index': index, 'sources': source
             manifest = seca_timeline.run_seca_light_timeline(batch_id=f"probe-{n}")
             assert manifest, f"batch {n} failed"
             with sqlite3.connect(root / "runtime/seca/stream.sqlite3") as db:
-                state = json.loads(db.execute("SELECT state FROM model").fetchone()[0])
+                state = json.loads(db.execute("SELECT state FROM models WHERE variant='30d'").fetchone()[0])
                 assert state["last_processed_batch_index"] == n - 1
                 assert len(state["state"]["processed_batches"]) <= 3
                 assert len(state["state"]["baseline_source_legend"]) == min(n, 3)
                 if historical is None:
-                    historical = db.execute("SELECT tree FROM batches WHERE sequence=0").fetchone()[0]
-                assert db.execute("SELECT tree FROM batches WHERE sequence=0").fetchone()[0] == historical
-                assert db.execute("SELECT COUNT(*) FROM batches").fetchone()[0] == n
-                assert db.execute("SELECT COUNT(*) FROM batches WHERE input_batch IS NOT NULL").fetchone()[0] == n
-                report = json.loads(db.execute("SELECT report FROM batches ORDER BY sequence DESC LIMIT 1").fetchone()[0])
+                    historical = db.execute("SELECT tree FROM batches WHERE variant='30d' AND sequence=0").fetchone()[0]
+                assert db.execute("SELECT tree FROM batches WHERE variant='30d' AND sequence=0").fetchone()[0] == historical
+                assert db.execute("SELECT COUNT(*) FROM batches").fetchone()[0] == 3 * n
+                assert db.execute("SELECT COUNT(*) FROM batches WHERE input_batch IS NOT NULL").fetchone()[0] == 3 * n
+                report = json.loads(db.execute("SELECT report FROM batches WHERE variant='30d' ORDER BY sequence DESC LIMIT 1").fetchone()[0])
                 assert not report["reconstruction_triggered"]
                 if n > 3:
                     assert report["sources_forgotten"] == 1
@@ -76,12 +76,18 @@ Path(sys.argv[3]).write_text(json.dumps({'batch_index': index, 'sources': source
                 data = json.loads((view / "timeline_manifest.json").read_text())
                 assert len(data["files"]) == n
                 assert json.loads((view / data["files"][0]).read_text()) == json.loads(historical)
+        with sqlite3.connect(root / "runtime/seca/stream.sqlite3") as db:
+            assert db.execute("SELECT COUNT(*) FROM models").fetchone()[0] == 3
+            for variant in ("3d", "7d", "30d"):
+                restored = json.loads(db.execute("SELECT state FROM models WHERE variant=?", (variant,)).fetchone()[0])
+                assert restored == state
+                assert db.execute("SELECT COUNT(*) FROM ingested WHERE variant=?", (variant,)).fetchone()[0] == 8
         # Replay archived normalized batches through fresh Rust processes.
         replay = root / "replay"
         replay.mkdir()
         with sqlite3.connect(root / "runtime/seca/stream.sqlite3") as db:
-            archived = db.execute("SELECT input_batch, config FROM batches ORDER BY sequence").fetchall()
-            committed = json.loads(db.execute("SELECT state FROM model").fetchone()[0])
+            archived = db.execute("SELECT input_batch, config FROM batches WHERE variant='30d' ORDER BY sequence").fetchall()
+            committed = json.loads(db.execute("SELECT state FROM models WHERE variant='30d'").fetchone()[0])
         for index, (batch_json, config_json) in enumerate(archived):
             (replay / "batch.json").write_text(batch_json)
             (replay / "config.json").write_text(config_json)
@@ -93,7 +99,7 @@ Path(sys.argv[3]).write_text(json.dumps({'batch_index': index, 'sources': source
         assert json.loads((replay / "state.json").read_text()) == committed
         # A new process is used for each CLI call, including this idempotent retry.
         assert seca_timeline.run_seca_light_timeline(batch_id="probe-8")
-        print("PASS: 8 process boundaries, one evolving model, gamma=3, historical views, identical deterministic replay, idempotent retry")
+        print("PASS: 8 process boundaries, three evolving models, gamma=3, independent timelines, identical deterministic replay, idempotent retry")
 
 
 if __name__ == "__main__":

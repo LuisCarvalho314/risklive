@@ -1,18 +1,22 @@
-# Persistent SECA-Light in RiskLive
+# Independent persistent SECA-Light models
 
-This change replaces independent daily CA baselines with one evolving Rust SECA-Light model. It is a code change only; production data and deployment have not been changed.
+## Investigation and root cause
 
-RiskLive milestone: [SECA production path corrected to persistent SECA-Light](milestones.md#seca-production-path-corrected-to-persistent-seca-light).
+Before persistence, commit `98d8709` selected separate 30/7/3 UTC calendar-day source windows anchored to the latest relevant observation. `_run_timeline_variant` grouped each window by UTC day and built fresh CA baselines for successive cumulative prefixes. The variants shared builder/threshold configuration but had distinct input and trees. The frontend selects separate directories and reads parallel `files`/`days` arrays; it does not require a shared model.
 
-## Investigation: previous production flow
+Commit `6192a33` incorrectly replaced this distinction with one singleton state, one ingestion ledger and one bootstrap batch, then filtered that model's history into three presentation windows. It also assigned processing time to bootstrap snapshots. Similar output shapes did not imply identical models.
 
-`src/app/schedules.json` schedules the fetch job. `src/app/scheduler_jobs.py` invokes the server fetch/process pipeline; the manual pipeline produces enriched articles and dashboard output and invokes `run_seca_light_timeline`. The manual SECA trigger and replay pipeline use the same service. Failures in this optional dashboard stage are logged without breaking article ingestion.
+## Corrected lifecycle
 
-Before this change, `src/services/seca_timeline.py::_run_timeline_variant` read relevant (`Relevance=Yes`) rows from current and backup enriched CSVs, deduplicated URLs, filtered against the latest article timestamp, grouped UTC dates and ran the Rust `baseline` command separately for each cumulative daily prefix. It did this independently for 30-, 7- and 3-day views. The next run loaded CSVs again, not yesterday's tree. Thus each date's tree was static CA reconstructed from that window's articles, despite the SECA-Light name. Previous articles survived in data/backup CSVs and verbose historical output, but no resumable active model was used.
+SQLite `runtime/seca/stream.sqlite3` uses `PRAGMA user_version=2`. `models` stores separate Rust snapshots keyed by `variant` (`30d`, `7d`, `3d`). `batches` has primary key `(variant, sequence)` and unique `(variant, batch_id)`; it stores logical and processed timestamps, tree, report, optional normalized input and config. `ingested` has primary key `(variant, source_key)`. `invocations` records completion of a whole service call. Schema 1 is explicitly rejected unchanged; its state is never reinterpreted.
 
-The Rust builder already contained SECA machinery: `SecaEngine`, `MemoryMode::SlidingWindow`, `process_batch`, top-down scope mapping, trigger metrics and targeted reconstruction. The production path bypassed these. Additional gaps prevented simply switching commands: schema-2 snapshots omitted the tree; the baseline scope helper considered only the first retained batch; candidate words changed the old vocabulary before comparison; the fallback rebuilt the whole tree; and forgetting removed empty structural nodes. Source statistics and duplicate source identities also needed correction.
+On an empty database, each variant selects its own original UTC calendar-day source window, groups nonempty source days chronologically, initializes on the first day's batch and passes the resulting Rust state to each subsequent day's update. All variants and historical batches commit together. The final state for each becomes its online state. Historical IDs are `bootstrap-v2-<variant>-<YYYY-MM-DD>`. Snapshot logical timestamps are midnight UTC on the source day; processed timestamps record actual processing time. Live logical timestamps are invocation time.
 
-`experimental/crates/realtime-seca-core/src/engine/baseline.rs` constructs the initial tree through `tree/hkt_builder.rs`. `engine/trigger.rs` evaluates scoped HKTs; `engine/rebuild.rs` replaces selected subtrees; `engine/snapshotting.rs` now saves and restores the complete engine. The production CLI entry point is `realtime-seca-cli/src/update.rs`.
+On subsequent calls, each model selects unseen articles in its own source window and evolves from its own saved state, including successful empty batches. A receipt in one variant cannot suppress another. Receipts outlive engine forgetting. Retrying an explicit completed invocation ID republishes without updating any model. Calling again under a new ID performs a normal online update, not another bootstrap. Publication failures leave committed history recoverable.
+
+Production schedules fetching once daily at 06:20 Europe/London (`src/app/schedules.json`). Prior configurations used shared builder thresholds; baseline generation did not apply gamma as a retention rule. Rust SlidingWindow gamma retains the latest committed **batches**, pruning source memory after updates while retaining learned topology until reconstruction. Defaults now explicitly map `3d=3`, `7d=7`, `30d=30` in `config/seca_timeline.json`. `RISKLIVE_SECA_GAMMA_BATCHES_<3|7|30>D` overrides an individual model; the existing `RISKLIVE_SECA_GAMMA_BATCHES` remains an explicit all-model override. Values must be positive. Manual/empty calls also consume batches; missing historical days do not. Therefore gamma is not an exact calendar-age bound. Source discovery retains the existing calendar window semantics, including late arrivals within each window. Changing persisted configuration requires explicit replay.
+
+All model/history/receipt updates share one SQLite transaction with synchronous FULL and the existing cross-process flock. CLI state files remain temporary and use Rust's fsync/atomic replacement. Failed tokenization or update rolls back all model writes and consumes no invocation ID. SQLite history remains complete; each output directory serves a calendar-bounded timeline of **its own model** with historical dates. Files/manifests preserve frontend fields and filenames; manifest `variant` identifies the model. Directory publication remains individually atomic and recoverable, not a three-directory filesystem transaction. Existing legacy output preservation remains in place.
 
 ## Paper mapping and interpretation
 
@@ -30,51 +34,80 @@ Production selects Option1 for all three measures. Options2/3 remain legacy diag
 
 Traversal starts at Seed-HKT with the new batch. Child scopes inherit sources adopted by their parent node. Sources may belong to multiple nodes; unmatched sources enter refuge. A threshold crossing replaces that HKT and its descendants, stopping further descent there. Otherwise its existing structure is retained and children are inspected. Reconstruction uses retained source batches plus the current batch, excluding words already adopted along the ancestor path.
 
-SECA-Light prunes source data **after** this update. The paper's phrase “before theta-gamma” has an inclusive-boundary ambiguity relative to “up to gamma batches”; we retain exactly the latest gamma successfully committed batches, as requested. The real-world paper uses gamma=3 with minute batches; RiskLive uses batches rather than minutes or days.
+SECA-Light prunes source data **after** this update. The paper's phrase “before theta-gamma” has an inclusive-boundary ambiguity relative to “up to gamma batches”; we retain exactly the latest gamma successfully committed batches, as requested. The real-world paper uses gamma=3 with minute batches; RiskLive uses separate gamma defaults of 3/7/30 batches rather than minutes or days.
 
 Forgetting alone does not erase learned topology. Zero-support nodes may remain until their container is reconstructed. Selective replacement can shrink a subtree, so the tree does not only grow. The paper does not establish a strict bound on tree size; gamma bounds retained batches, not nodes, sources per batch, vocabulary, or audit history. Empty scopes have no new evidence and do not trigger a rebuild. This is an explicit engineering interpretation of an undefined empty denominator.
 
-## State lifecycle and storage
+## Validation and compatibility
 
-`run_seca_light_timeline` now locks the stream, loads its committed engine, selects previously unseen relevant articles, converts one batch, runs `update`, and commits its staged outputs in one SQLite transaction. Only afterwards are presentation files published.
+Local results: **27 focused Python tests passed**, the eight-call real Rust probe passed, the offline Rust core suite passed, and 20 frontend loader/ops compatibility tests passed. Full production-converter CLI/container builds were not rerun locally; the existing CI gate remains required before deployment.
 
-| Concept | Storage and lifecycle |
-| --- | --- |
-| Active model | Singleton `model.state` in `runtime/seca/stream.sqlite3`; full schema-3 Rust engine snapshot, tree, legends, ID counters and update configuration |
-| Active source window | Within that engine: latest gamma batch payloads and source/node/word membership sets |
-| Historical output | Immutable `batches` rows: ordered sequence, explicit batch ID, timestamp, verbose tree, metrics and configuration |
-| Current presentation | Existing `results/web/newsmap/seca-light-{30,7,3}d` directories and manifest/tree JSON contracts; three views of the same model's snapshots |
+The focused Python suite covers independent state/history, 30 historical daily updates versus 7 versus 3, logical timestamps, model-specific receipts, live continuation, independent gamma forgetting, idempotent retry, late third-model bootstrap rollback, schema-1 rejection, processing failures and publication recovery. The real Rust probe launches separate engine processes across eight calls, checks all three restored states and receipt ledgers, and proves archived replay equals persisted continuation. Existing Rust core tests additionally cover restart equivalence, scoped reconstruction and forgetting. No Rust implementation or gitlink change is required.
 
-A batch is one successful service invocation, including an empty invocation after bootstrap. It has an explicit caller-supplied ID or a generated run UUID and a monotonic integer sequence. Calendar dates appear only in the presentation layer. Supplying the same committed ID retries publication without processing it twice. A failed attempt consumes neither sequence nor ingestion receipts. Scheduler runs currently use generated IDs; article receipts prevent repeated searches from reintroducing the same article.
+SQLite schema 1 requires the explicit migration below. CSVs, backup articles, legacy outputs and frontend contracts remain intact. Historic static baselines cannot initialize resumable states. Output size guards still apply. Archive history grows separately from bounded active engine memory; `RISKLIVE_SECA_ARCHIVE_BATCHES=1` retains normalized inputs for reproducible replay.
 
-`config/seca_timeline.json` sets `memory_mode=SlidingWindow` and `max_batches_in_memory=30`. `RISKLIVE_SECA_GAMMA_BATCHES` overrides gamma with a positive number of batches. Thirty preserves approximately the previous daily horizon for the normal schedule; extra successful manual runs also consume batches. It is not a guarantee of thirty calendar days.
+## Operator migration — do not run automatically
 
-Within the active window the engine needs stable source ID, batch order and normalized tokens, plus membership sets. Raw article text, metadata and timestamps are discarded from model payloads. URLs remain stable source IDs; URL-less articles receive a hash derived from article identity metadata, falling back to converter text/tokens when its metadata omits the title. Current/backup CSVs remain the article-detail store. A separate `ingested` table retains identity receipts beyond gamma, without article payloads, so duplicates across searches and later runs are not counted again. Corrections to an existing URL are currently ignored; versioning corrected articles would require an explicit identity policy.
+Deploy/build the tested corrected version first, without starting its scheduler. Run the commands below from the production repository with its usual compose environment (`COMPOSE_PROJECT_NAME`, `APP_IMAGE`, `WEB_IMAGE`, `APP_ENV_FILE`, `WEB_ENV_FILE`, `RISKLIVE_DATA_DIR`) already exported. `APP_IMAGE` must be the corrected immutable image. These commands pause app/manual processing and web reads too, giving a quiet CSV/SQLite backup point. No fetch/LLM pipeline is invoked.
 
-Pruning removes expired IDs from retained batch payloads, source legends, global identity lookup, node memberships and pending sets, word memberships and word pending sets. Node display counts and mirrored HKT/global node indexes are synchronized. Future metrics recompute frequencies from retained membership/batches; cumulative old counts cannot influence them. In-memory removed-subtree archives are cleared in Light mode; historical snapshots provide audit history. Learned vocabulary and topology persist.
+```bash
+set -euo pipefail
+: "${APP_IMAGE:?Set corrected versioned image}"
+test "$RISKLIVE_DATA_DIR" = /opt/risklive/data
+export SECA_MIGRATION_BACKUP="/opt/risklive/backups/seca-three-models-$(date -u +%Y%m%dT%H%M%SZ)"
+docker compose -f deployment/compose/docker-compose.prod.yml stop scheduler app web
+sudo mkdir -p "$SECA_MIGRATION_BACKUP/output"
+sudo cp -a /opt/risklive/data/runtime/seca "$SECA_MIGRATION_BACKUP/runtime-seca"
+for variant in 3d 7d 30d; do
+  if test -d "/opt/risklive/data/results/web/newsmap/seca-light-$variant"; then
+    sudo cp -a "/opt/risklive/data/results/web/newsmap/seca-light-$variant" "$SECA_MIGRATION_BACKUP/output/"
+  fi
+done
+# Reset only the incorrect new persistent database; retain lock and other diagnostics.
+sudo mv /opt/risklive/data/runtime/seca/stream.sqlite3 "$SECA_MIGRATION_BACKUP/incorrect-stream.sqlite3"
+for suffix in -wal -shm -journal; do
+  if test -f "/opt/risklive/data/runtime/seca/stream.sqlite3$suffix"; then
+    sudo mv "/opt/risklive/data/runtime/seca/stream.sqlite3$suffix" "$SECA_MIGRATION_BACKUP/"
+  fi
+done
+# Standalone corrected bootstrap, no network or scheduler, only existing CSV inputs.
+docker run --rm --pull never --network none --read-only \
+  --tmpfs /tmp:rw,nosuid,nodev \
+  --mount type=bind,src=/opt/risklive/data/results,dst=/app/results \
+  --mount type=bind,src=/opt/risklive/data/runtime,dst=/app/runtime \
+  "$APP_IMAGE" python -c 'from services.seca_timeline import run_seca_light_timeline; assert run_seca_light_timeline(batch_id="migration-three-models-v2") is not None'
+# Verify schema, independent states, populated dated histories, receipts and sequences.
+docker run --rm -i --pull never --network none --read-only \
+  --mount type=bind,src=/opt/risklive/data,dst=/data,readonly \
+  "$APP_IMAGE" python - <<'PY'
+import json, sqlite3
+from pathlib import Path
+root = Path('/data')
+db = sqlite3.connect('file:/data/runtime/seca/stream.sqlite3?mode=ro', uri=True)
+assert db.execute('PRAGMA user_version').fetchone()[0] == 2
+assert {r[0] for r in db.execute('SELECT variant FROM models')} == {'3d', '7d', '30d'}
+for variant in ('3d', '7d', '30d'):
+    state = json.loads(db.execute('SELECT state FROM models WHERE variant=?', (variant,)).fetchone()[0])
+    rows = db.execute('SELECT sequence, logical_timestamp, batch_id FROM batches WHERE variant=? ORDER BY sequence', (variant,)).fetchall()
+    assert rows and [r[0] for r in rows] == list(range(len(rows)))
+    assert state['last_processed_batch_index'] == rows[-1][0]
+    assert all(r[2] == f'bootstrap-v2-{variant}-{r[1][:10]}' for r in rows)
+    receipts = db.execute('SELECT COUNT(*), MIN(sequence), MAX(sequence) FROM ingested WHERE variant=?', (variant,)).fetchone()
+    assert receipts[0] > 0 and receipts[1] >= 0 and receipts[2] <= rows[-1][0]
+    directory = root / 'results/web/newsmap' / f'seca-light-{variant}'
+    manifest = json.loads((directory / 'timeline_manifest.json').read_text())
+    assert manifest['variant'] == variant
+    assert manifest['days'] == [r[1][:10] for r in rows]
+    assert len(manifest['files']) == len(rows)
+    for name, row in zip(manifest['files'], rows):
+        tree = json.loads((directory / name).read_text())
+        stored = json.loads(db.execute('SELECT tree FROM batches WHERE variant=? AND sequence=?', (variant, row[0])).fetchone()[0])
+        assert tree == stored
+    print(variant, 'latest_sequence=', rows[-1][0], 'receipts=', receipts[0], 'history_days=', manifest['days'], 'gamma=', state['config']['max_batches_in_memory'])
+PY
+# Only after all assertions pass and output review succeeds:
+docker compose -f deployment/compose/docker-compose.prod.yml up -d --no-deps --no-build --pull never --wait app web
+docker compose -f deployment/compose/docker-compose.prod.yml up -d --no-deps --no-build --pull never scheduler
+```
 
-No existing snapshot can safely initialize the stream: old presentation JSON and schema-2 snapshots are not resumable state. The first nonempty invocation builds once from currently available relevant input (the existing 30-day input discovery limit remains). Empty bootstrap waits; later empty batches preserve topology while advancing and pruning the source window. Failed processing preserves the last committed state.
-
-Rust snapshot schema/version and SQLite `user_version` are checked. Unknown versions and changed model configuration fail explicitly, rather than silently resetting the model. Changing gamma or alpha/beta requires an explicit migration or replay into a separate state directory; do not delete production state to bypass this guard.
-
-## Reliability, replay and compatibility
-
-A POSIX `flock` serializes scheduled/manual writers across processes. Rust processes clone the engine before mutation. The CLI writes a temporary state with fsync and atomic rename. The Python service stages everything under runtime and commits model, history and receipts together using SQLite with synchronous FULL. A conversion/update/validation failure cannot replace committed state. Publication failure leaves committed history recoverable on the next invocation. Each view directory is atomically replaced; the three views are not one filesystem transaction.
-
-Existing daily output directories are copied once into `results/web/newsmap/seca-legacy/<variant>` before the first new-format publication. Existing tree filenames and verbose HKT/node/source legend fields remain readable by `web/lib/newsmap-experimental.ts` and the ops artifact inspector. Manifests add batch IDs and model metadata. The 30/7/3 labels now mean snapshot presentation horizons, not three independent trained models. Multiple runs on one day can produce multiple snapshots. Existing loader file/aggregate size limits still apply.
-
-Set `RISKLIVE_SECA_ARCHIVE_BATCHES=1` before processing to persist normalized input JSON in historical rows for deterministic replay. It defaults off to avoid retaining source payloads outside gamma. With archives enabled, export `input_batch` and `config` in sequence order, run the pinned CLI's `update` command into a separate directory, passing each prior `--state-out` as the next `--state-in`. Replay requires the same engine version, configuration and tokenized inputs. CSV backups alone do not guarantee exact replay because tokenization and ingestion order can change. Historical trees/configuration/receipts grow independently of the bounded active payload window; archive retention is a separate operational policy.
-
-Docker copies the pinned Rust submodule, checks `docker/seca/SOURCE.sha256`, uses the parent-owned locked dependencies and tests both core and CLI. The previous timeline-many patch is incorporated into the Rust repository; Docker no longer reapplies it. Runtime/results mounts already shared by the app and scheduler preserve state across containers. Existing CSV cleanup does not delete `runtime/seca`.
-
-## Verification
-
-Focused Rust tests in `tests/seca_light_stream.rs` prove persisted continuation, unchanged structure below thresholds, child-only rebuild with a retained sibling, gamma=3 forgetting without reset, subtree shrinkage, duplicate suppression, empty updates, failed mutation rollback and restart equivalence. Existing core/integration regressions remain part of the suite.
-
-`tests/unit/services/test_seca_timeline.py` checks transaction failure paths, publication recovery, IDs/receipts, empty bootstrap, bounded payloads, historical views and retry semantics. `tests/integration/seca_light_probe.py` exercises eight independent Rust update processes through the real Python/SQLite service with gamma=3, using a fixture converter. It deliberately uses the exact production update module via the core example, allowing offline execution without the CLI's uncached tokenizer/network dependency graph.
-
-GitHub CI adds a `Persistent SECA-Light` job alongside backend/frontend checks. It initializes the pinned submodule, validates revision and hashes, tests/builds both Rust crates using toolchain 1.92.0 and the parent lockfile, runs the probe with `--production-converter` against the full CLI, and builds `docker/Dockerfile.app`. This CI path uses real CSV tokenization, requires no operational services, and does not deploy. Push the Rust commit before RiskLive so checkout can resolve its gitlink.
-
-Verified locally: **145 Rust tests**, **30 Python tests**, **20 dashboard/ops tests**, and the eight-process probe with identical archived-batch replay. Rust commit `a03e2ba3385d328a10eacbf584c57cddc6f40a62` is on local branch `fix/seca-light-stream`; the push attempt failed because shell DNS could not resolve GitHub and the connector denied tree creation with HTTP 403.
-
-Run the core suite with `cargo test -p realtime-seca-core --offline`, the focused Python tests with pytest, and the probe with the project virtualenv. A full CLI/container build still requires uncached crates and was not available in this network-restricted environment; this limitation must not be represented as a passing Docker build.
+If bootstrap/verification fails, keep scheduling paused. A bootstrap processing failure leaves a new empty schema-2 DB; retrying the same ID is safe. A publication failure leaves all three states committed; the same ID republishes. Do not restore the incorrect singleton into the corrected service. For a full rollback, stop app/web/scheduler, restore the entire backed-up `runtime-seca` and three backed-up output directories, and start the matching previous image before resuming scheduling. Leave `results/data`, `results/backup_data`, CSVs and `seca-legacy` untouched throughout. The commands above have not been executed by Codex.

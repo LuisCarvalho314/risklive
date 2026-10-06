@@ -1,5 +1,9 @@
 # RiskLive milestones
 
+## Three independent persistent SECA-Light horizons
+
+Recorded: 2026-10-06. Corrects the singleton architecture described in the earlier milestone below. RiskLive now maintains independent 3d, 7d and 30d Rust models, each chronologically replayed through its own historical source window. Schema 2 scopes state, sequences, history and receipts by variant; all three bootstrap histories commit atomically. Defaults are gamma 3/7/30 batches, with per-model overrides. See [design and operator migration](seca-light-stream.md). Production migration remains an operator action.
+
 ## SECA production path corrected to persistent SECA-Light
 
 Recorded: 2026-10-06. Status: implemented and verified locally; deployment is a separate release step.
