@@ -14,7 +14,7 @@ RUN cargo test --release --locked -p realtime-seca-core -p realtime-seca-cli --j
 
 FROM python:3.11-slim
 
-LABEL org.risklive.seca.source-revision="a03e2ba3385d328a10eacbf584c57cddc6f40a62" \
+LABEL org.risklive.seca.source-revision="1631655ad64e43e00c54cba05c6a6fc859e1bcee" \
     org.risklive.seca.toolchain="1.92.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

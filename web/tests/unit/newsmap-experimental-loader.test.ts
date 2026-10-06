@@ -335,9 +335,10 @@ describe("newsmap experimental loader", () => {
       const sequence = filePath.endsWith("0001.json") ? 1 : 0;
       return JSON.stringify({ hkts: [{hkt_id: 12, parent_node_id: 0}],
         nodes: [{ node_id: 1, hkt_id: 12 }],
-        diagnostics_schema_version: 1, update_context: {variant: `${variant}d`, sequence},
-        hkt_diagnostics: [{ hkt_id: 10, output_hkt_id: 12, mapped_source_count: variant + sequence,
-          paper_alpha_error: sequence ? 0.8 : 0.2, paper_beta_error: 0.3, paper_word_importance_error: 0.4,
+        diagnostics_schema_version: 2, update_context: {variant: `${variant}d`, sequence},
+        decision_diagnostics: [{hkt_id:10,output_hkt_id:12,should_reconstruct:Boolean(sequence)}],
+        display_diagnostics: [{ hkt_id: 12, mapped_source_count: variant + sequence,
+          paper_alpha_error: sequence ? 0.8 : null, paper_beta_error: sequence ? 0.3 : null, paper_word_importance_error: sequence ? 0.4 : null,
           should_reconstruct: Boolean(sequence) }] });
     });
     const result = await loadExperimentalNewsmap();
@@ -346,7 +347,7 @@ describe("newsmap experimental loader", () => {
     for (const variant of ["3d", "7d", "30d"] as const) {
       const batches = result.timelines[variant]!.batches;
       expect(batches[0].tree.children![0].meta!.experimentalMetrics).toMatchObject({
-        alphaError: 0.2, betaError: 0.3, wordImportanceError: 0.4, mappedSourceCount: parseInt(variant) });
+        alphaError: undefined, betaError: undefined, wordImportanceError: undefined, mappedSourceCount: parseInt(variant) });
       expect(batches[1].tree.children![0].meta!.experimentalMetrics).toMatchObject({
         alphaError: 0.8, mappedSourceCount: parseInt(variant)+1, triggeredScore: 4 });
     }

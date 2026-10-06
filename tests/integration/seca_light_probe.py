@@ -127,19 +127,21 @@ Path(sys.argv[3]).write_text(json.dumps({'batch_index': index, 'sources': source
                 structural = dict(published)
                 structural.pop("diagnostics_schema_version", None)
                 structural.pop("update_context", None)
-                structural.pop("hkt_diagnostics", None)
+                structural.pop("decision_diagnostics", None)
+                structural.pop("display_diagnostics", None)
 
                 assert structural == json.loads(stored_tree)
 
                 report = json.loads(stored_report)
 
-                assert published["diagnostics_schema_version"] == 1
+                assert published["diagnostics_schema_version"] == 2
                 assert published["update_context"] == {
                     "variant": variant,
                     "sequence": 0,
                     "batch_index": report["batch_index"],
                 }
-                assert published["hkt_diagnostics"] == report.get("hkt_diagnostics", [])
+                assert published["decision_diagnostics"] == report.get("decision_diagnostics", [])
+                assert published["display_diagnostics"] == report["display_diagnostics"]
 
         with sqlite3.connect(root / "runtime/seca/stream.sqlite3") as db:
             assert db.execute("SELECT COUNT(*) FROM models").fetchone()[0] == 3

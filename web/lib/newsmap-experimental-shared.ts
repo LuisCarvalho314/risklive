@@ -56,16 +56,15 @@ export function experimentalMetricStatus(root: TreemapNode, metric: Experimental
 /** Each sibling HKT scope owns one budget. Its nodes divide that budget by
  * source mass (equal if empty), then descendants partition it conditionally.
  * Only leaves carry D3 sum mass. Internal values are zero, avoiding duplicate
- * diagnostic mass across descendants. Incomplete snapshots use equal HKT
- * budgets with an explicit unavailable status, never a proxy substitution.
+ * diagnostic mass across descendants. Unavailable siblings receive the mean available sibling weight (or equal
+ * weights when none are available). Availability is local, never a proxy.
  */
 export function applyExperimentalSizeMetric(
   root: TreemapNode,
   metric: ExperimentalSizeMetric,
   direction: ExperimentalSizeDirection = "highToLarge"
 ): TreemapNode {
-  const unavailable = experimentalMetricStatus(root, metric).unavailable;
-  const provenance = unavailable ? "unavailable" : metric === "composite" ? "legacy_proxy" : "seca_actual";
+
   const epsilon = 1e-9;
   const divide = (nodes: TreemapNode[], budget: number): TreemapNode[] => {
     const groups = new Map<string, TreemapNode[]>();
@@ -74,9 +73,12 @@ export function applyExperimentalSizeMetric(
       groups.set(id, [...(groups.get(id) ?? []), node]);
     });
     const entries = [...groups.values()];
-    const values = entries.map((group) => unavailable ? 1 : metricValue(group[0], metric) ?? 1);
-    const min = Math.min(...values), max = Math.max(...values);
-    const weights = values.map((value) => epsilon + (direction === "highToSmall" ? max - value + min : value));
+    const values = entries.map((group) => metricValue(group[0], metric));
+    const available = values.filter((v): v is number => v !== undefined);
+    const min = Math.min(...available), max = Math.max(...available);
+    const realWeights = available.map(value => epsilon + (direction === "highToSmall" ? max - value + min : value));
+    const neutral = realWeights.length ? realWeights.reduce((a,b) => a+b,0) / realWeights.length : 1;
+    const weights = values.map(value => value === undefined ? neutral : epsilon + (direction === "highToSmall" ? max - value + min : value));
     const total = weights.reduce((sum, value) => sum + value, 0);
     return entries.flatMap((group, index) => {
       const masses = group.map((node) => Math.max(1, node.meta?.sourceCount ?? 1));
@@ -85,10 +87,11 @@ export function applyExperimentalSizeMetric(
     });
   };
   const clone = (node: TreemapNode, budget: number): TreemapNode => {
+    const provenance = metric === "composite" ? "legacy_proxy" : metricValue(node, metric) === undefined ? "unavailable" : "seca_actual";
     const children = node.children?.length ? divide(node.children, budget) : undefined;
     return { ...node, value: children ? 0 : budget, children,
       meta: { ...node.meta, experimentalLayoutWeights: true, experimentalMetricProvenance: provenance,
-        description: `${node.meta?.description ?? ""} | selected_metric=${metric} | selected_metrics=${provenance}` } };
+        description: `${node.meta?.description ?? ""} | selected_metric=${metric} | selected_metrics=${provenance} | layout_treatment=${provenance === "unavailable" ? "neutral_sibling_mean" : "real_metric"}` } };
   };
   return clone(root, 1);
 }

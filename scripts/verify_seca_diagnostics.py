@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import sqlite3
+import re
 import sys
 
 root = Path(sys.argv[1]).resolve()
@@ -16,23 +17,51 @@ with sqlite3.connect(f"file:{root}/runtime/seca/stream.sqlite3?mode=ro", uri=Tru
         directory = root / "results/web/newsmap" / f"seca-light-{variant}"
         manifest = json.loads((directory / "timeline_manifest.json").read_text())
         assert manifest["variant"] == variant
-        assert manifest["days"] == [r[1][:10] for r in rows]
-        assert len(manifest["files"]) == len(rows)
+        published = {}
+        by_sequence = {row[0]: row for row in rows}
+        for filename in manifest["files"]:
+            match = re.fullmatch(r"tree_batch_([0-9]+)\.json", filename)
+            assert match, filename
+            sequence = int(match[1])
+            assert sequence in by_sequence and sequence not in published
+            published[sequence] = filename
+        assert manifest["days"] == [by_sequence[seq][1][:10] for seq in published]
         joined = 0
-        for filename, (sequence, _, tree_text, report_text) in zip(manifest["files"], rows):
+        # Validate every stored snapshot. Publication may expose only the current
+        # horizon while older history remains in SQLite; never zip unrelated rows.
+        for sequence, _, tree_text, report_text in rows:
             tree, report = json.loads(tree_text), json.loads(report_text)
-            output = json.loads((directory / filename).read_text())
-            assert output["diagnostics_schema_version"] == 1
-            assert output["update_context"] == {"variant": variant, "sequence": sequence, "batch_index": sequence}
-            assert output["hkt_diagnostics"] == report["hkt_diagnostics"]
-            for key, value in tree.items():
-                assert output[key] == value
+            if sequence in published:
+                output = json.loads((directory / published[sequence]).read_text())
+                assert output["diagnostics_schema_version"] == 2
+                assert output["update_context"] == {"variant": variant, "sequence": sequence, "batch_index": sequence}
+                assert output["decision_diagnostics"] == report["decision_diagnostics"]
+                assert output["display_diagnostics"] == report["display_diagnostics"]
+                for key, value in tree.items():
+                    assert output[key] == value
             if sequence == 0:
-                assert report["hkt_diagnostics"] == []
-            else:
-                assert report["hkt_diagnostics"], (variant, sequence)
+                assert report["decision_diagnostics"] == []
+            elif report.get("sources_processed", 0) > 0:
+                assert report["decision_diagnostics"], (variant, sequence)
             ids = {h["hkt_id"] for h in tree["hkts"]}
-            for d in report["hkt_diagnostics"]:
+            display = report["display_diagnostics"]
+            assert len(display) == len(ids)
+            assert {d["hkt_id"] for d in display} == ids
+            coverage = {label: sum(d.get(field) is not None for d in display)
+                        for label, field in [("alpha", "paper_alpha_error"), ("beta", "paper_beta_error"),
+                                             ("WI", "paper_word_importance_error")]}
+            print(f"{variant} sequence={sequence} HKTs={len(ids)} decision={len(report['decision_diagnostics'])} "
+                  f"display={len(display)} available={coverage}")
+            if sequence and ids and min(coverage.values()) / len(ids) < 0.25:
+                print("WARNING: low evaluable display coverage; inspect unavailable_reason", file=sys.stderr)
+            for d in display:
+                for field in ("paper_alpha_error", "paper_beta_error", "paper_word_importance_error"):
+                    value = d.get(field)
+                    assert value is None or isinstance(value, (int, float)) and 0 <= value <= 1
+                if sequence == 0:
+                    assert d["paper_alpha_error"] is None
+                    assert d["unavailable_reason"] == "baseline_no_comparison"
+            for d in report["decision_diagnostics"]:
                 assert 0 <= d["mapped_source_count"] <= d["scoped_source_count"]
                 assert isinstance(d["should_reconstruct"], bool)
                 for field in ("paper_alpha_error", "paper_beta_error", "paper_word_importance_error"):

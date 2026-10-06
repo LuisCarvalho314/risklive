@@ -45,7 +45,7 @@ type SecaVerboseNode = {
   is_refuge_node?: boolean;
 };
 
-type SecaHktDiagnostics = {
+type SecaDecisionDiagnostics = {
   hkt_id?: number;
   scoped_source_count?: number;
   mapped_source_count?: number;
@@ -61,8 +61,18 @@ type SecaHktDiagnostics = {
   active_trigger_policy?: string;
 };
 
+type SecaDisplayDiagnostics = {
+  hkt_id?: number;
+  mapped_source_count?: number;
+  paper_alpha_error?: number | null;
+  paper_beta_error?: number | null;
+  paper_word_importance_error?: number | null;
+  unavailable_reason?: string | null;
+};
+
 type SecaVerboseTree = {
-  hkt_diagnostics?: SecaHktDiagnostics[];
+  decision_diagnostics?: SecaDecisionDiagnostics[];
+  display_diagnostics?: SecaDisplayDiagnostics[];
   hkts: SecaVerboseHkt[];
   nodes: SecaVerboseNode[];
 };
@@ -171,7 +181,8 @@ function parseSecaVerboseTree(payload: unknown): SecaVerboseTree {
   return {
     hkts: payload.hkts as SecaVerboseHkt[],
     nodes: payload.nodes as SecaVerboseNode[],
-    hkt_diagnostics: Array.isArray(payload.hkt_diagnostics) ? payload.hkt_diagnostics as SecaVerboseTree["hkt_diagnostics"] : [],
+    display_diagnostics: Array.isArray(payload.display_diagnostics) ? payload.display_diagnostics as SecaVerboseTree["display_diagnostics"] : [],
+    decision_diagnostics: Array.isArray(payload.decision_diagnostics) ? payload.decision_diagnostics as SecaVerboseTree["decision_diagnostics"] : [],
   };
 }
 
@@ -195,9 +206,10 @@ export function buildTreemapFromSecaVerboseTree(
   ctx: SecaBatchContext,
   sourceLookup?: SourceLookup
 ): TreemapNode {
-  const diagnosticsByHkt = new Map((tree.hkt_diagnostics ?? [])
+  const decisionsByHkt = new Map((tree.decision_diagnostics ?? [])
     .filter((d) => typeof d.output_hkt_id === "number")
     .map((d) => [d.output_hkt_id!, d]));
+  const diagnosticsByHkt = new Map((tree.display_diagnostics ?? []).map(d => [d.hkt_id, d]));
   const hktsById = new Map<number, SecaVerboseHkt>();
   const nodesById = new Map<number, SecaVerboseNode>();
   tree.hkts.forEach((hkt) => {
@@ -342,8 +354,9 @@ export function buildTreemapFromSecaVerboseTree(
     const combinedErrorValue = errorTerms.length
       ? Math.sqrt(errorTerms.reduce((sum, value) => sum + value * value, 0) / errorTerms.length)
       : undefined;
-    const triggeredScoreValue = typeof diagnostics?.should_reconstruct === "boolean"
-      ? (diagnostics.should_reconstruct ? 4 : 1) : undefined;
+    const decision = decisionsByHkt.get(raw.hkt_id);
+    const triggeredScoreValue = typeof decision?.should_reconstruct === "boolean"
+      ? (decision.should_reconstruct ? 4 : 1) : undefined;
 
     const nestedAncestors = new Set(ancestors);
     nestedAncestors.add(nodeId);
@@ -378,14 +391,17 @@ export function buildTreemapFromSecaVerboseTree(
           `active_window=${activeWindowWeight.toFixed(2)}`,
           diagnostics ? "metrics=seca_actual" : "metrics=unavailable | composite=legacy_proxy",
           ...(diagnostics ? [
-            `evaluated_hkt=${diagnostics.hkt_id}`,
-            `output_hkt=${diagnostics.output_hkt_id}`,
-            `policy=${diagnostics.active_trigger_policy ?? "unknown"}`,
-            `scoped_sources=${diagnostics.scoped_source_count ?? "unavailable"}`,
-            `should_reconstruct=${diagnostics.should_reconstruct ?? "unavailable"}`,
-            `trigger_reasons=${(diagnostics.trigger_reasons ?? []).join(",")}`,
+            `display_hkt=${diagnostics.hkt_id}`,
+            `comparison=${diagnostics.unavailable_reason ?? "available"}`,
+            `trigger_state=${decision ? decision.should_reconstruct ? "triggered" : "evaluated_not_triggered" : "not_evaluated"}`,
+            `output_hkt=${decision?.output_hkt_id}`,
+            `policy=${decision?.active_trigger_policy ?? "unknown"}`,
+            `scoped_sources=${decision?.scoped_source_count ?? "unavailable"}`,
+            `should_reconstruct=${decision?.should_reconstruct ?? "unavailable"}`,
+            `trigger_reasons=${(decision?.trigger_reasons ?? []).join(",")}`,
           ] : []),
         ].join(" | "),
+        experimentalTriggerState: decision ? decision.should_reconstruct ? "triggered" : "evaluated_not_triggered" : "not_evaluated",
         experimentalMetrics: {
           hktId: raw.hkt_id,
           provenance: diagnostics ? "seca_actual" : "unavailable",

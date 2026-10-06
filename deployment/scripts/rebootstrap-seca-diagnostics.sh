@@ -72,7 +72,7 @@ docker run --rm --pull never --network none --read-only \
   --mount "type=bind,src=$RISKLIVE_DATA_DIR/results,dst=/app/results" \
   --mount "type=bind,src=$RISKLIVE_DATA_DIR/runtime,dst=/app/runtime" \
   "$APP_IMAGE" \
-  python -c 'from services.seca_timeline import run_seca_light_timeline; assert run_seca_light_timeline(timeout_seconds=3600, batch_id="diagnostics-rebootstrap-v1") is not None'
+  python -c 'from services.seca_timeline import run_seca_light_timeline; assert run_seca_light_timeline(timeout_seconds=3600, batch_id="diagnostics-rebootstrap-v2") is not None'
 
 echo "Verifying regenerated diagnostics..."
 docker run --rm -i --pull never --network none --read-only \

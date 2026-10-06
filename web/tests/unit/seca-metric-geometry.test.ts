@@ -9,7 +9,8 @@ function fixture(alpha = [0.1, 0.9], variant = 1) {
   return buildTreemapFromSecaVerboseTree({
     hkts: [1,2].map(id => ({ hkt_id: id, parent_node_id: 0 })),
     nodes: [1,2].map(id => ({ node_id: id, hkt_id: id, sources: [] })),
-    hkt_diagnostics: [1,2].map((id,i) => ({ hkt_id: id+10, output_hkt_id: id,
+    decision_diagnostics: [1,2].map((id,i) => ({hkt_id:id+10,output_hkt_id:id,should_reconstruct:i===1})),
+    display_diagnostics: [1,2].map((id,i) => ({ hkt_id: id,
       mapped_source_count: [50,10][i]*variant, should_reconstruct: i===1,
       alpha_error: 99, beta_error: 99, paper_alpha_error: alpha[i],
       paper_beta_error: [0.8,0.2][i], paper_word_importance_error: [0.3,0.7][i] }))
@@ -59,4 +60,45 @@ it("uses each snapshot and variant's own diagnostics", () => {
   expect(areas(old,"alphaError")[0]).toBeGreaterThan(areas(old,"alphaError")[1]);
   expect(areas(next,"alphaError")[0]).toBeLessThan(areas(next,"alphaError")[1]);
   for(const v of [3,7,30]) expect(fixture(undefined,v).children![0].meta!.experimentalMetrics!.mappedSourceCount).toBe(50*v);
+});
+
+it("keeps partial availability local and preserves real sibling ratios", () => {
+  const tree=fixture();
+  tree.children!.push({id:"missing",name:"missing",meta:{experimentalMetrics:{hktId:3,composite:9999}}});
+  expect(experimentalMetricStatus(tree,"alphaError")).toMatchObject({available:2,total:3});
+  const [a,b]=areas(tree,"alphaError"); expect(b/a).toBeCloseTo(9,5);
+  const weighted=applyExperimentalSizeMetric(tree,"alphaError");
+  expect(weighted.children![2].meta?.experimentalMetricProvenance).toBe("unavailable");
+  expect(weighted.children![2].value).toBeCloseTo(1/3);
+  expect(weighted.children!.reduce((sum,n)=>sum+(n.value??0),0)).toBeCloseTo(1);
+});
+it("260 final scopes with three decisions change actual D3 geometry", () => {
+  const tree=buildTreemapFromSecaVerboseTree({
+    hkts:Array.from({length:260},(_,i)=>({hkt_id:i+1,parent_node_id:0})),
+    nodes:Array.from({length:260},(_,i)=>({node_id:i+1,hkt_id:i+1,sources:[]})),
+    decision_diagnostics:[1,2,3].map(id=>({hkt_id:id,output_hkt_id:id,should_reconstruct:false})),
+    display_diagnostics:Array.from({length:245},(_,i)=>({hkt_id:i+1,mapped_source_count:260-i,paper_alpha_error:(i+1)/260}))
+  },{activeWindowDays:30});
+  expect(experimentalMetricStatus(tree,"alphaError")).toMatchObject({available:245,total:260});
+  const layout=(metric:ExperimentalSizeMetric)=>computeLayout(buildWeightedTree(applyExperimentalSizeMetric(tree,metric),new Set(),tuning),2000,2000,tuning);
+  const area=(layout:ReturnType<typeof computeLayout>,id:number)=>{const r=layout.byId.get(`node::${id}`)!;return (r.x1-r.x0)*(r.y1-r.y0);};
+  const mapped=layout("mappedSourceCount"), alpha=layout("alphaError");
+  expect(area(mapped,1)).toBeGreaterThan(area(mapped,245));
+  expect(area(alpha,1)).toBeLessThan(area(alpha,245));
+  expect(tree.children![244].meta!.experimentalMetrics!.triggeredScore).toBeUndefined();
+});
+it("child leaf budgets conserve each parent budget", () => {
+  const tree=fixture(); tree.children![0].children=[{id:"x",name:"x"},{id:"y",name:"y"}];
+  const weighted=applyExperimentalSizeMetric(tree,"alphaError");
+  const sum=(n:TreemapNode):number=>n.children?.length?n.children.reduce((a,c)=>a+sum(c),0):n.value??0;
+  expect(sum(weighted)).toBeCloseTo(1,12);
+  expect(sum(weighted.children![0])).toBeCloseTo(0.1,8);
+});
+
+it("a missing distant descendant cannot flatten unrelated sibling geometry", () => {
+  const tree=fixture();
+  tree.children![0].children=[{id:"distant",name:"missing",meta:{experimentalMetrics:{hktId:900,composite:5000}}}];
+  const [a,b]=areas(tree,"alphaError"); expect(b/a).toBeCloseTo(9,5);
+  const weighted=applyExperimentalSizeMetric(tree,"alphaError");
+  expect(weighted.children![0].children![0].meta?.experimentalMetricProvenance).toBe("unavailable");
 });

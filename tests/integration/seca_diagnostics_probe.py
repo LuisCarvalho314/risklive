@@ -45,15 +45,17 @@ def probe(tmp_path, binary):
             for sequence, tree_text, report_text in history:
                 tree, report = json.loads(tree_text), json.loads(report_text)
                 published = json.loads((directory / f"tree_batch_{sequence:04}.json").read_text())
-                assert published["diagnostics_schema_version"] == 1
+                assert published["diagnostics_schema_version"] == 2
                 assert published["update_context"] == {"variant": variant, "sequence": sequence, "batch_index": sequence}
-                assert published["hkt_diagnostics"] == report["hkt_diagnostics"]
+                assert published["decision_diagnostics"] == report["decision_diagnostics"]
+                assert published["display_diagnostics"] == report["display_diagnostics"]
+                assert {d["hkt_id"] for d in report["display_diagnostics"]} == {h["hkt_id"] for h in tree["hkts"]}
                 assert published["nodes"] == tree["nodes"]
                 if sequence == 0:
-                    assert report["hkt_diagnostics"] == []  # Baseline is not a trigger update.
+                    assert report["decision_diagnostics"] == []  # Baseline is not a trigger update.
                 else:
-                    assert report["hkt_diagnostics"]
-                    d = report["hkt_diagnostics"][0]
+                    assert report["decision_diagnostics"]
+                    d = report["decision_diagnostics"][0]
                     assert d["scoped_source_count"] == report["sources_processed"]
                     assert 0 <= d["mapped_source_count"] <= d["scoped_source_count"]
                     assert isinstance(d["should_reconstruct"], bool)

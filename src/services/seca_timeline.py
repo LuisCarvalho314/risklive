@@ -289,10 +289,11 @@ def _publish_stream_views(root: Path, db: sqlite3.Connection) -> Path:
                 name = f"tree_batch_{sequence:04}.json"
                 payload = json.loads(tree)
                 update = json.loads(report)
-                payload["diagnostics_schema_version"] = 1
+                payload["diagnostics_schema_version"] = 2
                 payload["update_context"] = {"variant": variant, "sequence": sequence,
                                              "batch_index": update.get("batch_index")}
-                payload["hkt_diagnostics"] = update.get("hkt_diagnostics", [])
+                payload["decision_diagnostics"] = update.get("decision_diagnostics", [])
+                payload["display_diagnostics"] = update.get("display_diagnostics", [])
                 (staged / name).write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
                 files.append(name)
                 dates.append(generated[:10])

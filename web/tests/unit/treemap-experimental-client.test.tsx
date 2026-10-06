@@ -181,7 +181,7 @@ describe("TreemapExperimentalClient", () => {
     await user.click(screen.getByRole("button", { name: "Alpha Error" }));
     expect(currentTreemap()).toHaveTextContent("|1");
     await user.click(screen.getByRole("button", { name: "Beta Error" }));
-    expect(screen.getByRole("status")).toHaveTextContent("Diagnostic unavailable");
+    expect(screen.getByRole("status")).toHaveTextContent("scopes available");
     await user.click(screen.getByRole("button", { name: "High -> Small" }));
     expect(currentTreemap()).toHaveTextContent("|1");
   });
