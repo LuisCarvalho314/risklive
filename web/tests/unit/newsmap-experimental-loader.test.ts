@@ -18,9 +18,41 @@ vi.mock("fs/promises", () => ({
   },
 }));
 
+// Existing loader fixtures exercise tree behavior; the real bounded reader has
+// separate filesystem tests.
+vi.mock("@/lib/bounded-file", () => ({
+  readBoundedText: async (filePath: string, maxBytes: number, budget: { remainingBytes: number }) => {
+    const fs = await import("fs/promises");
+    const raw = String(await fs.default.readFile(filePath, "utf-8"));
+    const bytes = Buffer.byteLength(raw);
+    if (bytes > Math.min(maxBytes, budget.remainingBytes)) throw new Error("safe size limit");
+    budget.remainingBytes -= bytes;
+    return raw;
+  },
+}));
+
 describe("newsmap experimental loader", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("uses the dashboard fallback for oversized experimental inputs", async () => {
+    const fs = await import("fs/promises");
+    vi.mocked(fs.default.readFile).mockResolvedValue("x".repeat(8 * 1024 * 1024 + 1));
+    const out = await loadExperimentalNewsmap();
+    expect(out.mode).toBe("fallback");
+    if (out.mode === "fallback") expect(out.reason).toContain("safe size limit");
+  });
+
+  it("shares concurrent work and reloads after completion", async () => {
+    const fs = await import("fs/promises");
+    vi.mocked(fs.default.readFile).mockRejectedValue(Object.assign(new Error("missing"), { code: "ENOENT" }));
+    const first = loadExperimentalNewsmap();
+    expect(loadExperimentalNewsmap()).toBe(first);
+    await first;
+    const reads = vi.mocked(fs.default.readFile).mock.calls.length;
+    await loadExperimentalNewsmap();
+    expect(vi.mocked(fs.default.readFile).mock.calls.length).toBe(reads * 2);
   });
 
   it("parses required news_data.csv columns", () => {

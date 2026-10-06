@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import { readBoundedText, type FileReadBudget } from "@/lib/bounded-file";
 import path from "path";
 
 import type { TreemapNode } from "@/lib/dashboard";
@@ -613,8 +613,11 @@ function getSecaTimelineDirectory(key: ExperimentalTimelineKey): string {
   return path.join(process.cwd(), "..", "results", "web", "newsmap", dirName);
 }
 
-async function readJson(filePath: string): Promise<unknown> {
-  const raw = await fs.readFile(filePath, "utf-8");
+const MAX_INPUT_BYTES = 8 * 1024 * 1024;
+const MAX_LOAD_BYTES = 32 * 1024 * 1024;
+
+async function readJson(filePath: string, budget: FileReadBudget): Promise<unknown> {
+  const raw = await readBoundedText(filePath, MAX_INPUT_BYTES, budget);
   return JSON.parse(raw);
 }
 
@@ -639,11 +642,11 @@ function parseBatchDay(batchPayload: unknown, index: number): string {
   return `batch-${String(index).padStart(4, "0")}`;
 }
 
-async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<ExperimentalTimeline | null> {
+async function loadSecaTimelineBatches(key: ExperimentalTimelineKey, budget: FileReadBudget): Promise<ExperimentalTimeline | null> {
   const baseDir = getSecaTimelineDirectory(key);
   let sourceLookup: SourceLookup | undefined;
   try {
-    sourceLookup = buildSourceLookup(await readNewsDataFiles());
+    sourceLookup = buildSourceLookup(await readNewsDataFiles(budget));
   } catch {
     sourceLookup = undefined;
   }
@@ -654,7 +657,7 @@ async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<Ex
   for (const filename of manifestCandidates) {
     const filePath = path.join(baseDir, filename);
     try {
-      const payload = await readJson(filePath);
+      const payload = await readJson(filePath, budget);
       manifest = parseSecaTimelineManifest(payload);
       break;
     } catch (error) {
@@ -672,7 +675,7 @@ async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<Ex
   for (let i = 0; i < manifest.files.length; i += 1) {
     const filename = manifest.files[i];
     const batchPath = resolveBatchPath(baseDir, filename);
-    const batchPayload = await readJson(batchPath);
+    const batchPayload = await readJson(batchPath, budget);
     const secaTree = parseSecaVerboseTree(batchPayload);
     const day = manifest.days?.[i] ?? parseBatchDay(batchPayload, i);
     const tree = buildTreemapFromSecaVerboseTree(
@@ -700,12 +703,12 @@ function getNewsDataPaths(): string[] {
   return [path.join(base, "backup_data", "news_data.csv"), path.join(base, "data", "news_data.csv")];
 }
 
-async function readNewsDataFiles(): Promise<NewsCsvRow[]> {
+async function readNewsDataFiles(budget: FileReadBudget): Promise<NewsCsvRow[]> {
   const paths = getNewsDataPaths();
   const allRows: NewsCsvRow[] = [];
   for (const filePath of paths) {
     try {
-      const content = await fs.readFile(filePath, "utf-8");
+      const content = await readBoundedText(filePath, MAX_INPUT_BYTES, budget);
       const rows = parseNewsDataCsv(content);
       allRows.push(...rows);
     } catch (error) {
@@ -719,12 +722,13 @@ async function readNewsDataFiles(): Promise<NewsCsvRow[]> {
   return allRows;
 }
 
-export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineResult> {
+async function loadExperimentalNewsmapOnce(): Promise<ExperimentalTimelineResult> {
+  const budget: FileReadBudget = { remainingBytes: MAX_LOAD_BYTES };
   const secaErrors: Partial<Record<ExperimentalTimelineKey, string>> = {};
   const secaTimelines: Partial<Record<ExperimentalTimelineKey, ExperimentalTimeline>> = {};
   for (const key of ["30d", "7d", "3d"] as const) {
     try {
-      const timeline = await loadSecaTimelineBatches(key);
+      const timeline = await loadSecaTimelineBatches(key, budget);
       if (timeline) secaTimelines[key] = timeline;
     } catch (error) {
       secaErrors[key] = error instanceof Error ? error.message : "Unknown SECA loader error";
@@ -739,7 +743,7 @@ export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineRes
   }
 
   try {
-    const rows = await readNewsDataFiles();
+    const rows = await readNewsDataFiles(budget);
     if (!rows.length) {
       throw new Error("No rows found in results/data or results/backup_data news_data.csv");
     }
@@ -771,4 +775,17 @@ export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineRes
       reason,
     };
   }
+}
+
+// Share only active work; release the result after completion so updated files
+// appear on the next request and no historical trees accumulate in a cache.
+let inFlight: Promise<ExperimentalTimelineResult> | null = null;
+
+export function loadExperimentalNewsmap(): Promise<ExperimentalTimelineResult> {
+  if (!inFlight) {
+    inFlight = loadExperimentalNewsmapOnce().finally(() => {
+      inFlight = null;
+    });
+  }
+  return inFlight;
 }

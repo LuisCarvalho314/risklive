@@ -86,32 +86,36 @@ function deriveUsdFromTokens(promptTokens: number, completionTokens: number): nu
   return Number((promptCost + completionCost).toFixed(8));
 }
 
-function parseCsvLine(line: string): string[] {
+function parseCsvLine(line: string, selected?: Set<number>): string[] {
   const out: string[] = [];
-  let cell = "";
+  const parts: string[] = [];
+  let start = 0;
+  let column = 0;
   let inQuotes = false;
 
+  // Keep contiguous spans instead of allocating a string node for every character
+  // in article bodies. The backup CSV can contain hundreds of MB of text.
   for (let i = 0; i < line.length; i += 1) {
     const ch = line[i];
-    if (ch === "\"") {
-      const next = line[i + 1];
-      if (inQuotes && next === "\"") {
-        cell += "\"";
+    if (ch === '\"') {
+      if (!selected || selected.has(column)) parts.push(line.slice(start, i));
+      if (inQuotes && line[i + 1] === '\"') {
+        if (!selected || selected.has(column)) parts.push('\"');
         i += 1;
       } else {
         inQuotes = !inQuotes;
       }
-      continue;
+      start = i + 1;
+    } else if (ch === "," && !inQuotes) {
+      if (!selected || selected.has(column)) parts.push(line.slice(start, i));
+      out.push(parts.join(""));
+      column += 1;
+      parts.length = 0;
+      start = i + 1;
     }
-    if (ch === "," && !inQuotes) {
-      out.push(cell);
-      cell = "";
-      continue;
-    }
-    cell += ch;
   }
-
-  out.push(cell);
+  if (!selected || selected.has(column)) parts.push(line.slice(start));
+  out.push(parts.join(""));
   return out;
 }
 
@@ -122,12 +126,19 @@ function parseCsvRows(content: string): Record<string, string>[] {
   if (lines.length < 2) return [];
 
   const headers = parseCsvLine(lines[0]).map((header) => header.trim());
+  // Cost summaries do not consume article bodies or model responses. Avoid
+  // copying those large fields into temporary row objects.
+  const costFields = new Set([
+    "API_Timestamp", "Timestamp", "PromptTokens", "CompletionTokens", "TotalTokens",
+    "LLM_Price", "Source_Price", "URL", "Title"
+  ]);
+  const selected = new Set(headers.flatMap((header, index) => costFields.has(header) ? [index] : []));
   const rows: Record<string, string>[] = [];
   for (const line of lines.slice(1)) {
-    const values = parseCsvLine(line);
+    const values = parseCsvLine(line, selected);
     const row: Record<string, string> = {};
     for (let i = 0; i < headers.length; i += 1) {
-      row[headers[i]] = values[i] ?? "";
+      if (selected.has(i)) row[headers[i]] = values[i] ?? "";
     }
     rows.push(row);
   }
