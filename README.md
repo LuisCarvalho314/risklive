@@ -8,8 +8,10 @@ RiskLive currently runs on the `src/` + `web/` stack documented under `docs/onbo
 
 - `Current Runtime`: `src/` services pipeline and `web/` Next.js app with `/ops`
 - `Legacy Baseline`: historical `risklive/` implementation retained for context
-- `Experimental Runtime`: bounded SECA timelines for `/newsmap-experimental`
+- `Experimental Runtime`: persistent SECA-Light model with bounded source memory and historical views for `/newsmap-experimental`
 - `Future Paths` (separate, not active runtime): Agentic Workflow and LangExtract
+
+Recorded milestone: [SECA production path corrected to persistent SECA-Light](docs/milestones.md#seca-production-path-corrected-to-persistent-seca-light).
 
 ## Features
 

@@ -2,6 +2,8 @@
 
 This change replaces independent daily CA baselines with one evolving Rust SECA-Light model. It is a code change only; production data and deployment have not been changed.
 
+RiskLive milestone: [SECA production path corrected to persistent SECA-Light](milestones.md#seca-production-path-corrected-to-persistent-seca-light).
+
 ## Investigation: previous production flow
 
 `src/app/schedules.json` schedules the fetch job. `src/app/scheduler_jobs.py` invokes the server fetch/process pipeline; the manual pipeline produces enriched articles and dashboard output and invokes `run_seca_light_timeline`. The manual SECA trigger and replay pipeline use the same service. Failures in this optional dashboard stage are logged without breaking article ingestion.
