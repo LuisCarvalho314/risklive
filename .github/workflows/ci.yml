@@ -12,6 +12,44 @@ permissions:
   contents: read
 
 jobs:
+  seca:
+    name: Persistent SECA-Light
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      DISABLE_SCHEDULER: 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: true
+      - name: Verify pinned SECA source
+        run: |
+          test "$(git -C experimental rev-parse HEAD)" = "$(cat docker/seca/SOURCE_REVISION)"
+          cd experimental
+          sha256sum --check ../docker/seca/SOURCE.sha256
+      - name: Install the production Rust toolchain and lockfile
+        run: |
+          rustup toolchain install 1.92.0 --profile minimal
+          cp docker/seca/Cargo.lock experimental/Cargo.lock
+      - name: Test and build the production SECA CLI
+        working-directory: experimental
+        run: |
+          cargo +1.92.0 test --release --locked -p realtime-seca-core -p realtime-seca-cli --jobs 2
+          cargo +1.92.0 build --release --locked -p realtime-seca-cli --jobs 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.9.15'
+      - name: Install locked Python dependencies
+        run: uv sync --locked --group dev
+      - name: Verify persistent stream and deterministic replay with the production CLI
+        run: uv run --frozen --no-sync python tests/integration/seca_light_probe.py experimental/target/release/realtime-seca-cli --production-converter
+      - name: Build the production app image without deploying
+        run: docker build --file docker/Dockerfile.app --tag risklive:ci-seca .
+
   backend:
     runs-on: ubuntu-24.04
     timeout-minutes: 20

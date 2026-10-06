@@ -1,8 +1,9 @@
 """Offline end-to-end probe. Run directly; all state/output is isolated in /tmp.
 
 Uses the exact production Rust update command through the core's example binary.
-Only CSV tokenization is replaced by a tiny fixture adapter, because this sandbox
-has no cached HTTP/tokenizer CLI dependencies. Never runs fetch/LLM/scheduler.
+By default CSV tokenization is replaced by a fixture adapter for offline use.
+Pass --production-converter with the full CLI to test its real converter in CI.
+Never runs fetch/LLM/scheduler.
 """
 from __future__ import annotations
 
@@ -21,6 +22,8 @@ from services import seca_timeline
 
 
 def main():
+    if len(sys.argv) < 2:
+        raise SystemExit("Pass the built CLI or core example/update binary")
     binary = Path(sys.argv[1]).resolve()
     if not binary.is_file():
         raise SystemExit("Pass the built realtime-seca-core example/update binary")
@@ -29,7 +32,7 @@ def main():
         wrapper = root / "cli"
         wrapper.write_text("#!/usr/bin/env python3\n" + '''import csv,json,os,sys
 from pathlib import Path
-if sys.argv[1] != 'from-csv':
+if PRODUCTION_CONVERTER or sys.argv[1] != 'from-csv':
     os.execv(BINARY, [BINARY, *sys.argv[1:]])
 index = int(sys.argv[sys.argv.index('--batch-index') + 1])
 with Path(sys.argv[2]).open() as handle:
@@ -38,7 +41,7 @@ sources = [{'source_id': f'row_{i}', 'batch_index': index,
     'tokens': row['Title'].split(), 'text': None, 'metadata': row,
     'timestamp_unix_ms': None} for i,row in enumerate(rows)]
 Path(sys.argv[3]).write_text(json.dumps({'batch_index': index, 'sources': sources}))
-'''.replace("BINARY", repr(str(binary))))
+'''.replace("BINARY", repr(str(binary))).replace("PRODUCTION_CONVERTER", repr("--production-converter" in sys.argv[2:])))
         wrapper.chmod(0o755)
         seca_timeline._project_root = lambda: root
         seca_timeline._resolve_seca_command = lambda _: [str(wrapper)]

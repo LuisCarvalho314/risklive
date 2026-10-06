@@ -16,4 +16,6 @@ Implementation references:
 
 Verification: 145 Rust tests, 29 Python tests, 20 frontend tests, and an isolated eight-process continuation probe with identical deterministic replay. Tests cover unchanged topology below thresholds, targeted reconstruction, bounded source membership, forgetting, restart equivalence, empty batches and failure isolation.
 
+CI gate: the `Persistent SECA-Light` job in `.github/workflows/ci.yml` checks the pinned submodule revision and source hashes, tests core and CLI with the production toolchain/lockfile, runs the persistence/replay probe with the real CSV converter, and builds the app image without deploying. Existing backend and frontend jobs remain required checks for this work. The workflow runs on pull requests and pushes to `main`, `develop` and `dev/**`, including `dev/isolation`.
+
 Release follow-through: complete the full CLI/container build and confirm publication of both repository commits before deployment. Agent push attempts were blocked by GitHub DNS resolution and connector HTTP 403; subsequent operator publication has not been verified here. No production data was changed and no deployment was performed as part of this milestone. Gamma bounds retained batches, not tree size.
