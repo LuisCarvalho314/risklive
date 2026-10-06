@@ -1,5 +1,7 @@
 # SECA timeline hardening — 2026-10-06
 
+> Historical baseline workaround. The generator design described here is superseded by [the persistent SECA-Light stream](seca-light-stream.md). The loader limits and deployment observations remain useful historical context.
+
 ## Release and rollout status
 
 The locally recorded recent commits are `f14b049` (container deployment),

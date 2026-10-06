@@ -87,38 +87,34 @@ git submodule update --init --checkout experimental
 ```
 
 `docker/Dockerfile.app` builds from pinned SECA commit
-`42c07c098c1fadb931a4e7b5b6920ee9561dabc5` with Rust 1.92.0 Bookworm, pinned
-by image digest. Build inputs are checked against `docker/seca/SOURCE.sha256`.
-The parent-owned `docker/seca/Cargo.lock` supplies the missing workspace lockfile;
-Cargo tests/builds use `--locked`. Only `/usr/local/bin/realtime-seca-cli` is copied
-from the Rust stage into Python. Cargo, rustc, target directories and experimental
-sources are absent from the final image. The RiskLive user executes the binary.
+`a03e2ba3385d328a10eacbf584c57cddc6f40a62` with Rust 1.92.0 Bookworm, pinned by image digest.
+Build inputs are checked against `docker/seca/SOURCE.sha256`. The parent-owned
+`docker/seca/Cargo.lock` supplies the workspace lockfile; core and CLI tests/builds
+use `--locked`. Only `/usr/local/bin/realtime-seca-cli` is copied into Python.
+Cargo, rustc, target directories and sources are absent from the final image.
 
-The pinned CLI has no `timeline-many` command. The explicitly approved, tracked
-`docker/seca/timeline-many.patch` adds it without changing the submodule or core
-algorithm. It processes each already-grouped UTC-day batch in order, uses the
-same baseline/process/export engine, and keeps the manifest/tree output contract.
-It namespaces synthetic per-CSV `row_N` identifiers by batch to prevent separate
-articles on different days from merging; custom source IDs remain unchanged.
-The patch includes tests for unequal batch sizes, row identity and ordering.
-The pinned core's existing algorithm limitations are preserved.
+The Rust repository now includes `timeline-many` and the persistent `update`
+command directly. The former Docker compatibility patch has been removed.
+RiskLive converts one incoming batch and calls `update`, restoring the committed
+schema-3 engine, evolving selected HKTs and pruning source memberships to gamma.
+`config/seca_timeline.json` uses gamma=30 batches and branch threshold 10;
+`RISKLIVE_SECA_GAMMA_BATCHES` overrides the former. One transactional database at
+`/app/runtime/seca/stream.sqlite3` owns model state, receipts and snapshot history.
+App and scheduler already share its runtime mount. See [SECA-Light state and
+migration details](seca-light-stream.md) before changing model configuration.
 
-The fixed RiskLive timeline generator uses the packaged `from-csv` and `baseline`
-commands to build fresh daily cumulative prefixes from bounded source windows;
-it no longer calls the incremental `timeline-many` path. It supplies
-`config/seca_timeline.json` explicitly, including branch threshold 10. The
-compatibility command remains packaged for other consumers. Its final patch
-hunk header was corrected to `@@ -588,5 +715,6 @@`; this fixes patch parsing
-without changing Rust code.
+Publication of this pinned Rust commit was attempted but blocked by shell DNS
+and connector write permissions. Push the Rust branch before distributing a
+parent checkout that needs to initialize that gitlink. No deployment was run.
 
 CLI resolution is explicit `RISKLIVE_SECA_CLI`, then installed CLI on PATH,
 then source release/debug binaries, then Cargo only with a source workspace.
 The image sets `RISKLIVE_SECA_CLI=/usr/local/bin/realtime-seca-cli`. Standalone
 execution uses absolute data/output paths and no source cwd; only the Cargo
 fallback needs a workspace cwd. `/app/experimental` is not required at runtime.
-The 30d/7d/3d filters select exactly N UTC calendar days including the latest
-source day, independently of the scheduler's Europe/London clock. Regeneration
-uses the existing enriched CSVs and does not require fetching or LLM credits.
+The 30d/7d/3d directories select snapshot history by UTC generation day; they
+are views of one model. Source retention is measured in successful batches.
+Processing uses existing enriched CSVs and does not require fetching or LLM credits.
 
 ## Prepare a new deployment
 

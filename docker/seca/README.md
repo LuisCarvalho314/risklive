@@ -1,29 +1,27 @@
 # Reproducible SECA build inputs
 
-Source gitlink: `experimental`, commit `42c07c098c1fadb931a4e7b5b6920ee9561dabc5`.
-The submodule remains unchanged. `SOURCE.sha256` covers the copied pinned workspace
-and crate files. The Docker builder checks those hashes before applying the patch.
+Source gitlink: `experimental`, commit `a03e2ba3385d328a10eacbf584c57cddc6f40a62`.
+`SOURCE.sha256` covers the copied workspace and crate files. Docker verifies
+these before compiling. The former timeline-many patch is now part of the
+Rust repository; it must not be applied twice.
 
 Builder: `rust:1.92.0-bookworm@sha256:e90e846de4124376164ddfbaab4b0774c7bdeef5e738866295e5a90a34a307a2`.
-The pinned workspace has no root Cargo.lock. This parent-owned Cargo.lock locks its
-61 packages, including checksums, without updating an existing Rust workspace lock.
-Python uv.lock and frontend pnpm-lock.yaml are unchanged.
+The parent-owned Cargo.lock pins the existing dependency graph. No dependency
+changes are required by the persistent update command. The Rust workspace
+ignores locally generated root lockfiles; Docker uses this reviewed lock.
 
-Build: `cargo build --release --locked -p realtime-seca-cli --jobs 2`.
-The builder first runs `cargo test --release --locked -p realtime-seca-cli --jobs 2`.
-Cargo's [locked mode](https://doc.rust-lang.org/cargo/commands/cargo-build.html)
-rejects dependency resolution changes. Only the binary is copied to the runtime.
+The builder runs core and CLI tests with `--release --locked --jobs 2`, then
+builds the CLI with the same flags. Only the binary is copied into runtime.
+The update command restores full schema-3 state and selectively evolves HKTs;
+RiskLive's Python service owns the transactional stream database and snapshots.
+See [the state lifecycle and verification guide](../../docs/seca-light-stream.md).
 
-`timeline-many.patch` is an explicitly approved compatibility extension for the
-missing CLI command; it does not change the core, existing timeline, or from-csv.
-It preserves each input batch as a daily step instead of re-chunking all articles.
-It validates sequential indices, scopes only the pinned CSV converter's synthetic
-row_N identities by batch (avoiding unrelated-row collisions across dates), and
-exports the same tree/manifest structure. Custom IDs retain their identity.
-Its tests cover unequal day sizes and reject out-of-order batches before output.
-No model, provider, HTTP server, or scheduler is used by this command.
+To update inputs, update the submodule gitlink, regenerate hashes from tracked
+Cargo.toml/crates files, update the image's source-revision label, and review
+locked dependency changes if needed. Run core, CLI and isolated stream checks.
+A successful offline core/example build does not establish a passing complete
+CLI/container build.
 
-To update inputs in future, deliberately update the gitlink, regenerate checksums
-from clean pinned files, review the compatibility patch, resolve the workspace lock
-in a temporary copy, and repeat offline fixture validation. Do not generate or
-modify Cargo.lock inside the submodule for this build.
+The current Rust commit is local: publication was attempted but blocked by
+shell DNS resolution and GitHub connector HTTP 403. Publish that commit to the
+Rust repository before sharing a parent commit that depends on its gitlink.

@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.9.15 AS uv
 
-# Source hashes match the pinned submodule commit; the compatibility patch is local.
+# Source hashes match the pinned SECA-Light submodule commit.
 FROM rust:1.92.0-bookworm@sha256:e90e846de4124376164ddfbaab4b0774c7bdeef5e738866295e5a90a34a307a2 AS seca-builder
 WORKDIR /build/seca
 COPY experimental/Cargo.toml ./Cargo.toml
@@ -8,15 +8,13 @@ COPY experimental/crates ./crates
 COPY docker/seca/SOURCE.sha256 /tmp/SOURCE.sha256
 RUN sha256sum --check /tmp/SOURCE.sha256
 COPY docker/seca/Cargo.lock ./Cargo.lock
-COPY docker/seca/timeline-many.patch /tmp/timeline-many.patch
-RUN git apply --check /tmp/timeline-many.patch && git apply /tmp/timeline-many.patch
-RUN cargo test --release --locked -p realtime-seca-cli --jobs 2 \
+RUN cargo test --release --locked -p realtime-seca-core -p realtime-seca-cli --jobs 2 \
  && cargo build --release --locked -p realtime-seca-cli --jobs 2 \
  && install -m 0755 target/release/realtime-seca-cli /usr/local/bin/realtime-seca-cli
 
 FROM python:3.11-slim
 
-LABEL org.risklive.seca.source-revision="42c07c098c1fadb931a4e7b5b6920ee9561dabc5" \
+LABEL org.risklive.seca.source-revision="a03e2ba3385d328a10eacbf584c57cddc6f40a62" \
     org.risklive.seca.toolchain="1.92.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
