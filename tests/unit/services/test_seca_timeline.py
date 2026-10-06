@@ -453,3 +453,34 @@ def test_per_variant_gamma_override_is_independent(fake_cli, tmp_path, monkeypat
     assert len(_state(tmp_path, "3d")["state"]["processed_batches"]) == 1
     assert len(_state(tmp_path, "7d")["state"]["processed_batches"]) == 3
     assert len(_state(tmp_path, "30d")["state"]["processed_batches"]) == 3
+
+
+
+def test_publication_joins_same_variant_sequence_report(tmp_path):
+    with seca_timeline._open_stream(tmp_path) as db:
+        for variant, scale in [("3d", 3), ("7d", 7), ("30d", 30)]:
+            for sequence in range(2):
+                report = {"batch_index": sequence, "hkt_diagnostics": [{
+                    "hkt_id": 1, "output_hkt_id": 12, "mapped_source_count": scale + sequence,
+                    "paper_alpha_error": sequence / 10, "should_reconstruct": bool(sequence)}]}
+                db.execute("INSERT INTO batches VALUES (?,?,?,?,?,?,?,?,?)", (
+                    variant, sequence, f"{variant}-{sequence}", f"2026-10-0{sequence+1}T00:00:00+00:00", "now",
+                    json.dumps({"hkts": [{"hkt_id": 12}], "nodes": [], "source_legend": []}),
+                    json.dumps(report), None, "{}"))
+        seca_timeline._publish_stream_views(tmp_path, db)
+        for variant, scale in [("3d", 3), ("7d", 7), ("30d", 30)]:
+            directory, manifest = _manifest(tmp_path, scale)
+            for sequence, name in enumerate(manifest["files"]):
+                payload = json.loads((directory / name).read_text())
+                assert payload["update_context"] == {"variant": variant, "sequence": sequence, "batch_index": sequence}
+                assert payload["hkt_diagnostics"][0]["mapped_source_count"] == scale + sequence
+                assert payload["hkt_diagnostics"][0]["paper_alpha_error"] == sequence / 10
+
+
+def test_legacy_publication_preserves_absent_diagnostics(tmp_path):
+    with seca_timeline._open_stream(tmp_path) as db:
+        db.execute("INSERT INTO batches VALUES (?,?,?,?,?,?,?,?,?)", (
+            "3d", 0, "old", "2026-10-01T00:00:00+00:00", "now", '{"hkts":[],"nodes":[]}', '{}', None, '{}'))
+        seca_timeline._publish_stream_views(tmp_path, db)
+        directory, manifest = _manifest(tmp_path, 3)
+        assert json.loads((directory / manifest["files"][0]).read_text())["hkt_diagnostics"] == []

@@ -283,11 +283,17 @@ def _publish_stream_views(root: Path, db: sqlite3.Connection) -> Path:
             staged.mkdir()
             files, dates, batch_ids = [], [], []
             source_count = 0
-            for sequence, identity, generated, tree in db.execute(
-                "SELECT sequence, batch_id, logical_timestamp, tree FROM batches WHERE variant=? AND logical_timestamp>=? ORDER BY sequence", (variant, cutoff)
+            for sequence, identity, generated, tree, report in db.execute(
+                "SELECT sequence, batch_id, logical_timestamp, tree, report FROM batches WHERE variant=? AND logical_timestamp>=? ORDER BY sequence", (variant, cutoff)
             ):
                 name = f"tree_batch_{sequence:04}.json"
-                (staged / name).write_text(tree, encoding="utf-8")
+                payload = json.loads(tree)
+                update = json.loads(report)
+                payload["diagnostics_schema_version"] = 1
+                payload["update_context"] = {"variant": variant, "sequence": sequence,
+                                             "batch_index": update.get("batch_index")}
+                payload["hkt_diagnostics"] = update.get("hkt_diagnostics", [])
+                (staged / name).write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
                 files.append(name)
                 dates.append(generated[:10])
                 batch_ids.append(identity)

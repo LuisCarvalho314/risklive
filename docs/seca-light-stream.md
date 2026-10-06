@@ -48,6 +48,8 @@ SQLite schema 1 requires the explicit migration below. CSVs, backup articles, le
 
 ## Operator migration — do not run automatically
 
+For the diagnostics contract correction, use [the diagnostics replay procedure](seca-diagnostics.md#production-correction--commands-only-not-executed) instead. Published trees now include the paired report diagnostics; the older tree-only equality check below applies only to pre-diagnostics releases.
+
 Deploy/build the tested corrected version first, without starting its scheduler. Run the commands below from the production repository with its usual compose environment (`COMPOSE_PROJECT_NAME`, `APP_IMAGE`, `WEB_IMAGE`, `APP_ENV_FILE`, `WEB_ENV_FILE`, `RISKLIVE_DATA_DIR`) already exported. `APP_IMAGE` must be the corrected immutable image. These commands pause app/manual processing and web reads too, giving a quiet CSV/SQLite backup point. No fetch/LLM pipeline is invoked.
 
 ```bash

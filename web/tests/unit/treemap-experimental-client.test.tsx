@@ -177,10 +177,12 @@ describe("TreemapExperimentalClient", () => {
       return nodes[nodes.length - 1];
     };
 
-    expect(currentTreemap()).toHaveTextContent("|9");
+    expect(currentTreemap()).toHaveTextContent("|1");
     await user.click(screen.getByRole("button", { name: "Alpha Error" }));
-    expect(currentTreemap()).toHaveTextContent("|3");
+    expect(currentTreemap()).toHaveTextContent("|1");
+    await user.click(screen.getByRole("button", { name: "Beta Error" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Diagnostic unavailable");
     await user.click(screen.getByRole("button", { name: "High -> Small" }));
-    expect(currentTreemap()).toHaveTextContent("|3");
+    expect(currentTreemap()).toHaveTextContent("|1");
   });
 });

@@ -148,7 +148,7 @@ export function computeLayout(
   };
 
   let rootNode = hierarchy(root)
-    .sum((node: TreemapNode) => (typeof node.value === "number" ? node.value : 1))
+    .sum((node: TreemapNode) => node.meta?.experimentalLayoutWeights && node.children?.length ? 0 : (typeof node.value === "number" ? node.value : 1))
     .sort(sortComparator);
   const mapped = layout(rootNode);
 

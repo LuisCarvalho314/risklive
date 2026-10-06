@@ -43,22 +43,26 @@ type SecaVerboseNode = {
   sources?: SecaVerboseSourceRef[];
   top_words?: SecaVerboseWordRef[];
   is_refuge_node?: boolean;
-  diagnostics?: {
-    hkt_id?: number;
-    scoped_source_count?: number;
-    mapped_source_count?: number;
-    should_reconstruct?: boolean;
-    trigger_reasons?: string[];
-    alpha_error?: number;
-    beta_error?: number;
-    word_importance_error?: number;
-    paper_alpha_error?: number;
-    paper_beta_error?: number;
-    paper_word_importance_error?: number;
-  };
+};
+
+type SecaHktDiagnostics = {
+  hkt_id?: number;
+  scoped_source_count?: number;
+  mapped_source_count?: number;
+  should_reconstruct?: boolean;
+  trigger_reasons?: string[];
+  alpha_error?: number;
+  beta_error?: number;
+  word_importance_error?: number;
+  paper_alpha_error?: number;
+  paper_beta_error?: number;
+  paper_word_importance_error?: number;
+  output_hkt_id?: number | null;
+  active_trigger_policy?: string;
 };
 
 type SecaVerboseTree = {
+  hkt_diagnostics?: SecaHktDiagnostics[];
   hkts: SecaVerboseHkt[];
   nodes: SecaVerboseNode[];
 };
@@ -167,6 +171,7 @@ function parseSecaVerboseTree(payload: unknown): SecaVerboseTree {
   return {
     hkts: payload.hkts as SecaVerboseHkt[],
     nodes: payload.nodes as SecaVerboseNode[],
+    hkt_diagnostics: Array.isArray(payload.hkt_diagnostics) ? payload.hkt_diagnostics as SecaVerboseTree["hkt_diagnostics"] : [],
   };
 }
 
@@ -185,11 +190,14 @@ function computeBatchSignals(ctx: SecaBatchContext): { recencyWeight: number; ac
   return { recencyWeight, activeWindowWeight };
 }
 
-function buildTreemapFromSecaVerboseTree(
+export function buildTreemapFromSecaVerboseTree(
   tree: SecaVerboseTree,
   ctx: SecaBatchContext,
   sourceLookup?: SourceLookup
 ): TreemapNode {
+  const diagnosticsByHkt = new Map((tree.hkt_diagnostics ?? [])
+    .filter((d) => typeof d.output_hkt_id === "number")
+    .map((d) => [d.output_hkt_id!, d]));
   const hktsById = new Map<number, SecaVerboseHkt>();
   const nodesById = new Map<number, SecaVerboseNode>();
   tree.hkts.forEach((hkt) => {
@@ -281,7 +289,7 @@ function buildTreemapFromSecaVerboseTree(
           ).values()
         )
       : [];
-    const diagnostics = isRecord(raw.diagnostics) ? raw.diagnostics : undefined;
+    const diagnostics = diagnosticsByHkt.get(raw.hkt_id);
     const hkt = hktsById.get(raw.hkt_id);
     const expectedWordsArr = Array.isArray(hkt?.expected_words) ? hkt.expected_words : [];
     const unionWordsArr = Array.isArray(hkt?.all_node_words_union) ? hkt.all_node_words_union : [];
@@ -321,28 +329,21 @@ function buildTreemapFromSecaVerboseTree(
     const triggerIntensityValue = Math.max(1, Math.round(baseSourceMass * triggerErrorProxy));
     const activeWindowValue = Math.max(1, Math.round(baseSourceMass * activeWindowWeight));
 
-    const alphaErrorRaw = asNumber(diagnostics?.paper_alpha_error) ?? asNumber(diagnostics?.alpha_error);
-    const betaErrorRaw = asNumber(diagnostics?.paper_beta_error) ?? asNumber(diagnostics?.beta_error);
-    const wordImportanceErrorRaw =
-      asNumber(diagnostics?.paper_word_importance_error) ?? asNumber(diagnostics?.word_importance_error);
-    const mappedSourceCountRaw = asNumber(diagnostics?.mapped_source_count) ?? sourceCount;
-    const shouldReconstruct = Boolean(diagnostics?.should_reconstruct);
-
-    // Real SECA diagnostics first; scaled so larger tile = higher diagnostic magnitude.
-    const mappedSourceCountValue = Math.max(1, Math.round(Math.max(0, mappedSourceCountRaw)));
-    const alphaErrorValue = Math.max(1, Math.round((alphaErrorRaw ?? 0) * 1000));
-    const betaErrorValue = Math.max(1, Math.round((betaErrorRaw ?? 0) * 1000));
-    const wordImportanceErrorValue = Math.max(1, Math.round((wordImportanceErrorRaw ?? 0) * 1000));
-    const errorTerms = [alphaErrorRaw, betaErrorRaw, wordImportanceErrorRaw].filter(
-      (value): value is number => typeof value === "number" && Number.isFinite(value)
+    // Production update enforces PaperDiagnosticScaffold with selected Option1.
+    // Plain alpha/beta/WI fields are placeholders, never substitutes for paper metrics.
+    const alphaErrorValue = asNumber(diagnostics?.paper_alpha_error);
+    const betaErrorValue = asNumber(diagnostics?.paper_beta_error);
+    const wordImportanceErrorValue = asNumber(diagnostics?.paper_word_importance_error);
+    const mappedSourceCountValue = asNumber(diagnostics?.mapped_source_count);
+    const errorTerms = [alphaErrorValue, betaErrorValue, wordImportanceErrorValue].filter(
+      (value): value is number => typeof value === "number" && value >= 0
     );
-    const combinedErrorRaw = errorTerms.length
+    // RMS over available real terms; unavailable terms are omitted.
+    const combinedErrorValue = errorTerms.length
       ? Math.sqrt(errorTerms.reduce((sum, value) => sum + value * value, 0) / errorTerms.length)
-      : 0;
-    const combinedErrorValue = Math.max(1, Math.round(combinedErrorRaw * 1000));
-    const triggeredScoreValue = shouldReconstruct
-      ? Math.max(1, mappedSourceCountValue * 2)
-      : Math.max(1, Math.round(mappedSourceCountValue * 0.75));
+      : undefined;
+    const triggeredScoreValue = typeof diagnostics?.should_reconstruct === "boolean"
+      ? (diagnostics.should_reconstruct ? 4 : 1) : undefined;
 
     const nestedAncestors = new Set(ancestors);
     nestedAncestors.add(nodeId);
@@ -375,9 +376,19 @@ function buildTreemapFromSecaVerboseTree(
           `hkt_sig=${hktSignificance.toFixed(2)}`,
           `trigger_proxy=${triggerErrorProxy.toFixed(2)}`,
           `active_window=${activeWindowWeight.toFixed(2)}`,
-          diagnostics ? "metrics=seca_actual" : "metrics=proxy_fallback",
+          diagnostics ? "metrics=seca_actual" : "metrics=unavailable | composite=legacy_proxy",
+          ...(diagnostics ? [
+            `evaluated_hkt=${diagnostics.hkt_id}`,
+            `output_hkt=${diagnostics.output_hkt_id}`,
+            `policy=${diagnostics.active_trigger_policy ?? "unknown"}`,
+            `scoped_sources=${diagnostics.scoped_source_count ?? "unavailable"}`,
+            `should_reconstruct=${diagnostics.should_reconstruct ?? "unavailable"}`,
+            `trigger_reasons=${(diagnostics.trigger_reasons ?? []).join(",")}`,
+          ] : []),
         ].join(" | "),
         experimentalMetrics: {
+          hktId: raw.hkt_id,
+          provenance: diagnostics ? "seca_actual" : "unavailable",
           mappedSourceCount: mappedSourceCountValue,
           combinedError: combinedErrorValue,
           alphaError: alphaErrorValue,

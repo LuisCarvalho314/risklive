@@ -323,6 +323,35 @@ describe("newsmap experimental loader", () => {
     });
   });
 
+  it("loads diagnostics from each variant and historical file independently", async () => {
+    const fs = await import("fs/promises");
+    vi.mocked(fs.default.readFile).mockImplementation(async (filePathLike) => {
+      const filePath = String(filePathLike);
+      const variant = [3, 7, 30].find((v) => filePath.includes(`seca-light-${v}d`));
+      if (!variant) throw Object.assign(new Error("missing"), { code: "ENOENT" });
+      if (filePath.endsWith("timeline_manifest.json")) return JSON.stringify({
+        files: ["tree_batch_0000.json", "tree_batch_0001.json"], days: ["2026-09-01", "2026-09-02"]
+      });
+      const sequence = filePath.endsWith("0001.json") ? 1 : 0;
+      return JSON.stringify({ hkts: [{hkt_id: 12, parent_node_id: 0}],
+        nodes: [{ node_id: 1, hkt_id: 12 }],
+        diagnostics_schema_version: 1, update_context: {variant: `${variant}d`, sequence},
+        hkt_diagnostics: [{ hkt_id: 10, output_hkt_id: 12, mapped_source_count: variant + sequence,
+          paper_alpha_error: sequence ? 0.8 : 0.2, paper_beta_error: 0.3, paper_word_importance_error: 0.4,
+          should_reconstruct: Boolean(sequence) }] });
+    });
+    const result = await loadExperimentalNewsmap();
+    expect(result.mode).toBe("timeline");
+    if (result.mode !== "timeline") throw new Error("expected timeline");
+    for (const variant of ["3d", "7d", "30d"] as const) {
+      const batches = result.timelines[variant]!.batches;
+      expect(batches[0].tree.children![0].meta!.experimentalMetrics).toMatchObject({
+        alphaError: 0.2, betaError: 0.3, wordImportanceError: 0.4, mappedSourceCount: parseInt(variant) });
+      expect(batches[1].tree.children![0].meta!.experimentalMetrics).toMatchObject({
+        alphaError: 0.8, mappedSourceCount: parseInt(variant)+1, triggeredScore: 4 });
+    }
+  });
+
   it("applies selected experimental metric to node values", () => {
     const root = {
       id: "root::newsmap",
@@ -344,11 +373,11 @@ describe("newsmap experimental loader", () => {
     };
     const mappedTree = applyExperimentalSizeMetric(root, "mappedSourceCount");
     const wiTree = applyExperimentalSizeMetric(root, "wordImportanceError");
-    expect(mappedTree.children?.[0]?.value).toBe(4);
-    expect(wiTree.children?.[0]?.value).toBe(7);
+    expect(mappedTree.children?.[0]?.value).toBe(1);
+    expect(wiTree.children?.[0]?.value).toBe(1);
   });
 
-  it("re-sorts siblings when experimental metric changes", () => {
+  it("changes sibling weights when experimental metric changes", () => {
     const root = {
       id: "root::newsmap",
       name: "SECA Tree",
@@ -380,7 +409,7 @@ describe("newsmap experimental loader", () => {
     const byError = applyExperimentalSizeMetric(root, "combinedError");
 
     expect(byMapped.children?.map((node) => node.id)).toEqual(["node::a", "node::b"]);
-    expect(byError.children?.map((node) => node.id)).toEqual(["node::b", "node::a"]);
+    expect(byError.children?.[1]?.value).toBeGreaterThan(byError.children?.[0]?.value ?? 0);
   });
 
   it("inverts metric sizing when direction is high-to-small", () => {
@@ -404,6 +433,6 @@ describe("newsmap experimental loader", () => {
     const highToSmall = applyExperimentalSizeMetric(root, "mappedSourceCount", "highToSmall");
 
     expect(highToLarge.children?.map((node) => node.id)).toEqual(["node::a", "node::b"]);
-    expect(highToSmall.children?.map((node) => node.id)).toEqual(["node::b", "node::a"]);
+    expect(highToSmall.children?.[1]?.value).toBeGreaterThan(highToSmall.children?.[0]?.value ?? 0);
   });
 });

@@ -9,6 +9,7 @@ import { TreemapClient } from "@/components/newsmap/treemap-client";
 import type { TreemapNode } from "@/lib/dashboard";
 import {
   applyExperimentalSizeMetric,
+  experimentalMetricStatus,
 } from "@/lib/newsmap-experimental-shared";
 import type {
   ExperimentalSizeDirection,
@@ -97,6 +98,7 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
   }, [activeTimelineKey, isTimeline, timelineMeta, timelineResult]);
 
   const tree = timelineMeta?.batch.tree ?? fallbackTree;
+  const metricStatus = experimentalMetricStatus(tree, selectedMetric);
   const renderedTree = useMemo(
     () => (isTimeline ? applyExperimentalSizeMetric(tree, selectedMetric, sizeDirection) : tree),
     [isTimeline, selectedMetric, sizeDirection, tree]
@@ -151,12 +153,12 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                     [
                       "mappedSourceCount",
                       "Mapped Sources",
-                      "How many articles this node currently captures. Emphasizes coverage and volume.",
+                      "Unique incoming sources mapped to non-refuge nodes in this HKT scope.",
                     ],
                     [
                       "combinedError",
                       "Combined Error",
-                      "Overall drift signal combining alpha, beta, and word-importance error. Emphasizes total instability.",
+                      "RMS of available real Option1 alpha, beta, and word-importance errors.",
                     ],
                     [
                       "wordImportanceError",
@@ -176,7 +178,7 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                     [
                       "triggeredScore",
                       "Triggered",
-                      "Highlights branches flagged for reconstruction. Emphasizes trigger status over pure size.",
+                      "Actual HKT trigger decision: triggered weight 4, untriggered weight 1.",
                     ],
                     [
                       "composite",
@@ -231,6 +233,11 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
           ) : null}
         </div>
 
+        {isTimeline ? <div role="status" className="text-xs text-muted-foreground">
+          {metricStatus.unavailable
+            ? `Diagnostic unavailable (${metricStatus.available}/${metricStatus.total} HKT scopes); equal scope weighting.`
+            : selectedMetric === "composite" ? "Legacy proxy weighting." : "SECA actual diagnostics (HKT scope)."}
+        </div> : null}
         {isTimeline && timelineMeta ? (
           <div className="mt-2 flex min-w-0 items-center gap-2">
             <label
