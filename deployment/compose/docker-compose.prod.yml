@@ -101,8 +101,7 @@ services:
     env_file:
       - ${CADDY_ENV_FILE:?Set an absolute caddy env file path}
     ports:
-      - "${CADDY_HTTP_BIND:-0.0.0.0:80}:80"
-      - "${CADDY_HTTPS_BIND:-0.0.0.0:443}:443"
+      - "${CADDY_HTTP_BIND:-0.0.0.0:8888}:80"
     volumes:
       - ../caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
