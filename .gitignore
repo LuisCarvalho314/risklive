@@ -75,3 +75,9 @@ deployment/env/*.env
 !deployment/env/*.env.example
 
 .container-test/
+
+
+# SQLite databases
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal

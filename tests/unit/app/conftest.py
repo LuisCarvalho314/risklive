@@ -8,6 +8,7 @@ import pytest
 from flask import Flask
 
 from app import cli, server
+from services.analytics import initialise_database
 
 
 @pytest.fixture
@@ -21,11 +22,20 @@ def isolated_app(monkeypatch, tmp_path, reset_settings_cache):
         monkeypatch.setattr(module, "configure_logging", lambda: None)
         monkeypatch.setattr(module, "data_path", lambda name: tmp_path / name)
         for name in (
-            "fetch_news", "save_news", "read_csv", "extract_news_info",
-            "run_topic_modeling", "generate_report", "export_dashboard",
-            "cleanup_old_data", "run_topic_visualizations",
-            "manual_fetch_and_process", "fetch_and_process", "run_seca_light",
-            "run_seca_light_timeline", "BackgroundScheduler",
+            "fetch_news",
+            "save_news",
+            "read_csv",
+            "extract_news_info",
+            "run_topic_modeling",
+            "generate_report",
+            "export_dashboard",
+            "cleanup_old_data",
+            "run_topic_visualizations",
+            "manual_fetch_and_process",
+            "fetch_and_process",
+            "run_seca_light",
+            "run_seca_light_timeline",
+            "BackgroundScheduler",
         ):
             if hasattr(module, name):
                 monkeypatch.setattr(module, name, forbidden)
@@ -38,3 +48,19 @@ def isolated_app(monkeypatch, tmp_path, reset_settings_cache):
     monkeypatch.setattr(subprocess, "Popen", forbidden)
     monkeypatch.setattr(threading.Thread, "start", forbidden)
     monkeypatch.setattr(Flask, "run", forbidden)
+
+
+@pytest.fixture
+def analytics_client(tmp_path, monkeypatch):
+    monkeypatch.setattr(server, "configure_logging", lambda: None)
+
+    db_path = tmp_path / "analytics.sqlite3"
+    initialise_database(db_path)
+
+    app = server.create_app()
+    app.config.update(
+        TESTING=True,
+        ANALYTICS_DB_PATH=db_path,
+    )
+
+    return app.test_client(), db_path

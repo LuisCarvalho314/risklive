@@ -8,12 +8,22 @@ import uuid
 from flask import Flask, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
 import traceback
+from pydantic import ValidationError
 
 from config.settings import get_config, get_server_config
 from models.errors import AppError, from_exception
+from models.analytics import AnalyticsEvent
 from services.seca_timeline import run_seca_light_timeline
+from services.analytics import initialise_database, record_event
 from services.storage import data_path, read_csv
-from utils.logging import configure_logging, get_logger, log_context, set_correlation_id, set_run_id
+from utils.logging import (
+    configure_logging,
+    get_logger,
+    log_context,
+    set_correlation_id,
+    set_run_id,
+    get_project_root,
+)
 from utils.rows import llm_rows_from_records, news_rows_from_records
 
 logger = get_logger(__name__)
@@ -22,42 +32,53 @@ logger = get_logger(__name__)
 # Import operational dependencies only when a route or scheduled job executes.
 def cleanup_old_data(*args, **kwargs):
     from services.pipeline import cleanup_old_data as operation
+
     return operation(*args, **kwargs)
 
 
 def extract_news_info(*args, **kwargs):
     from services.pipeline import extract_news_info as operation
+
     return operation(*args, **kwargs)
 
 
 def export_dashboard(*args, **kwargs):
     from services.pipeline import export_dashboard as operation
+
     return operation(*args, **kwargs)
 
 
 def fetch_news(*args, **kwargs):
     from services.pipeline import fetch_news as operation
+
     return operation(*args, **kwargs)
 
 
 def generate_report(*args, **kwargs):
     from services.pipeline import generate_report as operation
+
     return operation(*args, **kwargs)
 
 
 def run_topic_modeling(*args, **kwargs):
     from services.pipeline import run_topic_modeling as operation
+
     return operation(*args, **kwargs)
 
 
 def save_news(*args, **kwargs):
     from services.pipeline import save_news as operation
+
     return operation(*args, **kwargs)
 
 
 def create_app() -> Flask:
     configure_logging()
     app = Flask(__name__)
+
+    app.config["ANALYTICS_DB_PATH"] = (
+        get_project_root() / "runtime" / "analytics.sqlite3"
+    )
 
     @app.before_request
     def _before_request():
@@ -74,7 +95,9 @@ def create_app() -> Flask:
         correlation_id = request.environ.get("risklive.correlation_id", "-")
         run_id = request.environ.get("risklive.run_id", "-")
         started_at = request.environ.get("risklive.started_at")
-        duration_ms = int((time.perf_counter() - started_at) * 1000) if started_at else None
+        duration_ms = (
+            int((time.perf_counter() - started_at) * 1000) if started_at else None
+        )
         response.headers["X-Correlation-Id"] = correlation_id
         response.headers["X-Run-Id"] = run_id
         logger.info(
@@ -157,8 +180,7 @@ def create_app() -> Flask:
 
     @app.route("/trigger/seca-light")
     def trigger_seca_light():
-        with log_context(component="app.server",
-                         operation="trigger_seca_light"):
+        with log_context(component="app.server", operation="trigger_seca_light"):
             run_seca_light()
         return jsonify({"status": "triggered", "task": "seca_light"})
 
@@ -187,14 +209,18 @@ def create_app() -> Flask:
     @app.route("/trigger/topic")
     def trigger_topic():
         with log_context(component="app.server", operation="trigger_topic"):
-            rows = llm_rows_from_records(read_csv(data_path("news_data_with_llm_info.csv")))
+            rows = llm_rows_from_records(
+                read_csv(data_path("news_data_with_llm_info.csv"))
+            )
             run_topic_modeling(rows)
         return jsonify({"status": "triggered", "task": "topic"})
 
     @app.route("/trigger/report")
     def trigger_report():
         with log_context(component="app.server", operation="trigger_report"):
-            rows = llm_rows_from_records(read_csv(data_path("df_with_response_and_topics.csv")))
+            rows = llm_rows_from_records(
+                read_csv(data_path("df_with_response_and_topics.csv"))
+            )
             generate_report(rows)
         return jsonify({"status": "triggered", "task": "report"})
 
@@ -210,7 +236,14 @@ def create_app() -> Flask:
         include_trending = request.args.get("trending", default=1, type=int) == 1
         with log_context(component="app.server", operation="trigger_full"):
             fetch_and_process(app)
-        return jsonify({"status": "triggered", "task": "full", "hours": hours, "trending": include_trending})
+        return jsonify(
+            {
+                "status": "triggered",
+                "task": "full",
+                "hours": hours,
+                "trending": include_trending,
+            }
+        )
 
     @app.route("/trigger/cleanup")
     def trigger_cleanup():
@@ -218,6 +251,25 @@ def create_app() -> Flask:
         with log_context(component="app.server", operation="trigger_cleanup"):
             removed = cleanup_old_data(cfg.cleanup_days_to_keep)
         return jsonify({"status": "triggered", "removed": removed})
+
+    @app.post("/analytics/events")
+    def ingest_analytics_event():
+        payload = request.get_json(silent=True)
+
+        if not isinstance(payload, dict):
+            return jsonify({"error": "Expected JSON object"}), 400
+
+        try:
+            event = AnalyticsEvent.model_validate(payload)
+        except ValidationError:
+            return jsonify({"error": "Invalid analytics event"}), 400
+
+        db_path = app.config["ANALYTICS_DB_PATH"]
+
+        initialise_database(db_path)
+        inserted = record_event(db_path, **event.model_dump())
+
+        return jsonify({"inserted": inserted}), (201 if inserted else 200)
 
     return app
 
@@ -229,6 +281,7 @@ def start_scheduler(app: Flask) -> BackgroundScheduler:
     register_jobs(scheduler, app)
     scheduler.start()
     return scheduler
+
 
 def _run_job(name: str, fn) -> None:
     correlation_id = str(uuid.uuid4())
@@ -243,16 +296,26 @@ def _run_job(name: str, fn) -> None:
         except Exception:
             logger.exception(
                 "job_failed",
-                extra={"event": "job_failed", "job": name, "duration_ms": int((time.perf_counter() - started) * 1000)},
+                extra={
+                    "event": "job_failed",
+                    "job": name,
+                    "duration_ms": int((time.perf_counter() - started) * 1000),
+                },
             )
             raise
         logger.info(
             "job_complete",
-            extra={"event": "job_complete", "job": name, "duration_ms": int((time.perf_counter() - started) * 1000)},
+            extra={
+                "event": "job_complete",
+                "job": name,
+                "duration_ms": int((time.perf_counter() - started) * 1000),
+            },
         )
+
 
 def run_seca_light() -> None:
     run_seca_light_timeline()
+
 
 def fetch_and_process(_app: Flask | None) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
@@ -292,7 +355,9 @@ def manual_fetch_and_process(hours: int = 24, include_trending: bool = True) -> 
         extract_news_info(rows)
         rows = llm_rows_from_records(read_csv(data_path("news_data_with_llm_info.csv")))
         run_topic_modeling(rows)
-        rows = llm_rows_from_records(read_csv(data_path("df_with_response_and_topics.csv")))
+        rows = llm_rows_from_records(
+            read_csv(data_path("df_with_response_and_topics.csv"))
+        )
         generate_report(rows)
         logger.info(
             "pipeline_run_end",
