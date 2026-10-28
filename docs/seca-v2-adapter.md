@@ -1,6 +1,8 @@
 # Offline SECALight V2 adapter
 
-`src/services/seca_v2.py` is opt-in and has no pipeline or scheduling hook.
+`src/services/seca_v2.py` is opt-in. The existing post-pipeline scheduler hook
+runs it only when `RISKLIVE_SECA_V2_ENABLED=true`; initialization stays explicit.
+See [shadow operations](seca-v2-shadow.md) for activation and recovery.
 Rust owns `runtime/seca/v2/state.json`. Do not run the Rust CLI directly against
 that file: this adapter must be its sole writer, using `update.lock`.
 

@@ -257,20 +257,8 @@ def run_seca_light() -> None:
 def fetch_and_process(_app: Flask | None) -> None:
     manual_fetch_and_process(hours=24, include_trending=True)
     export_dashboard()
-    try:
-        run_seca_light()
-    except Exception:
-        logger.exception(
-            "seca_light_non_blocking_error",
-            extra={
-                "event": "seca_light_non_blocking_error",
-                "component": "app.server",
-                "operation": "fetch_and_process",
-                "stage": "seca_light",
-                "stage_status": "failed",
-                "skip_reason": "unexpected_exception",
-            },
-        )
+    from services.seca_v2 import run_shadow
+    run_shadow()
 
 
 def manual_fetch_and_process(hours: int = 24, include_trending: bool = True) -> None:

@@ -244,3 +244,30 @@ def test_cli_offline_commands(tmp_path, binaries, monkeypatch, capsys):
                                          "--csv", str(source), "--date", f"2026-10-{day:02}"])
         v2.main()
         assert json.loads(capsys.readouterr().out)["batch"] == expected
+
+
+def test_native_artifact_metrics_and_publication_recovery(tmp_path, binaries, monkeypatch):
+    source = tmp_path / "articles.csv"
+    write(source, [row(1), row(1), row(3)])
+    stats = {}
+    result = invoke(tmp_path, source, binaries, bootstrap=True, stats=stats)
+    directory = tmp_path / "runtime/seca/v2"
+    assert json.loads((directory / "latest.json").read_text()) == result
+    assert json.loads((directory / "reports/2026-10-03/batch-2.json").read_text()) == result
+    assert stats["input_rows"] == 3
+    assert stats["deduped_rows"] == 1
+    assert stats["output_rows"] == 2
+    assert stats["state_bytes"] == len(state(tmp_path))
+    assert stats["total_adapter_ms"] > 0
+    assert stats["peak_rss_kib"] > 0
+    assert set(p.name for p in tmp_path.iterdir()) == {"articles.csv", "runtime"}
+    original = v2._publish_report
+    monkeypatch.setattr(v2, "_publish_report", lambda *args: (_ for _ in ()).throw(OSError("publish failed")))
+    with pytest.raises(OSError):
+        invoke(tmp_path, source, binaries, day=4)
+    before = state(tmp_path)
+    assert receipts(tmp_path)[-1][3] == "committed"
+    monkeypatch.setattr(v2, "_publish_report", original)
+    assert invoke(tmp_path, source, binaries, day=4)["batch"] == 3
+    assert state(tmp_path) == before
+    assert json.loads((directory / "latest.json").read_text())["batch"] == 3

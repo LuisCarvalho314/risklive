@@ -12,6 +12,8 @@ import shutil
 import sqlite3
 import subprocess
 import tempfile
+import time
+import resource
 from contextlib import closing
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -21,6 +23,9 @@ from services.seca_timeline import (
     _row_timestamp, _seca_working_directory, _write_relevant_csv,
 )
 
+from utils.logging import get_logger, log_context, log_artifact_written, pipeline_stage
+
+logger = get_logger(__name__)
 
 CONFIG = Path(__file__).resolve().parents[2] / "config/seca_v2.json"
 
@@ -38,8 +43,15 @@ def _state_hash(state: Path) -> str | None:
 
 
 def _cli(command, args, *, cwd=None, timeout=600):
-    result = subprocess.run([*command, *map(str, args)], cwd=cwd, capture_output=True,
-                            text=True, timeout=timeout, check=False)
+    started = time.perf_counter()
+    try:
+        result = subprocess.run([*command, *map(str, args)], cwd=cwd, capture_output=True,
+                                text=True, timeout=timeout, check=False)
+    finally:
+        if args[0] == "update":
+            logger.info("seca_v2_update", extra={"event": "seca_v2_update",
+                        "component": "services.seca_v2", "operation": "update",
+                        "duration_ms": round((time.perf_counter() - started) * 1000, 3)})
     if result.returncode:
         raise RuntimeError(f"SECA {args[0]}: {result.stderr[-1000:]}")
     return result.stdout
@@ -66,20 +78,25 @@ def _command():
     return [executable]
 
 
-def collect_articles(paths: list[Path]) -> list[dict[str, str]]:
+def collect_articles(paths: list[Path], *, stats=None) -> list[dict[str, str]]:
     """Read enriched CSVs without V1's rolling cutoff; newest duplicate wins."""
     selected = {}
+    considered = relevant = 0
     for path in paths:
         with path.open(encoding="utf-8", newline="") as handle:
             for row in csv.DictReader(handle):
+                considered += 1
                 stamp = _row_timestamp(row)
                 if (row.get("Relevance") or "").strip().lower() != "yes" or stamp is None:
                     continue
+                relevant += 1
                 row = {key: (value or "").strip() for key, value in row.items() if key}
                 key = _row_key(row)
                 previous = selected.get(key)
                 if previous is None or (stamp, _json(row)) > (_row_timestamp(previous), _json(previous)):
                     selected[key] = row
+    if stats is not None:
+        stats.update(input_rows=considered, relevant_rows=relevant, deduped_rows=relevant - len(selected))
     return [selected[key] for key in sorted(selected)]
 
 
@@ -174,6 +191,30 @@ def _commit(db, receipt, state, report):
                        for s in json.loads(receipt["input"])["sources"]])
 
 
+def _same_update(output, report):
+    # serde_json's persisted f64 readback can differ from update stdout by 1 ULP.
+    # Identity, tree and decisions stay exact; only metric readback gets 2 ULPs.
+    if not isinstance(output, dict) or not isinstance(output.get("decisions"), list):
+        return False
+    if {**output, "decisions": report["decisions"]} != report:
+        return False
+    decisions = output.get("decisions", [])
+    if len(decisions) != len(report["decisions"]):
+        return False
+    for emitted, persisted in zip(decisions, report["decisions"]):
+        if {**emitted, "errors": persisted["errors"]} != persisted:
+            return False
+        errors = emitted.get("errors", {})
+        if set(errors) != set(persisted["errors"]):
+            return False
+        for key, value in errors.items():
+            stored = persisted["errors"][key]
+            if (type(value) not in (float, int) or not math.isfinite(value)
+                    or abs(value - stored) > 2 * max(math.ulp(value), math.ulp(stored))):
+                return False
+    return True
+
+
 def _apply(db, receipt, command, state, directory):
     # Files are disposable; the ledger's immutable exact bytes are authoritative input.
     with tempfile.TemporaryDirectory(dir=directory, prefix="batch-") as temporary:
@@ -181,9 +222,10 @@ def _apply(db, receipt, command, state, directory):
         batch, config = work / "batch.json", work / "config.json"
         batch.write_text(receipt["input"], encoding="utf-8")
         config.write_text(receipt["config"], encoding="utf-8")
-        output = json.loads(_cli(command, ["update", "--batch", batch, "--config", config, "--state", state]))
+        with log_context(batch_index=receipt["sequence"], batch_date=receipt["day"]):
+            output = json.loads(_cli(command, ["update", "--batch", batch, "--config", config, "--state", state]))
     report = _report(command, state)
-    if output != report or report["batch"] != receipt["sequence"]:
+    if not _same_update(output, report) or report["batch"] != receipt["sequence"]:
         raise ValueError("update output disagrees with authoritative state")
     _commit(db, receipt, state, report)
     return report
@@ -247,11 +289,53 @@ def _recover(db, command, state, directory, config):
     return report
 
 
+def _publish_report(directory, day, report):
+    # Keep the CLI payload unchanged. The dated filename supplies UTC context.
+    reports = directory / "reports" / day
+    reports.mkdir(parents=True, exist_ok=True)
+    output = reports / f"batch-{report['batch']}.json"
+    payload = _json(report)
+    for target in (output, directory / "latest.json"):
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent, delete=False) as handle:
+            temporary = Path(handle.name)
+            try:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            except BaseException:
+                temporary.unlink(missing_ok=True)
+                raise
+        try:
+            os.replace(temporary, target)
+        finally:
+            temporary.unlink(missing_ok=True)
+    log_artifact_written(logger, stage="seca_v2", operation="shadow_update",
+                         component="services.seca_v2", artifact_path=output,
+                         artifact_type="seca_v2_native_report")
+
+
+def run_shadow():
+    """Optional nonblocking post-pipeline experiment; initialization is explicit."""
+    if os.getenv("RISKLIVE_SECA_V2_ENABLED", "false").strip().lower() != "true":
+        return None
+    try:
+        with pipeline_stage(logger, stage="seca_v2", component="services.seca_v2",
+                            operation="shadow_update"):
+            return run()
+    except Exception:
+        logger.exception("seca_v2_non_blocking_error", extra={
+            "event": "seca_v2_non_blocking_error", "component": "services.seca_v2",
+            "operation": "shadow_update", "stage": "seca_v2", "stage_status": "failed"})
+        return None
+
+
 def run(*, root: Path | None = None, paths: list[Path] | None = None,
         utc_date: date | None = None, bootstrap=False, show=False,
-        config_path: Path = CONFIG, converter=None, converter_cwd=None):
+        config_path: Path = CONFIG, converter=None, converter_cwd=None, stats=None):
     """Bootstrap three days or advance through a UTC date. Sole writer of V2 state."""
     root = root or _project_root()
+    stats = stats if stats is not None else {}
+    started = time.perf_counter()
     directory = root / "runtime/seca/v2"
     directory.mkdir(parents=True, exist_ok=True)
     state = directory / "state.json"
@@ -259,10 +343,29 @@ def run(*, root: Path | None = None, paths: list[Path] | None = None,
     command = _command()
     with (directory / "update.lock").open("a") as lock, closing(_open_ledger(directory)) as db:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        initial_count = db.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
         report = _recover(db, command, state, directory, config)
-        if show:
+        def finish():
+            if report is not None:
+                receipt = db.execute("SELECT day FROM batches WHERE sequence=?", (report["batch"],)).fetchone()
+                _publish_report(directory, receipt["day"], report)
+                stats.update(batch_date=receipt["day"], batch_index=report["batch"],
+                             retained_source_count=report["retained_source_count"],
+                             reconstruction_decisions=len(report["decisions"]),
+                             reconstructed=sum(d["reconstructed"] for d in report["decisions"]),
+                             state_bytes=state.stat().st_size)
+            stats.update(output_rows=db.execute("SELECT COUNT(*) FROM sources").fetchone()[0] - initial_count,
+                         peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+                         total_adapter_ms=round((time.perf_counter() - started) * 1000, 3))
+            with log_context(**stats):
+                logger.info("seca_v2_complete", extra={"event": "seca_v2_complete",
+                            "component": "services.seca_v2", "operation": "shadow_update"})
             return report
-        rows = collect_articles(paths if paths is not None else [p for p in _llm_input_paths(root) if p.exists()])
+        if show:
+            return finish()
+        rows = collect_articles(paths if paths is not None else [p for p in _llm_input_paths(root) if p.exists()], stats=stats)
+        stats["already_ingested_sources"] = sum(bool(db.execute("SELECT 1 FROM sources WHERE id=?", (
+            (row.get("URL") or "").strip() or "article:" + _hash(_row_key(row).encode()),)).fetchone()) for row in rows)
         last = db.execute("SELECT sequence, day, state_hash FROM batches ORDER BY sequence DESC LIMIT 1").fetchone()
         if last is None:
             if not bootstrap:
@@ -275,7 +378,7 @@ def run(*, root: Path | None = None, paths: list[Path] | None = None,
             target = utc_date or datetime.now(UTC).date()
             first = date.fromisoformat(last["day"]) + timedelta(days=1)
         if first > target:
-            return report
+            return finish()
         origin = date.fromisoformat(db.execute("SELECT day FROM batches ORDER BY sequence LIMIT 1").fetchone()[0]) if last else first
         day = first
         while day <= target:
@@ -298,7 +401,7 @@ def run(*, root: Path | None = None, paths: list[Path] | None = None,
             report = _apply(db, receipt, command, state, directory)
             last = db.execute("SELECT * FROM batches WHERE sequence=?", (sequence,)).fetchone()
             day += timedelta(days=1)
-        return report
+        return finish()
 
 
 def main():
