@@ -30,6 +30,7 @@ describe("native V2 view", () => {
   it("preserves recursive scopes, refuge, source IDs and batch-local render positions", () => {
     const out = buildSecaV2View(report(), "2026-10-28", new Map([["https://a", "Reactor story"]]));
     expect(out.mode).toBe("v2");
+    expect(out.tree.name).toBe("SECA Tree");
     const node = out.tree.children![0];
     expect(node.name).toBe("nuclear reactor");
     expect(node.children).toHaveLength(2);
@@ -48,7 +49,7 @@ describe("native V2 view", () => {
     const bad = report();
     if (field === "schema") bad.schema_version = 9;
     if (field === "sequence") bad.next_batch = 9;
-    if (field === "sourceCount") bad.retained_source_count = 9;
+    if (field === "sourceCount") bad.retained_source_count = 1;
     if (field === "childScope") bad.root.nodes[0].child!.nodes[0].sources = ["https://unrelated"];
     if (field === "metric") bad.decisions[0].errors.alpha = NaN;
     if (field === "path") bad.decisions[0].path = [-1];
@@ -73,6 +74,20 @@ describe("V2 experimental loader", () => {
     const out = await loadExperimentalNewsmap();
     expect(out).toMatchObject({ mode: "v2", day: "2026-10-28", batch: 2, retainedSourceCount: 3 });
     expect(read.mock.calls.some(([name]) => String(name).includes("seca-light"))).toBe(false);
+  });
+
+  it("loads native retained-but-unmapped evidence without falling back or fabricating nodes", async () => {
+    read.mockImplementation(async (name: string) => {
+      if (name.endsWith("manifest.json")) return JSON.stringify(manifest());
+      if (name.endsWith("batch-2.json")) return JSON.stringify({ ...report(), retained_source_count: 4 });
+      throw missing();
+    });
+    const out = await loadExperimentalNewsmap();
+    expect(out.mode).toBe("v2");
+    if (out.mode !== "v2") throw new Error("Expected V2");
+    expect(out.retainedSourceCount).toBe(4);
+    expect(out.tree.children).toHaveLength(2);
+    expect(out.tree.value).toBe(1);
   });
 
   it("reloads a fresh report on the next request", async () => {

@@ -25,8 +25,21 @@ it("refreshes the native V2 report when the existing dashboard poll completes", 
   expect(mocks.refresh).toHaveBeenCalledTimes(2);
 });
 
-it("leaves legacy fallback refresh behavior unchanged", () => {
+it("refreshes fallback and legacy modes and does not refresh again just for a mode transition", () => {
   mocks.data.lastLoadedAt = "2026-10-28T12:00:00Z";
-  render(<NewsmapExperimentalLivePage timelineResult={{ mode: "fallback", reason: "missing" }} />);
-  expect(mocks.refresh).not.toHaveBeenCalled();
+  const view = render(<NewsmapExperimentalLivePage timelineResult={{ mode: "fallback", reason: "missing" }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(1);
+  view.rerender(<NewsmapExperimentalLivePage timelineResult={{ mode: "timeline", selectedKey: "3d", timelines: {} }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(1);
+  mocks.data.lastLoadedAt = "2026-10-28T12:01:00Z";
+  view.rerender(<NewsmapExperimentalLivePage timelineResult={{ mode: "timeline", selectedKey: "3d", timelines: {} }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(2);
+  view.rerender(<NewsmapExperimentalLivePage timelineResult={{ mode: "v2", batch: 2, day: "2026-10-28",
+    retainedSourceCount: 0, tree: { name: "V2" }, decisions: [] }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(2);
+  view.rerender(<NewsmapExperimentalLivePage timelineResult={{ mode: "fallback", reason: "invalid" }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(2);
+  mocks.data.lastLoadedAt = "2026-10-28T12:02:00Z";
+  view.rerender(<NewsmapExperimentalLivePage timelineResult={{ mode: "fallback", reason: "repaired" }} />);
+  expect(mocks.refresh).toHaveBeenCalledTimes(3);
 });

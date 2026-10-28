@@ -19,8 +19,8 @@ export function NewsmapExperimentalLivePage({ timelineResult }: Props) {
   const router = useRouter();
   // Reuse the existing dashboard refresh cadence; no second polling timer.
   useEffect(() => {
-    if (timelineResult.mode === "v2" && lastLoadedAt) router.refresh();
-  }, [lastLoadedAt, router, timelineResult.mode]);
+    if (lastLoadedAt) router.refresh();
+  }, [lastLoadedAt, router]);
 
   return (
     <div className="h-full min-h-0 p-1">
