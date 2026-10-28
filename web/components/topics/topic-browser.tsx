@@ -3,13 +3,17 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+import { useAnalytics } from "@/components/analytics/provider";
 import { Button } from "@/components/ui/button";
 import { TopicEntry } from "@/lib/dashboard";
 
 export function TopicBrowser({ topics }: { topics: TopicEntry[] }) {
+  const { track } = useAnalytics();
+  const lastFilter = useRef("");
+  const recordFilter = () => { if (query !== lastFilter.current) { lastFilter.current = query; track("topic_filter_used"); } };
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(topics[0]?.keyword ?? "");
 
@@ -48,6 +52,8 @@ export function TopicBrowser({ topics }: { topics: TopicEntry[] }) {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          onBlur={recordFilter}
+          onKeyDown={(event) => { if (event.key === "Enter") recordFilter(); }}
           placeholder="Filter keywords"
           className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
         />
@@ -58,7 +64,7 @@ export function TopicBrowser({ topics }: { topics: TopicEntry[] }) {
               type="button"
               variant={selected === topic.keyword ? "default" : "ghost"}
               className="w-full justify-start"
-              onClick={() => setSelected(topic.keyword)}
+              onClick={() => { if (selected !== topic.keyword) track("topic_selected"); setSelected(topic.keyword); }}
             >
               {topic.keyword}
             </Button>

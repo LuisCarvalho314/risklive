@@ -1,0 +1,1801 @@
+{
+  "release": "liwan-v1.8.1",
+  "binarySha256": "bc186de92f9949ccb13e7a49fc409b5af146027ba56982208cb97e92e6803e09",
+  "range": {
+    "start": "2024-11-01T00:00:00Z",
+    "end": "2026-11-01T00:00:00Z"
+  },
+  "reports": {
+    "alert_source_opened_ranking": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "alert_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 12.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "newsmap_source_opened_ranking": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "newsmap_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 432.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 408.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 384.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 384.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 360.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 336.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 336.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 312.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 288.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 288.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 264.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 240.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 240.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 216.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 192.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 192.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 168.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 144.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 144.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 120.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 96.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 96.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 72.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 48.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 48.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "alerts_ranking": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "section",
+            "filterType": "equal",
+            "value": "alerts",
+            "strict": true
+          }
+        ],
+        "metric": "views",
+        "event": "alert_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 36.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 12.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "newsmap_ranking": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "section",
+            "filterType": "equal",
+            "value": "newsmap",
+            "strict": true
+          }
+        ],
+        "metric": "views",
+        "event": "newsmap_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 222.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 198.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 198.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 198.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 174.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 174.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 174.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 150.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 150.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 150.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 126.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 126.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 126.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 102.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 102.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 102.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 78.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 78.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 78.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 54.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 54.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 54.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 30.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 30.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 30.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "newsmap-experimental_ranking": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "section",
+            "filterType": "equal",
+            "value": "newsmap-experimental",
+            "strict": true
+          }
+        ],
+        "metric": "views",
+        "event": "newsmap_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 210.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 210.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 186.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 186.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 186.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 162.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 162.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 162.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 138.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 138.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 138.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 114.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 114.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 114.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 90.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 90.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 90.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 66.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 66.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 66.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 42.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 42.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 42.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 18.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 18.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "risk_levels": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "alert_source_opened",
+        "dimension": "property",
+        "propertyKey": "risk_level"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "red",
+            "value": 960.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "unknown",
+            "value": 960.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "yellow",
+            "value": 972.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "alert_source_opened_article_monthly": {
+      "project": "risklive-poc",
+      "endpoint": "graph",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "article_id",
+            "filterType": "equal",
+            "value": "article-001",
+            "strict": true
+          }
+        ],
+        "interval": "month",
+        "timezone": "UTC",
+        "metric": "views",
+        "event": "alert_source_opened"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "binStart": "2024-11-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2024-12-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-01-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-02-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-03-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-04-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-05-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-06-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-07-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-08-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-09-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-10-01T00:00:00Z",
+            "value": 8.0
+          },
+          {
+            "binStart": "2025-11-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2025-12-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-01-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-02-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-03-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-04-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-05-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-06-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-07-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-08-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-09-01T00:00:00Z",
+            "value": 9.0
+          },
+          {
+            "binStart": "2026-10-01T00:00:00Z",
+            "value": 9.0
+          }
+        ]
+      }
+    },
+    "newsmap_source_opened_article_monthly": {
+      "project": "risklive-poc",
+      "endpoint": "graph",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "article_id",
+            "filterType": "equal",
+            "value": "article-001",
+            "strict": true
+          }
+        ],
+        "interval": "month",
+        "timezone": "UTC",
+        "metric": "views",
+        "event": "newsmap_source_opened"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "binStart": "2024-11-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2024-12-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2025-01-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2025-02-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2025-03-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2025-04-01T00:00:00Z",
+            "value": 17.0
+          },
+          {
+            "binStart": "2025-05-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-06-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-07-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-08-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-09-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-10-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-11-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2025-12-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2026-01-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2026-02-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2026-03-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2026-04-01T00:00:00Z",
+            "value": 18.0
+          },
+          {
+            "binStart": "2026-05-01T00:00:00Z",
+            "value": 19.0
+          },
+          {
+            "binStart": "2026-06-01T00:00:00Z",
+            "value": 19.0
+          },
+          {
+            "binStart": "2026-07-01T00:00:00Z",
+            "value": 19.0
+          },
+          {
+            "binStart": "2026-08-01T00:00:00Z",
+            "value": 19.0
+          },
+          {
+            "binStart": "2026-09-01T00:00:00Z",
+            "value": 19.0
+          },
+          {
+            "binStart": "2026-10-01T00:00:00Z",
+            "value": 19.0
+          }
+        ]
+      }
+    },
+    "features": {
+      "project": "risklive-poc",
+      "endpoint": "custom-events",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": []
+      },
+      "status": 200,
+      "response": {
+        "rows": [
+          {
+            "name": "newsmap_source_opened",
+            "completions": 5808,
+            "uniques": 2
+          },
+          {
+            "name": "alert_source_opened",
+            "completions": 2892,
+            "uniques": 2
+          },
+          {
+            "name": "topic_selected",
+            "completions": 216,
+            "uniques": 2
+          },
+          {
+            "name": "newsmap_node_selected",
+            "completions": 120,
+            "uniques": 2
+          }
+        ],
+        "truncated": false
+      }
+    },
+    "article_property_without_event": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": []
+      }
+    },
+    "article_property_wildcard_event": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "*",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": []
+      }
+    },
+    "article_property_multi_event": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": [
+          "alert_source_opened",
+          "newsmap_source_opened"
+        ],
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 422,
+      "response": "Failed to deserialize the JSON body into the target type: event: invalid type: sequence, expected a string at line 1 column 119"
+    },
+    "canonical_combined_ranking": {
+      "project": "canonical-control",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "article_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-001",
+            "value": 636.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-002",
+            "value": 612.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-003",
+            "value": 588.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-004",
+            "value": 564.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-005",
+            "value": 540.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 516.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-007",
+            "value": 492.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-008",
+            "value": 468.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 444.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-010",
+            "value": 420.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-011",
+            "value": 396.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 372.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-013",
+            "value": 348.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-014",
+            "value": 324.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 300.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-016",
+            "value": 276.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-017",
+            "value": 252.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 228.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-019",
+            "value": 204.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-020",
+            "value": 180.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 156.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-022",
+            "value": 132.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-023",
+            "value": 108.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 84.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-025",
+            "value": 60.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "canonical_article_monthly": {
+      "project": "canonical-control",
+      "endpoint": "graph",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "article_id",
+            "filterType": "equal",
+            "value": "article-001",
+            "strict": true
+          }
+        ],
+        "interval": "month",
+        "timezone": "UTC",
+        "metric": "views",
+        "event": "article_opened"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "binStart": "2024-11-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2024-12-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2025-01-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2025-02-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2025-03-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2025-04-01T00:00:00Z",
+            "value": 25.0
+          },
+          {
+            "binStart": "2025-05-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-06-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-07-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-08-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-09-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-10-01T00:00:00Z",
+            "value": 26.0
+          },
+          {
+            "binStart": "2025-11-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2025-12-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2026-01-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2026-02-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2026-03-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2026-04-01T00:00:00Z",
+            "value": 27.0
+          },
+          {
+            "binStart": "2026-05-01T00:00:00Z",
+            "value": 28.0
+          },
+          {
+            "binStart": "2026-06-01T00:00:00Z",
+            "value": 28.0
+          },
+          {
+            "binStart": "2026-07-01T00:00:00Z",
+            "value": 28.0
+          },
+          {
+            "binStart": "2026-08-01T00:00:00Z",
+            "value": 28.0
+          },
+          {
+            "binStart": "2026-09-01T00:00:00Z",
+            "value": 28.0
+          },
+          {
+            "binStart": "2026-10-01T00:00:00Z",
+            "value": 28.0
+          }
+        ]
+      }
+    },
+    "multiple_property_filters": {
+      "project": "risklive-poc",
+      "endpoint": "dimension",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [
+          {
+            "dimension": "property",
+            "key": "section",
+            "filterType": "equal",
+            "value": "newsmap",
+            "strict": true
+          },
+          {
+            "dimension": "property",
+            "key": "risk_level",
+            "filterType": "equal",
+            "value": "red",
+            "strict": true
+          }
+        ],
+        "metric": "views",
+        "event": "newsmap_source_opened",
+        "dimension": "property",
+        "propertyKey": "article_id"
+      },
+      "status": 200,
+      "response": {
+        "data": [
+          {
+            "dimensionValue": "article-003",
+            "value": 198.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-006",
+            "value": 174.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-009",
+            "value": 150.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-012",
+            "value": 126.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-015",
+            "value": 102.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-018",
+            "value": 78.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-021",
+            "value": 54.0,
+            "displayName": null,
+            "icon": null
+          },
+          {
+            "dimensionValue": "article-024",
+            "value": 30.0,
+            "displayName": null,
+            "icon": null
+          }
+        ]
+      }
+    },
+    "approximate_uniques": {
+      "project": "risklive-poc",
+      "endpoint": "stats",
+      "request": {
+        "range": {
+          "start": "2024-11-01T00:00:00Z",
+          "end": "2026-11-01T00:00:00Z"
+        },
+        "filters": [],
+        "metric": "views",
+        "event": "pageview"
+      },
+      "status": 200,
+      "response": {
+        "currentVisitors": 0,
+        "stats": {
+          "totalViews": 288,
+          "uniqueVisitors": 2,
+          "bounceRate": null,
+          "avgTimeOnSite": null
+        },
+        "statsPrev": {
+          "totalViews": 0,
+          "uniqueVisitors": 0,
+          "bounceRate": null,
+          "avgTimeOnSite": null
+        }
+      }
+    }
+  },
+  "checks": {
+    "alert_source_opened_ranking": true,
+    "newsmap_source_opened_ranking": true,
+    "alerts_ranking": true,
+    "newsmap_ranking": true,
+    "newsmap-experimental_ranking": true,
+    "risk_levels": true,
+    "alert_source_opened_monthly": true,
+    "newsmap_source_opened_monthly": true,
+    "feature_totals": true,
+    "canonical_ranking": true,
+    "canonical_monthly": true,
+    "multiple_property_filters": true,
+    "explicit_retention_prune": true,
+    "expired_event_removed": true,
+    "no_server_outbound_connects_observed": true,
+    "cold_backup_restore": true
+  },
+  "syntheticEventCount": 9324,
+  "collectionSettings": {
+    "visitorGroupMode": "network_standard",
+    "trackSessions": false,
+    "trackUtmParams": false,
+    "trackGeo": "none",
+    "dataRetention": {
+      "mode": "days",
+      "days": 730
+    },
+    "ingestDropRules": []
+  },
+  "expiredEventBeforePrune": {
+    "rows": [
+      {
+        "name": "retention_probe",
+        "completions": 1,
+        "uniques": 1
+      }
+    ],
+    "truncated": false
+  },
+  "pruneDryRun": {
+    "dryRun": true,
+    "entities": [
+      {
+        "entityId": "risklive-poc",
+        "totalEvents": 9325,
+        "deletedEvents": 1,
+        "clearedUtmEvents": 0,
+        "clearedGeoEvents": 0,
+        "clearedSessionEvents": 0
+      },
+      {
+        "entityId": "canonical-control",
+        "totalEvents": 9324,
+        "deletedEvents": 0,
+        "clearedUtmEvents": 0,
+        "clearedGeoEvents": 0,
+        "clearedSessionEvents": 0
+      }
+    ],
+    "total": {
+      "entityId": "",
+      "totalEvents": 18649,
+      "deletedEvents": 1,
+      "clearedUtmEvents": 0,
+      "clearedGeoEvents": 0,
+      "clearedSessionEvents": 0
+    }
+  },
+  "pruneApplied": {
+    "dryRun": false,
+    "entities": [
+      {
+        "entityId": "risklive-poc",
+        "totalEvents": 9325,
+        "deletedEvents": 1,
+        "clearedUtmEvents": 0,
+        "clearedGeoEvents": 0,
+        "clearedSessionEvents": 0
+      },
+      {
+        "entityId": "canonical-control",
+        "totalEvents": 9324,
+        "deletedEvents": 0,
+        "clearedUtmEvents": 0,
+        "clearedGeoEvents": 0,
+        "clearedSessionEvents": 0
+      }
+    ],
+    "total": {
+      "entityId": "",
+      "totalEvents": 18649,
+      "deletedEvents": 1,
+      "clearedUtmEvents": 0,
+      "clearedGeoEvents": 0,
+      "clearedSessionEvents": 0
+    }
+  },
+  "expiredEventAfterPrune": {
+    "rows": [],
+    "truncated": false
+  },
+  "apiKeyReportQuery": {
+    "status": 404,
+    "response": {
+      "code": 404,
+      "message": "Project not found",
+      "status": "Not Found"
+    }
+  },
+  "anonymousPrivateReportStatus": 404,
+  "networkConnectAttempts": [],
+  "coldBackupRestoredStats": {
+    "currentVisitors": 0,
+    "stats": {
+      "totalViews": 8700,
+      "uniqueVisitors": 2,
+      "bounceRate": null,
+      "avgTimeOnSite": null
+    },
+    "statsPrev": {
+      "totalViews": 0,
+      "uniqueVisitors": 0,
+      "bounceRate": null,
+      "avgTimeOnSite": null
+    }
+  },
+  "databaseFiles": [
+    "liwan-app.sqlite",
+    "liwan-events.duckdb"
+  ]
+}

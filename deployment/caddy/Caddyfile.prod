@@ -1,6 +1,32 @@
 {$CADDY_SITE_ADDRESS} {
     encode gzip zstd
 
+    # The bundled official SDK needs only this endpoint, never Liwan's dashboard/API.
+    @analytics {
+        path /analytics/event
+        method POST
+        expression `"{$LIWAN_ENABLED:false}" == "true" && {http.request.uri.query} == ""`
+    }
+    handle @analytics {
+        request_body {
+            max_size 16KB
+        }
+        rewrite * /api/event
+        reverse_proxy liwan:9042 {
+            header_up -Cookie
+            header_up -Authorization
+            header_up -Referer
+            header_up -Accept-Language
+            # Network-prefix grouping does not require a visitor's browser identity.
+            header_up User-Agent RiskLiveAnalytics/1
+            header_down -Set-Cookie
+        }
+    }
+    @analyticsPrivate path /analytics /analytics/*
+    handle @analyticsPrivate {
+        respond 404
+    }
+
     # The app currently exposes its health response at /.
     @health path /health /healthz
     handle @health {

@@ -4,6 +4,7 @@
 "use client";
 
 import Link from "next/link";
+import { AnalyticsPrivacyLink } from "@/components/analytics/provider";
 import { useEffect, useMemo, useState } from "react";
 
 import { useTopbarContent } from "@/components/layout/topbar-context";
@@ -65,6 +66,7 @@ export function Topbar() {
           </h1>
         </Link>
 
+        <AnalyticsPrivacyLink />
         <nav className="ml-auto flex min-w-0 items-center gap-2 overflow-x-auto whitespace-nowrap">
           <Link
             href="/topics"

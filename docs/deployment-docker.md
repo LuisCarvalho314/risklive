@@ -12,10 +12,18 @@ Python is 3.11; uv 0.9.15 installs the frozen lock without the dev group.
 The locked torch source is the CPU-only index. The app runs as UID/GID 10001.
 The web image builds with pinned pnpm 10.30.3 and the frozen frontend lock, then
 runs the standalone Next.js output as the Node user, without build dependencies.
-The four services are `app` (Gunicorn), `scheduler` (foreground APScheduler),
+The four default services are `app` (Gunicorn), `scheduler` (foreground APScheduler),
 `web` (Next.js), and `caddy` (edge proxy). App and scheduler use the same Python
 image. Only Caddy publishes host ports. It proxies app routes using `app:5001` and
 frontend/ops routes using `web:3000`.
+
+## Optional self-hosted usage analytics
+
+[Liwan deployment and activation](analytics/liwan-integration.md) describes the
+optional `analytics` profile, embedded persistent storage, loopback-only private
+administration, Caddy ingestion boundary and default-off runtime switches.
+Existing Flask analytics and SQLite state remain separate and unchanged. The
+previous inactive GoatCounter wiring is superseded; do not activate both trackers.
 
 ## Recent changes and release status
 

@@ -1,0 +1,13 @@
+# Only Caddy and host loopback can connect. No external services are configured.
+listen = "0.0.0.0:9042"
+disable_favicons = true
+disable_ntp_check = true
+trusted_proxies = "*"
+trusted_headers = ["X-Forwarded-For"]
+
+[duckdb]
+memory_limit = "512MB"
+threads = 2
+
+# Collection settings live in Liwan's embedded app database. Before activation,
+# apply the reviewed settings in collection-settings.json through its private API.

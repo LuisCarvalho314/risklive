@@ -90,6 +90,27 @@ services:
       retries: 5
       start_period: 40s
 
+  liwan:
+    profiles: [analytics]
+    image: ghcr.io/explodingcamera/liwan:1.8.1@sha256:ed1eb1f7a208ab8e43648b86d22735513dfedd2fdc60ba4aae7cddd4468c6f2e
+    restart: unless-stopped
+    stop_grace_period: 1m
+    environment:
+      LIWAN_CONFIG: /etc/liwan/config.toml
+      LIWAN_DATA_DIR: /data
+      LIWAN_BASE_URL: "http://localhost:${LIWAN_ADMIN_PORT:-9042}"
+    # Private administration only. Access via an approved SSH tunnel, never public ingress.
+    ports:
+      - "127.0.0.1:${LIWAN_ADMIN_PORT:-9042}:9042"
+    volumes:
+      - liwan_data:/data
+      - ../liwan/config.toml:/etc/liwan/config.toml:ro
+    networks:
+      - analytics
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+
   caddy:
     image: caddy:2.8.4-alpine
     healthcheck:
@@ -106,8 +127,10 @@ services:
       - ../caddy/Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+    # Caddy is the only application service that shares Liwan's network.
     networks:
       - internal
+      - analytics
     depends_on:
       app:
         condition: service_healthy
@@ -115,9 +138,12 @@ services:
         condition: service_healthy
 
 networks:
+  analytics:
+    internal: true
   internal:
     driver: bridge
 
 volumes:
+  liwan_data:
   caddy_data:
   caddy_config:

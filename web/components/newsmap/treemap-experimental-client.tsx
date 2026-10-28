@@ -3,6 +3,7 @@
 
 "use client";
 
+import { useAnalytics } from "@/components/analytics/provider";
 import { useMemo, useState } from "react";
 
 import { TreemapClient } from "@/components/newsmap/treemap-client";
@@ -26,6 +27,7 @@ type Props = {
 export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Props) {
   const isTimeline = timelineResult.mode === "timeline";
   const initialKey: ExperimentalTimelineKey = isTimeline ? timelineResult.selectedKey : "30d";
+  const { track } = useAnalytics();
   const [selectedTimelineKey, setSelectedTimelineKey] = useState<ExperimentalTimelineKey>(initialKey);
   const [selectedIndexes, setSelectedIndexes] = useState<Partial<Record<ExperimentalTimelineKey, number>>>(() => {
     if (!isTimeline) return {};
@@ -128,7 +130,7 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                     key={key}
                     type="button"
                     onClick={() => {
-                      if (isAvailable) setSelectedTimelineKey(key);
+                      if (isAvailable) { if (activeTimelineKey !== key) track("newsmap_view_changed", { mode: key }); setSelectedTimelineKey(key); }
                     }}
                     disabled={!isAvailable}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
@@ -194,7 +196,7 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                   <div key={metric} className="group relative">
                     <button
                       type="button"
-                      onClick={() => setSelectedMetric(metric)}
+                      onClick={() => { if (selectedMetric !== metric) track("newsmap_view_changed", { mode: metric }); setSelectedMetric(metric); }}
                       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                         selectedMetric === metric
                           ? "bg-background text-foreground shadow-sm"
@@ -222,7 +224,7 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                   <button
                     key={direction}
                     type="button"
-                    onClick={() => setSizeDirection(direction)}
+                    onClick={() => { if (sizeDirection !== direction) track("newsmap_view_changed", { mode: direction }); setSizeDirection(direction); }}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                       sizeDirection === direction
                         ? "bg-background text-foreground shadow-sm"

@@ -6,6 +6,8 @@
 import { ParentSize } from "@visx/responsive";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { ArticleLink } from "@/components/analytics/article-link";
+import { useAnalytics } from "@/components/analytics/provider";
 import { TreemapCanvas } from "@/components/newsmap/treemap-canvas";
 import { TreemapNode } from "@/lib/dashboard";
 import { defaultTuning, treemapLabelColors, treemapPalettes } from "@/lib/treemap/config";
@@ -117,6 +119,7 @@ export function TreemapClient({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [flagFilter, setFlagFilter] = useState<FlagFilter>("All");
+  const { track } = useAnalytics();
   const [focusId, setFocusId] = useState<string>("root::newsmap");
   const [tooltip, setTooltip] = useState<{ x: number; y: number; node: TreemapNode } | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ left: number; top: number } | null>(null);
@@ -479,14 +482,14 @@ export function TreemapClient({
               <div className={["inline-flex items-center", controlGroupGapClass].join(" ")}>
                 <button
                   type="button"
-                  onClick={() => setLayoutMode("binary")}
+                  onClick={() => { if (layoutMode !== "binary") track("newsmap_view_changed", { mode: "binary" }); setLayoutMode("binary"); }}
                   className={modeButtonClass(layoutMode === "binary")}
                 >
                   Binary
                 </button>
                 <button
                   type="button"
-                  onClick={() => setLayoutMode("squarify")}
+                  onClick={() => { if (layoutMode !== "squarify") track("newsmap_view_changed", { mode: "squarify" }); setLayoutMode("squarify"); }}
                   className={modeButtonClass(layoutMode === "squarify")}
                 >
                   Squarify
@@ -752,7 +755,7 @@ export function TreemapClient({
                     <div className="max-h-40 space-y-1 overflow-y-auto">
                       {visibleSourceRefs.map((source) =>
                         source.url ? (
-                          <a
+                          <ArticleLink
                             key={source.id}
                             href={source.url}
                             target="_blank"
@@ -764,7 +767,7 @@ export function TreemapClient({
                               {source.title ?? source.id}
                             </div>
                             <div className="truncate text-[10px] text-muted-foreground">{source.url}</div>
-                          </a>
+                          </ArticleLink>
                         ) : (
                           <div
                             key={source.id}

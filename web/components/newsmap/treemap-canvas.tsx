@@ -4,6 +4,7 @@
 import { memo, type MutableRefObject, type RefObject, useMemo } from "react";
 import { useEffect, useRef, useState } from "react";
 
+import { useAnalytics } from "@/components/analytics/provider";
 import { TreemapNode } from "@/lib/dashboard";
 import { TreemapTuning } from "@/lib/treemap/config";
 import { LayoutMap, useLayoutMap } from "@/lib/treemap/layout";
@@ -412,6 +413,8 @@ function makeHoverKey(payload: HoverPayload): string {
 }
 
 function renderNodes(params: {
+  recordNode: (depth: number, leaf: boolean) => void;
+  openArticle: (url: string, risk?: string) => void;
   orderedNodes: LayoutMap["nodes"];
   visibility: Map<string, number>;
   tuning: TreemapTuning;
@@ -428,6 +431,8 @@ function renderNodes(params: {
 clickTimerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
 }) {
   const {
+    recordNode,
+    openArticle,
     orderedNodes,
     visibility,
     tuning,
@@ -510,6 +515,7 @@ clickTimerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
       <g
         key={node.id}
         onClick={(event) => {
+          recordNode(node.depth, isLeaf);
           const bounds = containerRef.current?.getBoundingClientRect();
           if (bounds) {
             setTooltip(
@@ -560,7 +566,7 @@ clickTimerRef: MutableRefObject<ReturnType<typeof setTimeout> | null>;
             return;
           }
           const meta = (data.meta ?? {}) as NonNullable<TreemapNode["meta"]>;
-          if (meta.url) window.open(meta.url, "_blank", "noreferrer");
+          if (meta.url) { openArticle(meta.url, meta.alertFlag); window.open(meta.url, "_blank", "noreferrer"); }
         }}
         onMouseMove={(event) => {
           const bounds = containerRef.current?.getBoundingClientRect();
@@ -756,6 +762,7 @@ function TreemapCanvasImpl({
   setTooltip,
   experimentalInteractions = false,
 }: TreemapCanvasProps) {
+  const { track, openArticle } = useAnalytics();
   const targetLayout = useLayoutMap(root, width, height, tuning);
   const nodeCount = targetLayout?.nodes.length ?? 0;
   const animationDurationMs = useMemo(
@@ -852,6 +859,8 @@ function TreemapCanvasImpl({
       }}
     >
       {renderNodes({
+        openArticle,
+        recordNode: (depth, leaf) => track("newsmap_node_selected", { depth, node_type: experimentalInteractions ? "node" : leaf ? "article" : depth === 1 ? "category" : "topic" }),
         orderedNodes,
         visibility: animated.visibility,
         tuning,

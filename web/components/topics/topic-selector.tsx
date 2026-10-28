@@ -6,9 +6,11 @@
 import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+import { useAnalytics } from "@/components/analytics/provider";
 import { TopicEntry } from "@/lib/dashboard";
 
 export function TopicSelector({ topics }: { topics: TopicEntry[] }) {
+  const { track } = useAnalytics();
   const options = useMemo(
     () => topics.filter((topic) => topic.keyword && topic.response),
     [topics]
@@ -23,7 +25,7 @@ export function TopicSelector({ topics }: { topics: TopicEntry[] }) {
         Select Topic
         <select
           value={selected}
-          onChange={(event) => setSelected(event.target.value)}
+          onChange={(event) => { track("topic_selected"); setSelected(event.target.value); }}
           className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
         >
           {options.map((topic) => (

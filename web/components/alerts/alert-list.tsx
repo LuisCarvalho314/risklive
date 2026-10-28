@@ -1,7 +1,7 @@
 //© 2025 University of Aberdeen. All rights reserved
 
 
-import Link from "next/link";
+import { ArticleLink } from "@/components/analytics/article-link";
 
 import { Badge } from "@/components/ui/badge";
 import { AlertItem } from "@/lib/dashboard";
@@ -45,9 +45,9 @@ export function AlertList({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
               {item.url ? (
-                <Link href={item.url} className="text-sm font-semibold text-foreground hover:underline">
+                <ArticleLink href={item.url} risk={item.alert_flag} className="text-sm font-semibold text-foreground hover:underline">
                   {item.title}
-                </Link>
+                </ArticleLink>
               ) : (
                 <p className="text-sm font-semibold text-foreground">{item.title}</p>
               )}

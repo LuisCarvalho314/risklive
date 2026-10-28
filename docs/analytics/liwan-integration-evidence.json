@@ -1,0 +1,700 @@
+{
+  "captured": [
+    {
+      "name": "pageview",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/alerts",
+      "properties": {}
+    },
+    {
+      "name": "article_opened",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/alerts",
+      "properties": {
+        "article_id": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+        "section": "alerts",
+        "risk_level": "red"
+      }
+    },
+    {
+      "name": "alert_filter_changed",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/alerts",
+      "properties": {
+        "section": "alerts",
+        "severity": "red"
+      }
+    },
+    {
+      "name": "pageview",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap",
+      "properties": {}
+    },
+    {
+      "name": "newsmap_node_selected",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap",
+      "properties": {
+        "section": "newsmap",
+        "node_type": "article",
+        "depth": 3
+      }
+    },
+    {
+      "name": "newsmap_node_selected",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap",
+      "properties": {
+        "section": "newsmap",
+        "node_type": "article",
+        "depth": 3
+      }
+    },
+    {
+      "name": "article_opened",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap",
+      "properties": {
+        "article_id": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+        "section": "newsmap",
+        "risk_level": "red"
+      }
+    },
+    {
+      "name": "newsmap_view_changed",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap",
+      "properties": {
+        "section": "newsmap",
+        "mode": "squarify"
+      }
+    },
+    {
+      "name": "pageview",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap-experimental",
+      "properties": {}
+    },
+    {
+      "name": "article_opened",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/newsmap-experimental",
+      "properties": {
+        "article_id": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+        "section": "newsmap-experimental",
+        "risk_level": "unknown"
+      }
+    },
+    {
+      "name": "pageview",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/topics",
+      "properties": {}
+    },
+    {
+      "name": "topic_selected",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/topics",
+      "properties": {
+        "section": "topics"
+      }
+    },
+    {
+      "name": "topic_filter_used",
+      "entity_id": "risklive",
+      "url": "http://risklive.test/topics",
+      "properties": {
+        "section": "topics"
+      }
+    }
+  ],
+  "checks": {
+    "sharedArticleIdentity": true,
+    "allPageRoutes": true,
+    "privatePayload": true,
+    "optOut": true,
+    "excludedOps": true,
+    "disabledServer": true,
+    "automationExcluded": true
+  },
+  "combinedArticleRanking": {
+    "data": [
+      {
+        "dimensionValue": "url-v1-03cb75f0d96b5ce786ae6c08299637f42e637b55030a261fd9d95be59e366966",
+        "value": 20.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0bf6b4d38ccccc220ad9479e7731abd1bb1eb36868dc1ef7153d1ee4e4f0b289",
+        "value": 18.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0e1bc8c5fef33aa96bd6092487e75b67515e55caca9b6dc6eff6a35320b76449",
+        "value": 11.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0f60b59d837ef210208cd90551b1e53817e5796d6085fe551ec76fadd88ebec0",
+        "value": 17.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+        "value": 28.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-2bb95c409927b81e582c9a3345c745aacff29a1150c48ec3dc501422a960986a",
+        "value": 24.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-2fb8f5bc3d4172f3de2f68ed3946dfb20b12854a740ad0d6ddd471fcb712c1ae",
+        "value": 21.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-3d8e3fcce3c49665d024cba14395dad577bb9f266da7573f53975f3d0d78810e",
+        "value": 10.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-3ec13393dcec0ddaf7eb26ddd35d7e65e15629b6afccc4a1eebf879f3ad16ecb",
+        "value": 8.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-454e516d155c0fc63c1119700124880c4eb6204564a2cc8f5380c1c6c1c5d7f3",
+        "value": 14.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-48943dc8f7f96b2b4f4d189e93a4af8a51aa3aa8ae4a419d077454d9c77ffec3",
+        "value": 15.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-8a965b5b537e7094dea7871164fce92c423eea570bfbbe6e70c9f057a341abf1",
+        "value": 9.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-923ad500f87741fd6f325f4d9d1f4f4285090abe98830beaf8d873c7ab0deb0c",
+        "value": 4.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-9288341712d5f65456872ad1196029c6fd213154dd7a756e6aeba79c7890bbde",
+        "value": 12.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-a0562a12f77242ef4c8a0df59d5442f5a5d49c06d1e163da17661752dac2663f",
+        "value": 22.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-b1309aa9d9e67cba0db7bddc10972f9213cc4e071e1c6fb103e2d059d900efa4",
+        "value": 1.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-cbc459c9caebcf534807f92f5f975cb72bdc34f0eeb88508629d5fd2d7814577",
+        "value": 5.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-cffd8c5842bd600b592e326ce8dacf2ebfed3f3d166c7cd4601ba4d64fefafd5",
+        "value": 6.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-d16021f413638e7b53605803cdc552786852a2c237ce5891f70d0e263d0368f0",
+        "value": 16.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-d731c38942bd7c8bda08edd62ddad5b2eaa89275b886b336c476f64b2d268d71",
+        "value": 2.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-dc1872dc5e766e3bed98a512fcf627a1186429b7e224fe53f4af2d4b06811a04",
+        "value": 3.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-de2ed50c2c8a2bbb2d49651c7dbf0c4ded380a10de930ce2d42adde15b8921fb",
+        "value": 7.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-e7d1f544077e85b0982d1a168c099c77912f31a50490f177c4d0e2dc29a59647",
+        "value": 13.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-fd18d07be07e26fe515233af539d52a10de072ce76bab1435149f1236b0bf264",
+        "value": 23.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-fd7f59a6bc4a80c3543bbd4cb676cdfd02a04de69785ee89973d0964da43159f",
+        "value": 19.0,
+        "displayName": null,
+        "icon": null
+      }
+    ]
+  },
+  "top20": [
+    {
+      "dimensionValue": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+      "value": 28.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-2bb95c409927b81e582c9a3345c745aacff29a1150c48ec3dc501422a960986a",
+      "value": 24.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-fd18d07be07e26fe515233af539d52a10de072ce76bab1435149f1236b0bf264",
+      "value": 23.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-a0562a12f77242ef4c8a0df59d5442f5a5d49c06d1e163da17661752dac2663f",
+      "value": 22.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-2fb8f5bc3d4172f3de2f68ed3946dfb20b12854a740ad0d6ddd471fcb712c1ae",
+      "value": 21.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-03cb75f0d96b5ce786ae6c08299637f42e637b55030a261fd9d95be59e366966",
+      "value": 20.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-fd7f59a6bc4a80c3543bbd4cb676cdfd02a04de69785ee89973d0964da43159f",
+      "value": 19.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-0bf6b4d38ccccc220ad9479e7731abd1bb1eb36868dc1ef7153d1ee4e4f0b289",
+      "value": 18.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-0f60b59d837ef210208cd90551b1e53817e5796d6085fe551ec76fadd88ebec0",
+      "value": 17.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-d16021f413638e7b53605803cdc552786852a2c237ce5891f70d0e263d0368f0",
+      "value": 16.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-48943dc8f7f96b2b4f4d189e93a4af8a51aa3aa8ae4a419d077454d9c77ffec3",
+      "value": 15.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-454e516d155c0fc63c1119700124880c4eb6204564a2cc8f5380c1c6c1c5d7f3",
+      "value": 14.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-e7d1f544077e85b0982d1a168c099c77912f31a50490f177c4d0e2dc29a59647",
+      "value": 13.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-9288341712d5f65456872ad1196029c6fd213154dd7a756e6aeba79c7890bbde",
+      "value": 12.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-0e1bc8c5fef33aa96bd6092487e75b67515e55caca9b6dc6eff6a35320b76449",
+      "value": 11.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-3d8e3fcce3c49665d024cba14395dad577bb9f266da7573f53975f3d0d78810e",
+      "value": 10.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-8a965b5b537e7094dea7871164fce92c423eea570bfbbe6e70c9f057a341abf1",
+      "value": 9.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-3ec13393dcec0ddaf7eb26ddd35d7e65e15629b6afccc4a1eebf879f3ad16ecb",
+      "value": 8.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-de2ed50c2c8a2bbb2d49651c7dbf0c4ded380a10de930ce2d42adde15b8921fb",
+      "value": 7.0,
+      "displayName": null,
+      "icon": null
+    },
+    {
+      "dimensionValue": "url-v1-cffd8c5842bd600b592e326ce8dacf2ebfed3f3d166c7cd4601ba4d64fefafd5",
+      "value": 6.0,
+      "displayName": null,
+      "icon": null
+    }
+  ],
+  "sections": {
+    "data": [
+      {
+        "dimensionValue": "alerts",
+        "value": 170.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "newsmap",
+        "value": 157.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "newsmap-experimental",
+        "value": 1.0,
+        "displayName": null,
+        "icon": null
+      }
+    ]
+  },
+  "risks": {
+    "data": [
+      {
+        "dimensionValue": "red",
+        "value": 171.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "unknown",
+        "value": 1.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "yellow",
+        "value": 156.0,
+        "displayName": null,
+        "icon": null
+      }
+    ]
+  },
+  "articleMonthly": {
+    "data": [
+      {
+        "binStart": "2024-10-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2024-11-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2024-12-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-01-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-02-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-03-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-04-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-05-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-06-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-07-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-08-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-09-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-10-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-11-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2025-12-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-01-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-02-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-03-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-04-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-05-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-06-01T00:00:00Z",
+        "value": 0.0
+      },
+      {
+        "binStart": "2026-07-01T00:00:00Z",
+        "value": 8.0
+      },
+      {
+        "binStart": "2026-08-01T00:00:00Z",
+        "value": 8.0
+      },
+      {
+        "binStart": "2026-09-01T00:00:00Z",
+        "value": 9.0
+      },
+      {
+        "binStart": "2026-10-01T00:00:00Z",
+        "value": 3.0
+      }
+    ]
+  },
+  "sectionFiltered": {
+    "data": [
+      {
+        "dimensionValue": "url-v1-03cb75f0d96b5ce786ae6c08299637f42e637b55030a261fd9d95be59e366966",
+        "value": 10.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0bf6b4d38ccccc220ad9479e7731abd1bb1eb36868dc1ef7153d1ee4e4f0b289",
+        "value": 9.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0e1bc8c5fef33aa96bd6092487e75b67515e55caca9b6dc6eff6a35320b76449",
+        "value": 5.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-0f60b59d837ef210208cd90551b1e53817e5796d6085fe551ec76fadd88ebec0",
+        "value": 8.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-11675e9c8546e43bb02679d73cc84a5cf6ae4645b709b3418202aeae26dec097",
+        "value": 13.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-2bb95c409927b81e582c9a3345c745aacff29a1150c48ec3dc501422a960986a",
+        "value": 12.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-2fb8f5bc3d4172f3de2f68ed3946dfb20b12854a740ad0d6ddd471fcb712c1ae",
+        "value": 10.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-3d8e3fcce3c49665d024cba14395dad577bb9f266da7573f53975f3d0d78810e",
+        "value": 5.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-3ec13393dcec0ddaf7eb26ddd35d7e65e15629b6afccc4a1eebf879f3ad16ecb",
+        "value": 4.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-454e516d155c0fc63c1119700124880c4eb6204564a2cc8f5380c1c6c1c5d7f3",
+        "value": 7.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-48943dc8f7f96b2b4f4d189e93a4af8a51aa3aa8ae4a419d077454d9c77ffec3",
+        "value": 7.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-8a965b5b537e7094dea7871164fce92c423eea570bfbbe6e70c9f057a341abf1",
+        "value": 4.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-923ad500f87741fd6f325f4d9d1f4f4285090abe98830beaf8d873c7ab0deb0c",
+        "value": 2.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-9288341712d5f65456872ad1196029c6fd213154dd7a756e6aeba79c7890bbde",
+        "value": 6.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-a0562a12f77242ef4c8a0df59d5442f5a5d49c06d1e163da17661752dac2663f",
+        "value": 11.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-cbc459c9caebcf534807f92f5f975cb72bdc34f0eeb88508629d5fd2d7814577",
+        "value": 2.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-cffd8c5842bd600b592e326ce8dacf2ebfed3f3d166c7cd4601ba4d64fefafd5",
+        "value": 3.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-d16021f413638e7b53605803cdc552786852a2c237ce5891f70d0e263d0368f0",
+        "value": 8.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-d731c38942bd7c8bda08edd62ddad5b2eaa89275b886b336c476f64b2d268d71",
+        "value": 1.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-dc1872dc5e766e3bed98a512fcf627a1186429b7e224fe53f4af2d4b06811a04",
+        "value": 1.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-de2ed50c2c8a2bbb2d49651c7dbf0c4ded380a10de930ce2d42adde15b8921fb",
+        "value": 3.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-e7d1f544077e85b0982d1a168c099c77912f31a50490f177c4d0e2dc29a59647",
+        "value": 6.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-fd18d07be07e26fe515233af539d52a10de072ce76bab1435149f1236b0bf264",
+        "value": 11.0,
+        "displayName": null,
+        "icon": null
+      },
+      {
+        "dimensionValue": "url-v1-fd7f59a6bc4a80c3543bbd4cb676cdfd02a04de69785ee89973d0964da43159f",
+        "value": 9.0,
+        "displayName": null,
+        "icon": null
+      }
+    ]
+  },
+  "publicAdministrativeRoutes": {
+    "/analytics/": 404,
+    "/analytics/api/dashboard/projects": 404,
+    "/analytics/api/v1/events": 404,
+    "/analytics/script.js": 404,
+    "/api/dashboard/auth/me": 404
+  }
+}

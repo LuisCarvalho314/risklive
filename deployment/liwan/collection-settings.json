@@ -1,0 +1,8 @@
+{
+  "visitorGroupMode": "network_standard",
+  "trackSessions": false,
+  "trackUtmParams": false,
+  "trackGeo": "none",
+  "dataRetention": {"mode": "days", "days": 730},
+  "ingestDropRules": []
+}

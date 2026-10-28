@@ -15,6 +15,8 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 120_000,
     env: {
+      ANALYTICS_TEST_MODE: "true",
+      LIWAN_ENABLED: "false",
       DASHBOARD_JSON_PATH: path.join(process.cwd(), "tests", ".runtime", "dashboard.json")
     }
   }

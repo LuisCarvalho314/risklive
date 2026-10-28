@@ -5,6 +5,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useAnalytics } from "@/components/analytics/provider";
 import { AlertList } from "@/components/alerts/alert-list";
 import { Button } from "@/components/ui/button";
 import { AlertItem, FlaggedAlerts } from "@/lib/dashboard";
@@ -67,6 +68,7 @@ function AlertSection({
 }
 
 export function AlertsDashboard({ flagged }: { flagged: FlaggedAlerts }) {
+  const { track } = useAnalytics();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<AlertFilter>("All");
   const maxInitial = 200;
@@ -107,7 +109,7 @@ export function AlertsDashboard({ flagged }: { flagged: FlaggedAlerts }) {
               type="button"
               size="sm"
               variant={filter === value ? "default" : "outline"}
-              onClick={() => setFilter(value)}
+              onClick={() => { if (filter !== value) track("alert_filter_changed", { severity: value.toLowerCase() }); setFilter(value); }}
             >
               {alertFilterLabel(value)}
             </Button>
