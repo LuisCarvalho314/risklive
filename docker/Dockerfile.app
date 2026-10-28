@@ -8,13 +8,14 @@ COPY experimental/crates ./crates
 COPY docker/seca/SOURCE.sha256 /tmp/SOURCE.sha256
 RUN sha256sum --check /tmp/SOURCE.sha256
 COPY docker/seca/Cargo.lock ./Cargo.lock
-RUN cargo test --release --locked -p realtime-seca-core -p realtime-seca-cli --jobs 2 \
- && cargo build --release --locked -p realtime-seca-cli --jobs 2 \
- && install -m 0755 target/release/realtime-seca-cli /usr/local/bin/realtime-seca-cli
+RUN cargo test --release --locked -p realtime-seca-core -p realtime-seca-cli -p realtime-seca-v2 --jobs 2 \
+ && cargo build --release --locked -p realtime-seca-cli -p realtime-seca-v2 --bins --jobs 2 \
+ && install -m 0755 target/release/realtime-seca-cli /usr/local/bin/realtime-seca-cli \
+ && install -m 0755 target/release/seca-v2-cli /usr/local/bin/seca-v2-cli
 
 FROM python:3.11-slim
 
-LABEL org.risklive.seca.source-revision="1631655ad64e43e00c54cba05c6a6fc859e1bcee" \
+LABEL org.risklive.seca.source-revision="4630d280e323ed2067b9ac7a0efb4f59447d335d" \
     org.risklive.seca.toolchain="1.92.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -37,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=uv /uv /usr/local/bin/uv
 COPY --from=seca-builder /usr/local/bin/realtime-seca-cli /usr/local/bin/realtime-seca-cli
+COPY --from=seca-builder /usr/local/bin/seca-v2-cli /usr/local/bin/seca-v2-cli
 
 COPY pyproject.toml uv.lock ./
 COPY README.md ./README.md
