@@ -3,6 +3,9 @@
 
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import { TreemapExperimentalClient } from "@/components/newsmap/treemap-experimental-client";
 import { useDashboardData } from "@/lib/dashboard-client";
 import type { ExperimentalTimelineResult } from "@/lib/newsmap-experimental-shared";
@@ -12,7 +15,12 @@ type Props = {
 };
 
 export function NewsmapExperimentalLivePage({ timelineResult }: Props) {
-  const { dashboard } = useDashboardData();
+  const { dashboard, lastLoadedAt } = useDashboardData();
+  const router = useRouter();
+  // Reuse the existing dashboard refresh cadence; no second polling timer.
+  useEffect(() => {
+    if (timelineResult.mode === "v2" && lastLoadedAt) router.refresh();
+  }, [lastLoadedAt, router, timelineResult.mode]);
 
   return (
     <div className="h-full min-h-0 p-1">

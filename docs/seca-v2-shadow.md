@@ -10,8 +10,8 @@ V1 compatibility was explicitly dropped during validation. The scheduled V1
 invocation is retired. Existing V1 code/artifacts and legacy routes remain, but
 the packaged CLI is not compatible with the old scientific update configuration.
 It is retained for CSV preprocessing only. No V1-to-V2 state migration occurs.
-Existing Newsmap pages continue to read their existing artifacts; V2 is not shown
-in the frontend. BERTopic, report generation and dashboard export code are unchanged.
+The experimental Newsmap prefers the V2 native report when published. The main
+Newsmap, BERTopic, report generation and dashboard export code are unchanged.
 
 ## Build and scientific output
 
@@ -137,3 +137,31 @@ For unusable state, replay explicitly into a fresh root, using the adapter's
 Inspect `latest.json` and receipts and compare source counts before any separately
 authorized promotion of that directory. No automatic historical replay is done by
 the scheduler. See [adapter recovery details](seca-v2-adapter.md).
+
+
+## Experimental Newsmap publication
+
+`/newsmap-experimental` reads `results/web/newsmap/seca-v2/manifest.json` and its
+referenced native report (`YYYY-MM-DD-batch-N.json`) through the existing
+read-only results mount. The adapter publishes the native report first and the
+manifest last, using atomic replacement and file mode 0644. Authoritative model
+state and the SQLite ledger stay private in runtime; the web container does not
+mount them. Publication errors can be repaired with `show-last` without advancing
+the model. `export_dashboard()` is not required.
+
+The page shows batch date/index, retained source count, the recursive HKT and
+source links. Tile area uses retained source counts with conditional child
+budgets, avoiding duplicate mass across hierarchy levels. Render keys use
+batch-local positions, not durable scientific node IDs. Native reconstruction
+decisions and error metrics are shown separately because they describe scopes
+before reconstruction. V1-only window and error-sizing controls are hidden in
+the V2 view. The existing dashboard refresh cadence reloads the native report.
+Missing V2 publication retains the existing legacy behavior; a present but
+invalid V2 publication shows an explicit error/fallback instead of stale V1 data.
+
+For an existing V2 stream, deploy the new app/web images and publish the current
+report once with `docker compose -f "$SECA_COMPOSE" exec -T app python -m
+services.seca_v2 show-last`. Do not bootstrap again. Then open
+`/newsmap-experimental`; confirm its batch/source counts match `show-last` and
+that following source links works. The main `/newsmap` and report artifacts
+must remain unchanged.

@@ -23,7 +23,46 @@ type Props = {
   fallbackTree: TreemapNode;
 };
 
-export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Props) {
+export function TreemapExperimentalClient(props: Props) {
+  if (props.timelineResult.mode === "v2") {
+    const result = props.timelineResult;
+    const reconstructed = result.decisions.filter(d => d.reconstructed).length;
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        <div className="shrink-0 rounded-xl border border-border bg-background/95 px-3 py-2 text-xs">
+          <strong>SECALight V2 · Experimental</strong>
+          <span className="ml-3">{result.day} UTC · Batch {result.batch} · {result.retainedSourceCount} retained sources</span>
+          <span className="ml-3 text-muted-foreground">Area: retained sources</span>
+          <details className="mt-1">
+            <summary className="cursor-pointer">Update decisions: {reconstructed} reconstructed of {result.decisions.length}</summary>
+            <p className="my-1 text-muted-foreground">Decisions describe the evaluated tree before reconstruction.</p>
+            <div className="max-h-40 overflow-auto">
+              <table className="w-full text-left">
+                <thead><tr><th>Scope path</th><th>Alpha error</th><th>Beta error</th><th>Importance error</th><th>Reconstructed</th></tr></thead>
+                <tbody>{result.decisions.map((decision, i) => (
+                  <tr key={i}><td>{decision.path.length ? decision.path.join(" / ") : "Root"}</td>
+                    <td>{decision.errors.alpha.toPrecision(4)}</td><td>{decision.errors.beta.toPrecision(4)}</td>
+                    <td>{decision.errors.importance.toPrecision(4)}</td><td>{decision.reconstructed ? "Yes" : "No"}</td></tr>
+                ))}</tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+        <div className="min-h-0 flex-1">
+          {result.retainedSourceCount ? <TreemapClient key={`v2-${result.batch}`} data={result.tree}
+            preserveHierarchy weightModeOverride="value" experimentalInteractions compactControls
+            controlHint="Double click a tile to show sources." />
+            : <p className="p-4" role="status">No retained sources in the current V2 batch.</p>}
+        </div>
+      </div>
+    );
+  }
+  return <LegacyTreemapExperimentalClient {...props} timelineResult={props.timelineResult} />;
+}
+
+function LegacyTreemapExperimentalClient({ timelineResult, fallbackTree }: Omit<Props, "timelineResult"> & {
+  timelineResult: Exclude<ExperimentalTimelineResult, { mode: "v2" }>
+}) {
   const isTimeline = timelineResult.mode === "timeline";
   const initialKey: ExperimentalTimelineKey = isTimeline ? timelineResult.selectedKey : "30d";
   const [selectedTimelineKey, setSelectedTimelineKey] = useState<ExperimentalTimelineKey>(initialKey);

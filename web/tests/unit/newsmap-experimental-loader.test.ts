@@ -24,6 +24,7 @@ vi.mock("fs/promises", () => ({
 // separate filesystem tests.
 vi.mock("@/lib/bounded-file", () => ({
   readBoundedText: async (filePath: string, maxBytes: number, budget: { remainingBytes: number }) => {
+    if (filePath.includes("/seca-v2/")) throw Object.assign(new Error("missing"), { code: "ENOENT" });
     const fs = await import("fs/promises");
     const raw = String(await fs.default.readFile(filePath, "utf-8"));
     const bytes = simulatedSizes.get(filePath) ?? Buffer.byteLength(raw);

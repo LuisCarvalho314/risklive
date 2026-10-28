@@ -254,13 +254,19 @@ def test_native_artifact_metrics_and_publication_recovery(tmp_path, binaries, mo
     directory = tmp_path / "runtime/seca/v2"
     assert json.loads((directory / "latest.json").read_text()) == result
     assert json.loads((directory / "reports/2026-10-03/batch-2.json").read_text()) == result
+    web = tmp_path / "results/web/newsmap/seca-v2"
+    manifest = json.loads((web / "manifest.json").read_text())
+    assert manifest == {"schema_version": 1, "batch": 2, "day": "2026-10-03", "file": "2026-10-03-batch-2.json"}
+    assert json.loads((web / manifest["file"]).read_text()) == result
+    assert (web / manifest["file"]).stat().st_mode & 0o777 == 0o644
+    assert (web / "manifest.json").stat().st_mode & 0o777 == 0o644
     assert stats["input_rows"] == 3
     assert stats["deduped_rows"] == 1
     assert stats["output_rows"] == 2
     assert stats["state_bytes"] == len(state(tmp_path))
     assert stats["total_adapter_ms"] > 0
     assert stats["peak_rss_kib"] > 0
-    assert set(p.name for p in tmp_path.iterdir()) == {"articles.csv", "runtime"}
+    assert set(p.name for p in tmp_path.iterdir()) == {"articles.csv", "runtime", "results"}
     original = v2._publish_report
     monkeypatch.setattr(v2, "_publish_report", lambda *args: (_ for _ in ()).throw(OSError("publish failed")))
     with pytest.raises(OSError):
@@ -271,3 +277,28 @@ def test_native_artifact_metrics_and_publication_recovery(tmp_path, binaries, mo
     assert invoke(tmp_path, source, binaries, day=4)["batch"] == 3
     assert state(tmp_path) == before
     assert json.loads((directory / "latest.json").read_text())["batch"] == 3
+
+
+def test_public_manifest_keeps_last_complete_report_on_publish_failure(tmp_path, binaries, monkeypatch):
+    source = tmp_path / "articles.csv"
+    write(source, [row(1), row(3)])
+    initial = invoke(tmp_path, source, binaries, bootstrap=True)
+    web = tmp_path / "results/web/newsmap/seca-v2"
+    previous = json.loads((web / "manifest.json").read_text())
+    replace = v2.os.replace
+    def failed_manifest(src, dst):
+        if dst == web / "manifest.json":
+            raise OSError("interrupted manifest publication")
+        return replace(src, dst)
+    monkeypatch.setattr(v2.os, "replace", failed_manifest)
+    with pytest.raises(OSError):
+        invoke(tmp_path, source, binaries, day=4)
+    assert json.loads((web / "manifest.json").read_text()) == previous
+    assert json.loads((web / previous["file"]).read_text()) == initial
+    committed = state(tmp_path)
+    monkeypatch.setattr(v2.os, "replace", replace)
+    result = invoke(tmp_path, source, binaries, day=4)
+    assert state(tmp_path) == committed
+    current = json.loads((web / "manifest.json").read_text())
+    assert current["batch"] == 3
+    assert json.loads((web / current["file"]).read_text()) == result
