@@ -295,11 +295,21 @@ def _publish_report(directory, day, report):
     reports.mkdir(parents=True, exist_ok=True)
     output = reports / f"batch-{report['batch']}.json"
     payload = _json(report)
-    for target in (output, directory / "latest.json"):
+    # Publish only derived reports through the existing read-only web mount.
+    web = directory.parents[2] / "results/web/newsmap/seca-v2"
+    web.mkdir(parents=True, exist_ok=True)
+    filename = f"{day}-batch-{report['batch']}.json"
+    manifest = _json({"schema_version": 1, "batch": report["batch"], "day": day, "file": filename})
+    targets = [(output, payload, False), (directory / "latest.json", payload, False),
+               (web / filename, payload, True), (web / "manifest.json", manifest, True)]
+    # Publish the manifest last, after its immutable report is fully available.
+    for target, contents, public in targets:
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent, delete=False) as handle:
             temporary = Path(handle.name)
             try:
-                handle.write(payload)
+                if public:
+                    os.fchmod(handle.fileno(), 0o644)
+                handle.write(contents)
                 handle.flush()
                 os.fsync(handle.fileno())
             except BaseException:

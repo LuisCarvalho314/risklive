@@ -1,5 +1,6 @@
 import { readBoundedText, type FileReadBudget } from "@/lib/bounded-file";
 import path from "path";
+import { buildSecaV2View } from "@/lib/seca-v2";
 
 import type { TreemapNode } from "@/lib/dashboard";
 import type {
@@ -751,6 +752,35 @@ async function readNewsDataFiles(budget: FileReadBudget): Promise<NewsCsvRow[]> 
 
 async function loadExperimentalNewsmapOnce(): Promise<ExperimentalTimelineResult> {
   const budget: FileReadBudget = { remainingBytes: MAX_LOAD_BYTES };
+  const v2Directory = path.join(process.cwd(), "..", "results/web/newsmap/seca-v2");
+  let manifest: unknown;
+  try {
+    manifest = await readJson(path.join(v2Directory, "manifest.json"), budget);
+  } catch (error) {
+    if (!isRecord(error) || error.code !== "ENOENT") {
+      return { mode: "fallback", reason: "V2 report could not be loaded safely." };
+    }
+  }
+  if (manifest !== undefined) {
+    try {
+      if (!isRecord(manifest) || manifest.schema_version !== 1
+          || !Number.isSafeInteger(manifest.batch) || (manifest.batch as number) < 0
+          || typeof manifest.day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(manifest.day)
+          || new Date(`${manifest.day}T00:00:00Z`).toISOString().slice(0, 10) !== manifest.day
+          || manifest.file !== `${manifest.day}-batch-${manifest.batch}.json`) throw new Error("Invalid V2 manifest");
+      const payload = await readJson(resolveBatchPath(v2Directory, manifest.file as string), budget);
+      const titles = new Map<string, string>();
+      try {
+        const raw = await readBoundedText(getNewsDataPaths()[1], MAX_INPUT_BYTES, budget);
+        for (const row of parseNewsDataCsv(raw)) if (row.url) titles.set(row.url, row.title);
+      } catch { /* The native source IDs/URLs remain usable without optional titles. */ }
+      const view = buildSecaV2View(payload, manifest.day, titles);
+      if (view.batch !== manifest.batch) throw new Error("V2 manifest batch mismatch");
+      return view;
+    } catch {
+      return { mode: "fallback", reason: "V2 report is invalid or exceeds the safe input limit." };
+    }
+  }
   const secaErrors: Partial<Record<ExperimentalTimelineKey, string>> = {};
   const secaTimelines: Partial<Record<ExperimentalTimelineKey, ExperimentalTimeline>> = {};
   for (const key of ["30d", "7d", "3d"] as const) {

@@ -15,7 +15,16 @@ export type ExperimentalTimeline = {
 
 export type ExperimentalTimelineKey = "30d" | "7d" | "3d";
 
+export type SecaV2Decision = {
+  path: number[];
+  errors: { alpha: number; beta: number; importance: number };
+  reconstructed: boolean;
+};
+
 export type ExperimentalTimelineResult =
+  | { mode: "v2"; batch: number; day: string; retainedSourceCount: number;
+      tree: TreemapNode; decisions: SecaV2Decision[] }
+
   | {
       mode: "timeline";
       selectedKey: ExperimentalTimelineKey;

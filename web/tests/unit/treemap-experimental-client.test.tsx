@@ -186,3 +186,26 @@ describe("TreemapExperimentalClient", () => {
     expect(currentTreemap()).toHaveTextContent("|1");
   });
 });
+
+it("renders V2 batch context and native decisions without legacy window/error sizing controls", () => {
+  renderIntoDom(<TreemapExperimentalClient fallbackTree={{ name: "Old dashboard" }} timelineResult={{
+    mode: "v2", batch: 2, day: "2026-10-28", retainedSourceCount: 148,
+    tree: { id: "root::newsmap", name: "SECALight V2", children: [{ name: "reactor", value: 148 }] },
+    decisions: [{ path: [], errors: { alpha: .1, beta: .2, importance: .3 }, reconstructed: true }],
+  }} />);
+  expect(screen.getByText("SECALight V2 · Experimental")).toBeInTheDocument();
+  expect(screen.getByText(/2026-10-28 UTC · Batch 2 · 148 retained sources/)).toBeInTheDocument();
+  expect(screen.getByText("Update decisions: 1 reconstructed of 1")).toBeInTheDocument();
+  expect(screen.getByTestId("mock-treemap")).toHaveTextContent("SECALight V2|value");
+  expect(screen.queryByRole("button", { name: "30 days" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Alpha Error" })).not.toBeInTheDocument();
+});
+
+it("shows an empty V2 model without a stale fallback tree", () => {
+  renderIntoDom(<TreemapExperimentalClient fallbackTree={{ name: "Old dashboard" }} timelineResult={{
+    mode: "v2", batch: 4, day: "2026-10-30", retainedSourceCount: 0,
+    tree: { id: "root::newsmap", name: "SECALight V2", children: [] }, decisions: [],
+  }} />);
+  expect(screen.getByRole("status")).toHaveTextContent("No retained sources");
+  expect(screen.queryByTestId("mock-treemap")).not.toBeInTheDocument();
+});
