@@ -23,47 +23,10 @@ type Props = {
   fallbackTree: TreemapNode;
 };
 
-export function TreemapExperimentalClient(props: Props) {
-  if (props.timelineResult.mode === "v2") {
-    const result = props.timelineResult;
-    const reconstructed = result.decisions.filter(d => d.reconstructed).length;
-    return (
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="shrink-0 rounded-xl border border-border bg-background/95 px-3 py-2 text-xs">
-          <strong>SECALight V2 · Experimental</strong>
-          <span className="ml-3">{result.day} UTC · Batch {result.batch} · {result.retainedSourceCount} retained sources</span>
-          <span className="ml-3 text-muted-foreground">Area: retained sources</span>
-          <details className="mt-1">
-            <summary className="cursor-pointer">Update decisions: {reconstructed} reconstructed of {result.decisions.length}</summary>
-            <p className="my-1 text-muted-foreground">Decisions describe the evaluated tree before reconstruction.</p>
-            <div className="max-h-40 overflow-auto">
-              <table className="w-full text-left">
-                <thead><tr><th>Scope path</th><th>Alpha error</th><th>Beta error</th><th>Importance error</th><th>Reconstructed</th></tr></thead>
-                <tbody>{result.decisions.map((decision, i) => (
-                  <tr key={i}><td>{decision.path.length ? decision.path.join(" / ") : "Root"}</td>
-                    <td>{decision.errors.alpha.toPrecision(4)}</td><td>{decision.errors.beta.toPrecision(4)}</td>
-                    <td>{decision.errors.importance.toPrecision(4)}</td><td>{decision.reconstructed ? "Yes" : "No"}</td></tr>
-                ))}</tbody>
-              </table>
-            </div>
-          </details>
-        </div>
-        <div className="min-h-0 flex-1">
-          {result.retainedSourceCount ? <TreemapClient key={`v2-${result.batch}`} data={result.tree}
-            preserveHierarchy weightModeOverride="value" experimentalInteractions compactControls
-            controlHint="Double click a tile to show sources." />
-            : <p className="p-4" role="status">No retained sources in the current V2 batch.</p>}
-        </div>
-      </div>
-    );
-  }
-  return <LegacyTreemapExperimentalClient {...props} timelineResult={props.timelineResult} />;
-}
-
-function LegacyTreemapExperimentalClient({ timelineResult, fallbackTree }: Omit<Props, "timelineResult"> & {
-  timelineResult: Exclude<ExperimentalTimelineResult, { mode: "v2" }>
-}) {
+export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Props) {
   const isTimeline = timelineResult.mode === "timeline";
+  const isV2 = timelineResult.mode === "v2";
+  const preserveHierarchy = isTimeline || isV2;
   const initialKey: ExperimentalTimelineKey = isTimeline ? timelineResult.selectedKey : "30d";
   const [selectedTimelineKey, setSelectedTimelineKey] = useState<ExperimentalTimelineKey>(initialKey);
   const [selectedIndexes, setSelectedIndexes] = useState<Partial<Record<ExperimentalTimelineKey, number>>>(() => {
@@ -136,7 +99,7 @@ function LegacyTreemapExperimentalClient({ timelineResult, fallbackTree }: Omit<
       .filter((value): value is { index: number; day: string; diffLabel: string; leftPct: number } => Boolean(value));
   }, [activeTimelineKey, isTimeline, timelineMeta, timelineResult]);
 
-  const tree = timelineMeta?.batch.tree ?? fallbackTree;
+  const tree = isV2 ? timelineResult.tree : timelineMeta?.batch.tree ?? fallbackTree;
   const metricStatus = experimentalMetricStatus(tree, selectedMetric);
   const selectedMetricLabel = {
     mappedSourceCount: "Mapped Sources", combinedError: "Combined Error", alphaError: "Alpha Error",
@@ -328,23 +291,23 @@ function LegacyTreemapExperimentalClient({ timelineResult, fallbackTree }: Omit<
               {timelineMeta.batch.day}
             </p>
           </div>
-        ) : (
+        ) : !isV2 ? (
           <div className="mt-2 rounded-md border border-amber-400/50 bg-amber-50/60 px-2 py-1 text-xs text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
             Static experimental timeline unavailable. Using dashboard fallback data. Reason:{" "}
             {timelineResult.mode === "fallback" ? timelineResult.reason : "Unknown"}
           </div>
-        )}
+        ) : null}
       </div>
 
       <div className="min-h-0 flex-1 overflow-hidden pt-2">
         <TreemapClient
           data={renderedTree}
-          preserveHierarchy={isTimeline}
-          weightModeOverride={isTimeline ? "value" : undefined}
-          experimentalInteractions={isTimeline}
-          singleHierarchyColor={isTimeline}
-          compactControls={isTimeline}
-          controlHint={isTimeline ? "Double click a tile to show sources." : undefined}
+          preserveHierarchy={preserveHierarchy}
+          weightModeOverride={preserveHierarchy ? "value" : undefined}
+          experimentalInteractions={preserveHierarchy}
+          singleHierarchyColor={preserveHierarchy}
+          compactControls={preserveHierarchy}
+          controlHint={preserveHierarchy ? "Double click a tile to show sources." : undefined}
         />
       </div>
     </div>

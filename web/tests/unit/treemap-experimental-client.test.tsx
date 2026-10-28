@@ -14,14 +14,16 @@ vi.mock("@/components/newsmap/treemap-client", () => ({
     data,
     weightModeOverride,
     compactControls,
+    singleHierarchyColor,
     controlHint,
   }: {
     data: { name?: string; value?: number; children?: Array<{ value?: number }> };
     weightModeOverride?: string;
     compactControls?: boolean;
+    singleHierarchyColor?: boolean;
     controlHint?: string;
   }) => (
-    <div data-testid="mock-treemap">
+    <div data-testid="mock-treemap" data-single-color={String(singleHierarchyColor ?? false)}>
       {data?.name ?? "unknown"}|{String(weightModeOverride ?? "")}|{String(data?.children?.[0]?.value ?? data?.value ?? "")}|{String(compactControls ?? false)}|{controlHint ?? ""}
     </div>
   ),
@@ -187,15 +189,19 @@ describe("TreemapExperimentalClient", () => {
   });
 });
 
-it("renders V2 batch context and native decisions without legacy window/error sizing controls", () => {
+it("restores the original V2 shell and single colour treemap without replacement controls", () => {
   renderIntoDom(<TreemapExperimentalClient fallbackTree={{ name: "Old dashboard" }} timelineResult={{
     mode: "v2", batch: 2, day: "2026-10-28", retainedSourceCount: 148,
     tree: { id: "root::newsmap", name: "SECALight V2", children: [{ name: "reactor", value: 148 }] },
     decisions: [{ path: [], errors: { alpha: .1, beta: .2, importance: .3 }, reconstructed: true }],
   }} />);
-  expect(screen.getByText("SECALight V2 · Experimental")).toBeInTheDocument();
-  expect(screen.getByText(/2026-10-28 UTC · Batch 2 · 148 retained sources/)).toBeInTheDocument();
-  expect(screen.getByText("Update decisions: 1 reconstructed of 1")).toBeInTheDocument();
+  expect(screen.getByText("Experimental")).toBeInTheDocument();
+  expect(screen.queryByText("SECALight V2 · Experimental")).not.toBeInTheDocument();
+  expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  expect(screen.queryByText(/retained sources/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/fallback data/)).not.toBeInTheDocument();
+  expect(screen.getByTestId("mock-treemap")).toHaveAttribute("data-single-color", "true");
+  expect(screen.getByTestId("mock-treemap").parentElement).toHaveClass("pt-2", "overflow-hidden");
   expect(screen.getByTestId("mock-treemap")).toHaveTextContent("SECALight V2|value");
   expect(screen.queryByRole("button", { name: "30 days" })).not.toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "Alpha Error" })).not.toBeInTheDocument();
@@ -206,6 +212,7 @@ it("shows an empty V2 model without a stale fallback tree", () => {
     mode: "v2", batch: 4, day: "2026-10-30", retainedSourceCount: 0,
     tree: { id: "root::newsmap", name: "SECALight V2", children: [] }, decisions: [],
   }} />);
-  expect(screen.getByRole("status")).toHaveTextContent("No retained sources");
-  expect(screen.queryByTestId("mock-treemap")).not.toBeInTheDocument();
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  expect(screen.getByTestId("mock-treemap")).toHaveTextContent("SECALight V2");
+  expect(screen.queryByText("Old dashboard")).not.toBeInTheDocument();
 });
