@@ -16,6 +16,21 @@ describe("ops cost aggregator", () => {
     vi.clearAllMocks();
   });
 
+  it("preserves quoted fields and deduplication while ignoring large article bodies", async () => {
+    const fs = await import("fs/promises");
+    const body = `"${"article, ".repeat(200000)}with ""quotes"""`;
+    const csv = [
+      "Description,Title,URL,API_Timestamp,LLM_Price,Source_Price,TotalTokens",
+      `${body},"A, ""quoted"" title",https://a,2026-02-27T11:00:00Z,0.1,0.02,15`,
+    ].join("\n");
+    vi.mocked(fs.default.readFile).mockResolvedValue(csv);
+    const out = await buildOpsCosts(new Date("2026-02-27T12:00:00Z"));
+    expect(out.llm.dayUsd).toBeCloseTo(0.1);
+    expect(out.valyu.dayUsd).toBeCloseTo(0.02);
+    expect(out.llm.dayTokens).toBe(15);
+    expect(out.llm.quality.rowsInWindow).toBe(1);
+  });
+
   it("returns zeros and valyu unavailable when csv is missing", async () => {
     const fs = await import("fs/promises");
     vi.mocked(fs.default.readFile).mockRejectedValue(Object.assign(new Error("missing"), { code: "ENOENT" }));

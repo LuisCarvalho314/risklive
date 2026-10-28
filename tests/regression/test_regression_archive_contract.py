@@ -5,8 +5,7 @@ from __future__ import annotations
 import pytest
 
 from tests.fixtures.archive_loader import (
-    extract_archive_to_workspace,
-    latest_backup_archive,
+    load_frozen_archive,
     stage_backup_csvs_to_data,
 )
 from tests.fixtures.contracts import assert_csv_has_columns
@@ -15,8 +14,7 @@ pytestmark = pytest.mark.regression
 
 
 def test_archived_dataset_contracts(tmp_path):
-    archive = latest_backup_archive()
-    backup_dir = extract_archive_to_workspace(archive, tmp_path)
+    backup_dir = load_frozen_archive(tmp_path)
     layout = stage_backup_csvs_to_data(tmp_path, backup_dir)
 
     news_rows = assert_csv_has_columns(

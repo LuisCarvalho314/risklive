@@ -1,0 +1,30 @@
+# Compose >= 2.24.4. Use only with development env/data paths and a unique project.
+services:
+  scheduler:
+    # Excluded from default smoke startup; never enable this profile for initial smoke startup.
+    profiles: ["scheduler-disabled-in-smoke"]
+  caddy:
+    # Publishing ports requires an edge network. Application services stay isolated.
+    networks:
+      - internal
+      - smoke_edge
+    ports: !override
+      - "127.0.0.1:8188:80"
+    volumes:
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set the isolated data root}/caddy-data
+        target: /data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RISKLIVE_DATA_DIR:?Set the isolated data root}/caddy-config
+        target: /config
+        bind:
+          create_host_path: false
+networks:
+  internal:
+    # Prevent outbound API traffic from app, web, and scheduler.
+    internal: true
+  smoke_edge:
+    # Only Caddy attaches here to publish the loopback HTTP port.
+    driver: bridge

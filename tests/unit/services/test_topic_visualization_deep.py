@@ -210,6 +210,7 @@ def test_get_visualize_hierarchy_with_ctfidf_and_hierarchical(monkeypatch):
 
 
 def test_get_annotations_multi_topic_branches(monkeypatch):
+    monkeypatch.setattr(tv, "validate_distance_matrix", lambda x, n: x)
     monkeypatch.setattr(
         tv.sch,
         "dendrogram",

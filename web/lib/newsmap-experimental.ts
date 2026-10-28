@@ -1,5 +1,5 @@
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
+import { readBoundedText, type FileReadBudget } from "@/lib/bounded-file";
+import path from "path";
 
 import type { TreemapNode } from "@/lib/dashboard";
 import type {
@@ -43,22 +43,36 @@ type SecaVerboseNode = {
   sources?: SecaVerboseSourceRef[];
   top_words?: SecaVerboseWordRef[];
   is_refuge_node?: boolean;
-  diagnostics?: {
-    hkt_id?: number;
-    scoped_source_count?: number;
-    mapped_source_count?: number;
-    should_reconstruct?: boolean;
-    trigger_reasons?: string[];
-    alpha_error?: number;
-    beta_error?: number;
-    word_importance_error?: number;
-    paper_alpha_error?: number;
-    paper_beta_error?: number;
-    paper_word_importance_error?: number;
-  };
+};
+
+type SecaDecisionDiagnostics = {
+  hkt_id?: number;
+  scoped_source_count?: number;
+  mapped_source_count?: number;
+  should_reconstruct?: boolean;
+  trigger_reasons?: string[];
+  alpha_error?: number;
+  beta_error?: number;
+  word_importance_error?: number;
+  paper_alpha_error?: number;
+  paper_beta_error?: number;
+  paper_word_importance_error?: number;
+  output_hkt_id?: number | null;
+  active_trigger_policy?: string;
+};
+
+type SecaDisplayDiagnostics = {
+  hkt_id?: number;
+  mapped_source_count?: number;
+  paper_alpha_error?: number | null;
+  paper_beta_error?: number | null;
+  paper_word_importance_error?: number | null;
+  unavailable_reason?: string | null;
 };
 
 type SecaVerboseTree = {
+  decision_diagnostics?: SecaDecisionDiagnostics[];
+  display_diagnostics?: SecaDisplayDiagnostics[];
   hkts: SecaVerboseHkt[];
   nodes: SecaVerboseNode[];
 };
@@ -167,6 +181,8 @@ function parseSecaVerboseTree(payload: unknown): SecaVerboseTree {
   return {
     hkts: payload.hkts as SecaVerboseHkt[],
     nodes: payload.nodes as SecaVerboseNode[],
+    display_diagnostics: Array.isArray(payload.display_diagnostics) ? payload.display_diagnostics as SecaVerboseTree["display_diagnostics"] : [],
+    decision_diagnostics: Array.isArray(payload.decision_diagnostics) ? payload.decision_diagnostics as SecaVerboseTree["decision_diagnostics"] : [],
   };
 }
 
@@ -185,11 +201,15 @@ function computeBatchSignals(ctx: SecaBatchContext): { recencyWeight: number; ac
   return { recencyWeight, activeWindowWeight };
 }
 
-function buildTreemapFromSecaVerboseTree(
+export function buildTreemapFromSecaVerboseTree(
   tree: SecaVerboseTree,
   ctx: SecaBatchContext,
   sourceLookup?: SourceLookup
 ): TreemapNode {
+  const decisionsByHkt = new Map((tree.decision_diagnostics ?? [])
+    .filter((d) => typeof d.output_hkt_id === "number")
+    .map((d) => [d.output_hkt_id!, d]));
+  const diagnosticsByHkt = new Map((tree.display_diagnostics ?? []).map(d => [d.hkt_id, d]));
   const hktsById = new Map<number, SecaVerboseHkt>();
   const nodesById = new Map<number, SecaVerboseNode>();
   tree.hkts.forEach((hkt) => {
@@ -281,7 +301,7 @@ function buildTreemapFromSecaVerboseTree(
           ).values()
         )
       : [];
-    const diagnostics = isRecord(raw.diagnostics) ? raw.diagnostics : undefined;
+    const diagnostics = diagnosticsByHkt.get(raw.hkt_id);
     const hkt = hktsById.get(raw.hkt_id);
     const expectedWordsArr = Array.isArray(hkt?.expected_words) ? hkt.expected_words : [];
     const unionWordsArr = Array.isArray(hkt?.all_node_words_union) ? hkt.all_node_words_union : [];
@@ -321,28 +341,22 @@ function buildTreemapFromSecaVerboseTree(
     const triggerIntensityValue = Math.max(1, Math.round(baseSourceMass * triggerErrorProxy));
     const activeWindowValue = Math.max(1, Math.round(baseSourceMass * activeWindowWeight));
 
-    const alphaErrorRaw = asNumber(diagnostics?.paper_alpha_error) ?? asNumber(diagnostics?.alpha_error);
-    const betaErrorRaw = asNumber(diagnostics?.paper_beta_error) ?? asNumber(diagnostics?.beta_error);
-    const wordImportanceErrorRaw =
-      asNumber(diagnostics?.paper_word_importance_error) ?? asNumber(diagnostics?.word_importance_error);
-    const mappedSourceCountRaw = asNumber(diagnostics?.mapped_source_count) ?? sourceCount;
-    const shouldReconstruct = Boolean(diagnostics?.should_reconstruct);
-
-    // Real SECA diagnostics first; scaled so larger tile = higher diagnostic magnitude.
-    const mappedSourceCountValue = Math.max(1, Math.round(Math.max(0, mappedSourceCountRaw)));
-    const alphaErrorValue = Math.max(1, Math.round((alphaErrorRaw ?? 0) * 1000));
-    const betaErrorValue = Math.max(1, Math.round((betaErrorRaw ?? 0) * 1000));
-    const wordImportanceErrorValue = Math.max(1, Math.round((wordImportanceErrorRaw ?? 0) * 1000));
-    const errorTerms = [alphaErrorRaw, betaErrorRaw, wordImportanceErrorRaw].filter(
-      (value): value is number => typeof value === "number" && Number.isFinite(value)
+    // Production update enforces PaperDiagnosticScaffold with selected Option1.
+    // Plain alpha/beta/WI fields are placeholders, never substitutes for paper metrics.
+    const alphaErrorValue = asNumber(diagnostics?.paper_alpha_error);
+    const betaErrorValue = asNumber(diagnostics?.paper_beta_error);
+    const wordImportanceErrorValue = asNumber(diagnostics?.paper_word_importance_error);
+    const mappedSourceCountValue = asNumber(diagnostics?.mapped_source_count);
+    const errorTerms = [alphaErrorValue, betaErrorValue, wordImportanceErrorValue].filter(
+      (value): value is number => typeof value === "number" && value >= 0
     );
-    const combinedErrorRaw = errorTerms.length
+    // RMS over available real terms; unavailable terms are omitted.
+    const combinedErrorValue = errorTerms.length
       ? Math.sqrt(errorTerms.reduce((sum, value) => sum + value * value, 0) / errorTerms.length)
-      : 0;
-    const combinedErrorValue = Math.max(1, Math.round(combinedErrorRaw * 1000));
-    const triggeredScoreValue = shouldReconstruct
-      ? Math.max(1, mappedSourceCountValue * 2)
-      : Math.max(1, Math.round(mappedSourceCountValue * 0.75));
+      : undefined;
+    const decision = decisionsByHkt.get(raw.hkt_id);
+    const triggeredScoreValue = typeof decision?.should_reconstruct === "boolean"
+      ? (decision.should_reconstruct ? 4 : 1) : undefined;
 
     const nestedAncestors = new Set(ancestors);
     nestedAncestors.add(nodeId);
@@ -375,9 +389,22 @@ function buildTreemapFromSecaVerboseTree(
           `hkt_sig=${hktSignificance.toFixed(2)}`,
           `trigger_proxy=${triggerErrorProxy.toFixed(2)}`,
           `active_window=${activeWindowWeight.toFixed(2)}`,
-          diagnostics ? "metrics=seca_actual" : "metrics=proxy_fallback",
+          diagnostics ? "metrics=seca_actual" : "metrics=unavailable | composite=legacy_proxy",
+          ...(diagnostics ? [
+            `display_hkt=${diagnostics.hkt_id}`,
+            `comparison=${diagnostics.unavailable_reason ?? "available"}`,
+            `trigger_state=${decision ? decision.should_reconstruct ? "triggered" : "evaluated_not_triggered" : "not_evaluated"}`,
+            `output_hkt=${decision?.output_hkt_id}`,
+            `policy=${decision?.active_trigger_policy ?? "unknown"}`,
+            `scoped_sources=${decision?.scoped_source_count ?? "unavailable"}`,
+            `should_reconstruct=${decision?.should_reconstruct ?? "unavailable"}`,
+            `trigger_reasons=${(decision?.trigger_reasons ?? []).join(",")}`,
+          ] : []),
         ].join(" | "),
+        experimentalTriggerState: decision ? decision.should_reconstruct ? "triggered" : "evaluated_not_triggered" : "not_evaluated",
         experimentalMetrics: {
+          hktId: raw.hkt_id,
+          provenance: diagnostics ? "seca_actual" : "unavailable",
           mappedSourceCount: mappedSourceCountValue,
           combinedError: combinedErrorValue,
           alphaError: alphaErrorValue,
@@ -613,8 +640,11 @@ function getSecaTimelineDirectory(key: ExperimentalTimelineKey): string {
   return path.join(process.cwd(), "..", "results", "web", "newsmap", dirName);
 }
 
-async function readJson(filePath: string): Promise<unknown> {
-  const raw = await fs.readFile(filePath, "utf-8");
+const MAX_INPUT_BYTES = 8 * 1024 * 1024;
+const MAX_LOAD_BYTES = 128 * 1024 * 1024;
+
+async function readJson(filePath: string, budget: FileReadBudget): Promise<unknown> {
+  const raw = await readBoundedText(filePath, MAX_INPUT_BYTES, budget);
   return JSON.parse(raw);
 }
 
@@ -639,11 +669,11 @@ function parseBatchDay(batchPayload: unknown, index: number): string {
   return `batch-${String(index).padStart(4, "0")}`;
 }
 
-async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<ExperimentalTimeline | null> {
+async function loadSecaTimelineBatches(key: ExperimentalTimelineKey, budget: FileReadBudget): Promise<ExperimentalTimeline | null> {
   const baseDir = getSecaTimelineDirectory(key);
   let sourceLookup: SourceLookup | undefined;
   try {
-    sourceLookup = buildSourceLookup(await readNewsDataFiles());
+    sourceLookup = buildSourceLookup(await readNewsDataFiles(budget));
   } catch {
     sourceLookup = undefined;
   }
@@ -654,7 +684,7 @@ async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<Ex
   for (const filename of manifestCandidates) {
     const filePath = path.join(baseDir, filename);
     try {
-      const payload = await readJson(filePath);
+      const payload = await readJson(filePath, budget);
       manifest = parseSecaTimelineManifest(payload);
       break;
     } catch (error) {
@@ -672,7 +702,7 @@ async function loadSecaTimelineBatches(key: ExperimentalTimelineKey): Promise<Ex
   for (let i = 0; i < manifest.files.length; i += 1) {
     const filename = manifest.files[i];
     const batchPath = resolveBatchPath(baseDir, filename);
-    const batchPayload = await readJson(batchPath);
+    const batchPayload = await readJson(batchPath, budget);
     const secaTree = parseSecaVerboseTree(batchPayload);
     const day = manifest.days?.[i] ?? parseBatchDay(batchPayload, i);
     const tree = buildTreemapFromSecaVerboseTree(
@@ -700,12 +730,12 @@ function getNewsDataPaths(): string[] {
   return [path.join(base, "backup_data", "news_data.csv"), path.join(base, "data", "news_data.csv")];
 }
 
-async function readNewsDataFiles(): Promise<NewsCsvRow[]> {
+async function readNewsDataFiles(budget: FileReadBudget): Promise<NewsCsvRow[]> {
   const paths = getNewsDataPaths();
   const allRows: NewsCsvRow[] = [];
   for (const filePath of paths) {
     try {
-      const content = await fs.readFile(filePath, "utf-8");
+      const content = await readBoundedText(filePath, MAX_INPUT_BYTES, budget);
       const rows = parseNewsDataCsv(content);
       allRows.push(...rows);
     } catch (error) {
@@ -719,12 +749,13 @@ async function readNewsDataFiles(): Promise<NewsCsvRow[]> {
   return allRows;
 }
 
-export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineResult> {
+async function loadExperimentalNewsmapOnce(): Promise<ExperimentalTimelineResult> {
+  const budget: FileReadBudget = { remainingBytes: MAX_LOAD_BYTES };
   const secaErrors: Partial<Record<ExperimentalTimelineKey, string>> = {};
   const secaTimelines: Partial<Record<ExperimentalTimelineKey, ExperimentalTimeline>> = {};
   for (const key of ["30d", "7d", "3d"] as const) {
     try {
-      const timeline = await loadSecaTimelineBatches(key);
+      const timeline = await loadSecaTimelineBatches(key, budget);
       if (timeline) secaTimelines[key] = timeline;
     } catch (error) {
       secaErrors[key] = error instanceof Error ? error.message : "Unknown SECA loader error";
@@ -739,7 +770,7 @@ export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineRes
   }
 
   try {
-    const rows = await readNewsDataFiles();
+    const rows = await readNewsDataFiles(budget);
     if (!rows.length) {
       throw new Error("No rows found in results/data or results/backup_data news_data.csv");
     }
@@ -771,4 +802,17 @@ export async function loadExperimentalNewsmap(): Promise<ExperimentalTimelineRes
       reason,
     };
   }
+}
+
+// Share only active work; release the result after completion so updated files
+// appear on the next request and no historical trees accumulate in a cache.
+let inFlight: Promise<ExperimentalTimelineResult> | null = null;
+
+export function loadExperimentalNewsmap(): Promise<ExperimentalTimelineResult> {
+  if (!inFlight) {
+    inFlight = loadExperimentalNewsmapOnce().finally(() => {
+      inFlight = null;
+    });
+  }
+  return inFlight;
 }

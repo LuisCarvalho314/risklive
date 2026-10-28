@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
@@ -19,27 +18,34 @@ def test_storage_empty_write_and_load_if_exists(tmp_path):
     assert storage_service.load_if_exists(tmp_path / "missing.csv") is None
 
 
-def test_pipeline_continue_branches(monkeypatch):
+def test_pipeline_continue_branches(monkeypatch, tmp_path, caplog):
     rows = [
         LLMEnrichedRow(Title="B", AlertFlag="Red", topic=1, ShortSummary="y"),
         LLMEnrichedRow(Title="A", AlertFlag="Red", topic=None, ShortSummary="x"),
     ]
-    monkeypatch.setattr(
-        pipeline_service,
-        "generate_reports_from_rows",
-        lambda group: [type("R", (), {"keyword": "k", "input_prompt": "p", "response": "r"})()],
-    )
-    monkeypatch.setattr(pipeline_service, "write_csv", lambda *args, **kwargs: None)
-    monkeypatch.setattr(pipeline_service, "data_path", lambda filename: filename)
-    reports = pipeline_service.generate_report(rows)
-    assert reports and reports[0]["topic"] == 1
+    with monkeypatch.context() as report_patches:
+        report_patches.setattr(
+            pipeline_service,
+            "generate_reports_from_rows",
+            lambda group: [type("R", (), {"keyword": "k", "input_prompt": "p", "response": "r"})()],
+        )
+        report_patches.setattr(pipeline_service, "write_csv", lambda *args, **kwargs: None)
+        report_patches.setattr(pipeline_service, "data_path", lambda filename: filename)
+        reports = pipeline_service.generate_report(rows)
+        assert reports and reports[0]["topic"] == 1
 
-    bad_ts = SimpleNamespace(timestamp="bad")
-    monkeypatch.setattr(pipeline_service, "load_if_exists", lambda path: [{"Title": "bad", "Timestamp": "bad"}])
-    monkeypatch.setattr(pipeline_service, "llm_rows_from_records", lambda records: [bad_ts])
-    monkeypatch.setattr(pipeline_service, "records_from_llm_rows", lambda rows: rows)
-    monkeypatch.setattr(pipeline_service, "write_csv", lambda *args, **kwargs: None)
+    # The shared settings fixture resolves storage beneath this test's tmp_path.
+    path = storage_service.data_path("invalid_timestamp.csv")
+    assert path.is_relative_to(tmp_path)
+    storage_service.write_csv([{"Title": "bad", "Timestamp": "bad"}], path)
     assert pipeline_service.cleanup_old_data(1) == 1
+    assert storage_service.read_csv(path) == []
+    invalid_logs = [
+        record for record in caplog.records
+        if getattr(record, "event", "") == "cleanup_invalid_timestamps_dropped"
+    ]
+    assert len(invalid_logs) == 1
+    assert invalid_logs[0].dropped_invalid_timestamp_rows == 1
 
 
 def test_storage_write_oserror_branch(monkeypatch, tmp_path):

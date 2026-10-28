@@ -10,7 +10,7 @@ from services import pipeline as pipeline_service
 
 
 def test_fetch_and_save_news(monkeypatch):
-    def _fake_collect_news(*_args, **_kwargs):
+    def _fake_collect_news(queries, hours, reference_now_utc=None):
         return [Article(title="A", url="https://example.com/a", description="D")]
 
     monkeypatch.setattr(pipeline_service, "collect_news", _fake_collect_news)

@@ -4,8 +4,13 @@ from __future__ import annotations
 
 import sys
 
+import pytest
+
 from app import cli as cli_app
 from app import server as server_app
+
+
+pytestmark = pytest.mark.usefixtures("isolated_app")
 
 
 def test_cli_fetch(monkeypatch):
@@ -27,6 +32,9 @@ def test_server_routes(monkeypatch):
     monkeypatch.setattr(server_app, "cleanup_old_data", lambda days: 0)
     monkeypatch.setattr(server_app, "read_csv", lambda path: [])
 
+    seca_calls = []
+    monkeypatch.setattr(server_app, "run_seca_light", lambda: seca_calls.append("seca"))
+
     app = server_app.create_app()
     client = app.test_client()
 
@@ -38,3 +46,5 @@ def test_server_routes(monkeypatch):
     assert client.get("/trigger/report").status_code == 200
     assert client.get("/trigger/dashboard").status_code == 200
     assert client.get("/trigger/cleanup").status_code == 200
+    assert client.get("/trigger/seca-light").status_code == 200
+    assert seca_calls == ["seca"]

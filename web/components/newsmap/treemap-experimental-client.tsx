@@ -9,6 +9,7 @@ import { TreemapClient } from "@/components/newsmap/treemap-client";
 import type { TreemapNode } from "@/lib/dashboard";
 import {
   applyExperimentalSizeMetric,
+  experimentalMetricStatus,
 } from "@/lib/newsmap-experimental-shared";
 import type {
   ExperimentalSizeDirection,
@@ -97,6 +98,11 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
   }, [activeTimelineKey, isTimeline, timelineMeta, timelineResult]);
 
   const tree = timelineMeta?.batch.tree ?? fallbackTree;
+  const metricStatus = experimentalMetricStatus(tree, selectedMetric);
+  const selectedMetricLabel = {
+    mappedSourceCount: "Mapped Sources", combinedError: "Combined Error", alphaError: "Alpha Error",
+    betaError: "Beta Error", wordImportanceError: "Word-Importance Error", triggeredScore: "Triggered", composite: "Composite",
+  }[selectedMetric];
   const renderedTree = useMemo(
     () => (isTimeline ? applyExperimentalSizeMetric(tree, selectedMetric, sizeDirection) : tree),
     [isTimeline, selectedMetric, sizeDirection, tree]
@@ -151,37 +157,37 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
                     [
                       "mappedSourceCount",
                       "Mapped Sources",
-                      "How many articles this node currently captures. Emphasizes coverage and volume.",
+                      "Unique retained active sources in this final HKT, including refuge members.",
                     ],
                     [
                       "combinedError",
                       "Combined Error",
-                      "Overall drift signal combining alpha, beta, and word-importance error. Emphasizes total instability.",
+                      "RMS of available real Option1 alpha, beta, and word-importance errors.",
                     ],
                     [
                       "wordImportanceError",
                       "Word-Imp Error",
-                      "How much important vocabulary shifted from expectation. Emphasizes topical vocabulary drift.",
+                      "Real Option1 error in the retained importance mass of the final HKT vocabulary.",
                     ],
                     [
                       "alphaError",
                       "Alpha Error",
-                      "How far word-strength patterns moved from baseline. Emphasizes intensity changes.",
+                      "Real Option1 mean deficit of final word strength below the alpha threshold.",
                     ],
                     [
                       "betaError",
                       "Beta Error",
-                      "How far word-eligibility/fit moved from baseline. Emphasizes boundary changes in topic fit.",
+                      "Real Option1 mean deficit of final word eligibility below the beta threshold.",
                     ],
                     [
                       "triggeredScore",
                       "Triggered",
-                      "Highlights branches flagged for reconstruction. Emphasizes trigger status over pure size.",
+                      "Actual decision: triggered weight 4, evaluated but not triggered weight 1; not evaluated is unavailable.",
                     ],
                     [
                       "composite",
                       "Composite",
-                      "Fallback blended score for legacy batches without full diagnostics. Emphasizes balanced overview.",
+                      "Explicit legacy proxy score.",
                     ],
                   ] as Array<[ExperimentalSizeMetric, string, string]>
                 ).map(([metric, label, description]) => (
@@ -231,6 +237,12 @@ export function TreemapExperimentalClient({ timelineResult, fallbackTree }: Prop
           ) : null}
         </div>
 
+        {isTimeline ? <div role="status" className="text-xs text-muted-foreground">
+          {`${selectedMetricLabel} — ${metricStatus.available} / ${metricStatus.total} scopes available. `}
+          {metricStatus.unavailable
+            ? `Missing scopes use a neutral sibling budget. ${metricStatus.available === 0 ? selectedMetric === "triggeredScore" ? "No actual decision evaluations." : "No comparison evidence (baseline or unavailable)." : ""}`
+            : selectedMetric === "composite" ? "Legacy proxy weighting." : "SECA actual diagnostics (HKT scope)."}
+        </div> : null}
         {isTimeline && timelineMeta ? (
           <div className="mt-2 flex min-w-0 items-center gap-2">
             <label

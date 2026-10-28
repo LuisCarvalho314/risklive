@@ -1,10 +1,15 @@
 # RiskLive System Architecture
 
+> The legacy deployment sections below are historical. The canonical container
+> deployment is documented in [Docker deployment](deployment-docker.md): Gunicorn
+> serves HTTP, a dedicated process owns APScheduler, Next.js serves the frontend,
+> and Caddy proxies the HTTP services. The existing host deployment remains in place.
+
 ## Overview
-RiskLive is a news-driven risk analysis pipeline for the nuclear industry. It ingests news via the Valyu API, enriches articles with LLM-based extraction, performs topic modeling, and produces summaries and visualizations. The deployed runtime is the legacy pipeline under `risklive/`. The refactor under `src/` mirrors the flow but is not the currently deployed system.
+RiskLive is a news-driven risk analysis pipeline for the nuclear industry. It ingests news via the Valyu API, enriches articles with LLM-based extraction, performs topic modeling, and produces summaries and visualizations. The historical runtime described below used the legacy pipeline under `risklive/`. The current services-based code is under `src/`.
 
 ## Codebase Versions
-- **Deployed (current production)**: `risklive/` (Flask + APScheduler + Streamlit).
+- **Historical deployment**: `risklive/` (Flask + APScheduler + Streamlit).
 - **Next (in refactor)**: `src/` (services-based pipeline, typed models, Pydantic-AI adapters).
 
 ## High-Level Information Flow (Deployed)
@@ -80,7 +85,7 @@ RiskLive is a news-driven risk analysis pipeline for the nuclear industry. It in
 - **Dashboard**: `streamlit run risklive/dashboard/alerts.py`.
 
 ## Data Freshness and Authority (Deployed)
-- **Scheduler cadence**: daily fetch at 07:00, report generation at 07:30, cleanup at 06:30.
+- **Scheduler cadence**: current canonical cadence: fetch at 06:20 and cleanup at 06:00 Europe/London; reporting runs inside the fetch pipeline, without a separate report cron.
 - **Dashboard source of truth**: `results/data/news_data_with_llm_info.csv`.
 - **Reporting source of truth**: `results/data/df_report.csv`.
 - **Topic modeling source of truth**: `results/models/topic_model/` and `results/data/df_with_response_and_topics.csv`.
@@ -132,7 +137,7 @@ RiskLive is a news-driven risk analysis pipeline for the nuclear industry. It in
 
 ## Runtime Modes (Deployed)
 - **API**: `risklive/server/app.py` exposes `/trigger/*` routes and runs APScheduler.
-- **Scheduler**: daily fetch at 07:00, report generation at 07:30, cleanup at 06:30.
+- **Scheduler**: current canonical cadence: fetch at 06:20 and cleanup at 06:00 Europe/London; reporting runs inside the fetch pipeline, without a separate report cron.
 - **Dashboard**: `risklive/dashboard/alerts.py` (Streamlit) reads CSV outputs.
 - **One-shot**: `risklive/jumpstart.py` runs the full pipeline once.
 
@@ -205,7 +210,7 @@ RiskLive is a news-driven risk analysis pipeline for the nuclear industry. It in
 
 ### Refactor Entry Points
 - `src/app/cli.py`: CLI runner for fetch/extract/topic/visualize/report/full/cleanup.
-- `src/app/server.py`: Flask API and scheduler (daily fetch at 07:00, cleanup at 06:30).
+- `src/app/server.py`: Flask API and legacy host startup. Containers serve `app.wsgi:app` with Gunicorn and run one dedicated `app.scheduler` process. Canonical registrations read `src/app/schedules.json`: fetch daily at 06:20 and cleanup at 06:00 Europe/London. See `docs/deployment-docker.md` for the canonical container lifecycle.
 - `src/dashboard/alerts.py`: Streamlit alert dashboard.
 - `apps/*`: Legacy runners that reference missing `services.*` modules (see Known Gaps).
 

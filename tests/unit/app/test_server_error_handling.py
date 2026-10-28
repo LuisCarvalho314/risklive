@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import pytest
+
 from app import server as server_app
 from models.errors import ValidationError
+
+
+pytestmark = pytest.mark.usefixtures("isolated_app")
 
 
 def test_trigger_regular_returns_structured_error(monkeypatch):

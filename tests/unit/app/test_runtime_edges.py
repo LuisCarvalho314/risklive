@@ -10,6 +10,9 @@ from app import cli as cli_app
 from app import server as server_app
 
 
+pytestmark = pytest.mark.usefixtures("isolated_app")
+
+
 def test_server_unexpected_error_handler(monkeypatch):
     monkeypatch.setattr(server_app, "fetch_news", lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("boom")))
     app = server_app.create_app()

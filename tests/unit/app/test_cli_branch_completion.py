@@ -11,6 +11,9 @@ from app import cli as cli_app
 from models.errors import AppError
 
 
+pytestmark = pytest.mark.usefixtures("isolated_app")
+
+
 def test_cli_app_error_and_full_branch(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["risklive", "fetch"])
 

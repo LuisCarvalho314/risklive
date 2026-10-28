@@ -65,11 +65,13 @@ ehthumbs.db
 Thumbs.db
 
 # Results files are too large
-results/
-runtime/
-data/
-logs/
+/results/
+/runtime/
+/data/
+/logs/
 
 .env.txt
 deployment/env/*.env
 !deployment/env/*.env.example
+
+.container-test/

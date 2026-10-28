@@ -1,13 +1,14 @@
-# SECA-Based Path (Future Path)
+# SECA-Based Path
 
-This document describes the SECA-based path for RiskLive. It is a **future path** and is **separate** from the Agentic Workflow path and the LangExtract path.
+RiskLive now contains a persistent SECA-Light dashboard stream in the Rust submodule. See [the implementation and operational guide](../seca-light-stream.md). Replacing the main report/story clustering path remains future work; the comparisons below concern that broader proposal.
 
 ## Status
 
 - Classification: Future path
 - Evidence level: External validated prototype
 - Implementation location: Different project (outside this repository)
-- Current runtime status in this repository: Not active
+- Dashboard implementation: active code path; deployment of the persistent-stream change is separate
+- Main report/story clustering replacement: future work
 
 ## Reference
 

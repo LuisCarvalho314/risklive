@@ -36,7 +36,7 @@ The `web/` app uses a layered test strategy:
 
 For VPS deployments with Caddy, protect `"/ops"` and `"/api/ops/*"` at the proxy layer:
 
-- Config template: [`deployment/caddy/Caddyfile.ops.example`](/Users/lcarv/PycharmProjects/risklive/deployment/caddy/Caddyfile.ops.example)
+- Config template: [`deployment/caddy/Caddyfile.prod`](../deployment/caddy/Caddyfile.prod)
 - Runbook: [`docs/ops-auth-caddy.md`](/Users/lcarv/PycharmProjects/risklive/docs/ops-auth-caddy.md)
 
 ## Ops Dashboard

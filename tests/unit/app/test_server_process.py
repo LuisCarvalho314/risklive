@@ -32,15 +32,15 @@ def test_fetch_and_process_order(monkeypatch):
 
     server_app.fetch_and_process(None)
 
-    assert calls == ["manual", "dashboard", "seca"]
+    assert calls == ["manual", "dashboard"]
 
 
-def test_fetch_and_process_seca_failure_is_non_blocking(monkeypatch):
+def test_fetch_and_process_does_not_invoke_retired_v1(monkeypatch):
     monkeypatch.setattr(server_app, "manual_fetch_and_process", lambda **kwargs: None)
     monkeypatch.setattr(server_app, "export_dashboard", lambda: None)
 
     def _boom():
-        raise RuntimeError("seca failed")
+        raise AssertionError("retired V1 was invoked")
 
     monkeypatch.setattr(server_app, "run_seca_light_timeline", _boom)
 

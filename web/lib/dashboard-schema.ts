@@ -57,7 +57,12 @@ export type TreemapNode = {
       url?: string | null;
       isUrl?: boolean;
     }>;
+    experimentalLayoutWeights?: boolean;
+    experimentalMetricProvenance?: "seca_actual" | "legacy_proxy" | "unavailable";
+    experimentalTriggerState?: "triggered" | "evaluated_not_triggered" | "not_evaluated";
     experimentalMetrics?: {
+      hktId?: number;
+      provenance?: "seca_actual" | "unavailable";
       mappedSourceCount?: number;
       combinedError?: number;
       alphaError?: number;

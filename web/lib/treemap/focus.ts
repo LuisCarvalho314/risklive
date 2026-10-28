@@ -117,6 +117,9 @@ export function buildEmphasisSet(params: {
 }
 
 export function buildWeightedTree(root: TreemapNode, emphasized: Set<string>, tuning: TreemapTuning): TreemapNode {
+  // Experimental scope budgets are already positive and partitioned. Preserve
+  // them through focus; log1p/minGroupWeight would distort continuous errors.
+  if (root.meta?.experimentalLayoutWeights) return root;
   const { minGroupWeight, epsilon, weightMode, valueTransform, redAlertWeightBoost } = tuning;
   const weightById = new Map<string, number>();
 

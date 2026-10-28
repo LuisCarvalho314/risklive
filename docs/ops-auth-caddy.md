@@ -1,63 +1,19 @@
-# Ops Route Protection with Caddy (Option 1)
+# Ops and trigger access
 
-This runbook protects `"/ops"` and `"/api/ops/*"` with HTTP Basic Auth at the reverse proxy.
+The canonical container proxy is `deployment/caddy/Caddyfile.prod`.
+See [Docker deployment](deployment-docker.md) for configuration and validation.
 
-It does not require application auth code changes.
+Commit `6b2550b` preserves the existing plain-HTTP deployment on host port
+**8888** and removes Caddy basic authentication. The current template uses
+`CADDY_SITE_ADDRESS=http://:80`; Compose maps that container port to
+`${CADDY_HTTP_BIND:-0.0.0.0:8888}`. HTTPS is not configured by this stack.
 
-## 1) Generate a password hash
+`OPS_USER` and `OPS_PASSWORD_HASH` are not required or consumed by the current
+Caddyfile. Access follows the existing Azure/network boundary. `/ops` and
+`/api/ops/*` route to the frontend; `/trigger` and `/trigger/*` route to the app.
+`/health` and `/healthz` proxy the app's health response.
 
-```bash
-caddy hash-password --plaintext 'your-strong-password'
-```
-
-Copy the generated hash.
-
-## 2) Apply Caddy config
-
-Use [`deployment/caddy/Caddyfile.ops.example`](/Users/lcarv/PycharmProjects/risklive/deployment/caddy/Caddyfile.ops.example) as a template.
-
-Update:
-- Hostname (`dashboard.example.com`)
-- Password hash (`REPLACE_WITH_CADDY_HASH`)
-- Upstream port if needed (`127.0.0.1:3000`)
-
-The matcher is intentionally limited to:
-- `/ops`
-- `/ops/*`
-- `/api/ops/*`
-
-All other routes remain unchanged.
-
-## 3) Validate and reload
-
-```bash
-sudo caddy validate --config /etc/caddy/Caddyfile
-sudo systemctl reload caddy
-```
-
-## 4) Verify behavior
-
-Without credentials:
-
-```bash
-curl -i https://<your-host>/ops
-curl -i https://<your-host>/api/ops/overview
-```
-
-Both should be blocked by auth (`401` or equivalent challenge).
-
-With credentials:
-
-```bash
-curl -u opsadmin:<password> -i https://<your-host>/ops
-curl -u opsadmin:<password> -i https://<your-host>/api/ops/overview
-```
-
-Both should succeed.
-
-## Security notes
-
-- Keep HTTPS enabled.
-- Use a long random password.
-- Rotate credentials periodically.
-- Share ops credentials only with operators.
+Adding authentication or HTTPS is a separate reviewed deployment change, not
+part of the SECA generator fix. Verify serving behavior using pages and health
+routes; trigger endpoints start operational work and must not be used as access
+checks while fetching/LLM credits are unavailable.
