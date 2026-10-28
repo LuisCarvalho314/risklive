@@ -1,0 +1,7 @@
+{
+  "alpha": 0.7,
+  "beta": 0.5,
+  "error_limits": {"alpha": 0.1, "beta": 0.2, "importance": 0.3},
+  "minimum_branch_sources": 10,
+  "window": 3
+}
