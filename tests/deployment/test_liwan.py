@@ -43,6 +43,15 @@ class LiwanDeployment(unittest.TestCase):
             self.assertNotIn('liwan', services[name].get('depends_on', {}))
         self.assertEqual([name for name, value in services.items() if any(p.get('host_ip', '0.0.0.0') != '127.0.0.1' for p in value.get('ports', []))], ['caddy'])
 
+    def test_project_display_settings_focus_on_product_usage(self):
+        display = json.loads((ROOT / 'deployment/liwan/project-display-settings.json').read_text())
+        self.assertEqual(display['projectId'], 'risklive')
+        self.assertEqual(display['dimensionDisplayOverrides'], {
+            'platform': 'hide', 'browser': 'hide', 'mobile': 'hide',
+            'screen_width': 'hide', 'orientation': 'hide',
+        })
+        self.assertNotIn('property', display['dimensionDisplayOverrides'])
+
     def test_public_routing_and_payload_boundary(self):
         if not shutil.which(os.environ.get('CADDY_BINARY', 'caddy')):
             self.skipTest('caddy binary required')

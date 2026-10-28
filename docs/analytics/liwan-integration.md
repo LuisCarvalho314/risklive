@@ -19,6 +19,7 @@ not touch the Flask analytics API, its models or its SQLite storage.
 |---|---|
 | `deployment/compose/docker-compose.prod.yml` | Optional Liwan 1.8.1, pinned multi-platform digest; its own `liwan_data` volume, internal analytics network, no app mounts. Native admin bound to host **127.0.0.1:9042 only**. App/web/scheduler do not depend on Liwan. |
 | `deployment/liwan/config.toml` | NTP/favicons disabled, no MaxMind/external auth, 512 MiB DuckDB memory limit and two threads. Proxy trust is restricted by the dedicated network boundary. |
+| `deployment/liwan/project-display-settings.json` | Hides platform, browser, device type, screen width and orientation panels using native project settings. Applied by the private configuration helper; this controls display, not storage. |
 | `deployment/liwan/collection-settings.json` | Proposed 730-day event retention, daily network-prefix grouping, no geo, UTM or sessions. Apply privately before activation; these are database settings, not automatically imported by the service. |
 | `deployment/caddy/Caddyfile.prod` | Only exact POST `/analytics/event`, with no query string and a 16 KiB body limit, can proxy to Liwan when explicitly enabled. Rewrites to its `/api/event`; no dashboard, batch API, script, export or login paths are exposed. Cookies, auth, referrer and language are stripped; User-Agent is replaced with a constant. |
 | `deployment/env/{web,caddy}.env.example` | Separate default-off flags and client collection categories. No build-time public activation flags. |
@@ -142,7 +143,9 @@ switches enforce a server-side schema.
 ## Built-in reporting
 
 Through private administration, open the RiskLive project and select the
-`article_opened` event. In Properties choose `article_id`, select the full date
+`article_opened` event. In Properties click the **chevron labelled “Open article_id”**, not the
+`article_id` text label. The label only adds an “is set” filter; the chevron
+opens the ranked property values. Select the full date
 range and Views; the existing dashboard sorts counts, so its first 20 rows are
 the combined top articles. Filter `section` to compare Alerts and either Newsmap;
 choose `risk_level` for the risk breakdown. Select an article property filter and

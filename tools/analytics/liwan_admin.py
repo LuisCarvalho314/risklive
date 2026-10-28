@@ -38,6 +38,8 @@ def main():
         if args.action == 'configure':
             settings = json.loads((ROOT / 'deployment/liwan/collection-settings.json').read_text())
             print(json.dumps(request('settings', settings, 'PUT'), indent=2))
+            display = json.loads((ROOT / 'deployment/liwan/project-display-settings.json').read_text())
+            print(json.dumps(request('project/risklive/settings', display, 'PUT'), indent=2))
         else:
             print(json.dumps(request('settings/prune', {'dryRun': not args.apply}), indent=2))
     finally:

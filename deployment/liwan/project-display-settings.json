@@ -1,0 +1,11 @@
+{
+  "projectId": "risklive",
+  "metricDisplayOverrides": {},
+  "dimensionDisplayOverrides": {
+    "platform": "hide",
+    "browser": "hide",
+    "mobile": "hide",
+    "screen_width": "hide",
+    "orientation": "hide"
+  }
+}
