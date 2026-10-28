@@ -23,35 +23,44 @@ export function buildSecaV2View(payload: unknown, day: string, titles = new Map<
       errors: decision.errors as SecaV2Decision["errors"] };
   });
   let remainingNodes = 10_000;
-  const build = (hkt: unknown, position: number[], budget: number, parentScope?: Set<string>): TreemapNode[] => {
+  const build = (hkt: unknown, position: number[], weights?: Map<string, number>): TreemapNode[] => {
     if (!record(hkt) || !Array.isArray(hkt.nodes) || position.length > 64) throw new Error("Invalid V2 HKT");
     const nodes = hkt.nodes.map(raw => {
       if (--remainingNodes < 0 || !record(raw) || !strings(raw.words) || !strings(raw.sources)
           || new Set(raw.sources).size !== raw.sources.length
-          || raw.sources.some(id => parentScope && !parentScope.has(id))) throw new Error("Invalid V2 node");
+          || raw.sources.some(id => weights && !weights.has(id))) throw new Error("Invalid V2 node");
       return { words: raw.words, sources: raw.sources, child: raw.child };
     });
-    const total = nodes.reduce((sum, node) => sum + node.sources.length, 0);
+    // One unit per distinct root source. Split each inherited source fraction
+    // across its sibling memberships, then carry those fractions down the HKT.
+    const memberships = new Map<string, number>();
+    for (const node of nodes) for (const id of node.sources) {
+      memberships.set(id, (memberships.get(id) ?? 0) + 1);
+    }
     return nodes.map((node, offset) => {
       const nodePath = [...position, offset];
-      const mass = total ? budget * node.sources.length / total : 0;
-      const children = node.child == null ? [] : build(node.child, nodePath, mass, new Set(node.sources));
-      const hasVisibleChildren = children.some(child => (child.meta?.sourceCount ?? 0) > 0);
+      const nodeWeights = new Map(node.sources.map(id =>
+        [id, (weights?.get(id) ?? 1) / memberships.get(id)!]));
+      const mass = [...nodeWeights.values()].reduce((sum, value) => sum + value, 0);
+      const children = node.child == null ? [] : build(node.child, nodePath, nodeWeights);
+      // value is local unallocated mass; D3 sums it with descendant mass.
+      const childMass = children.reduce((sum, child) => sum + child.meta!.secaV2Mass!, 0);
       const name = node.words.length ? node.words.slice(0, 4).join(" ") : "Unassigned";
-      return { id: `v2:${batch}:${nodePath.join("/")}`, name, value: hasVisibleChildren ? 0 : mass,
-        children: hasVisibleChildren ? children : [],
+      return { id: `v2:${batch}:${nodePath.join("/")}`, name, value: Math.max(0, mass - childMass),
+        children,
         meta: { title: name, sourceCount: node.sources.length,
-          experimentalLayoutWeights: true,
+          experimentalLayoutWeights: true, secaV2Mass: mass,
           sourceRefs: node.sources.map(id => ({ id, title: titles.get(id),
             url: /^https?:\/\//i.test(id) ? id : null, isUrl: /^https?:\/\//i.test(id) })),
           description: `${node.sources.length} retained sources. Keywords: ${node.words.join(", ") || "refuge"}.`,
         } };
     });
   };
-  const children = build(payload.root, [], payload.retained_source_count);
+  const children = build(payload.root, []);
   const sources = new Set(children.flatMap(child => child.meta?.sourceRefs?.map(source => source.id) ?? []));
-  if (sources.size !== payload.retained_source_count) throw new Error("V2 retained source count mismatch");
+  if (sources.size > payload.retained_source_count) throw new Error("V2 retained source count mismatch");
   return { mode: "v2", batch, day, retainedSourceCount: payload.retained_source_count, decisions,
-    tree: { id: "root::newsmap", name: "SECALight V2", value: 0, children,
-      meta: { experimentalLayoutWeights: true } } };
+    tree: { id: "root::newsmap", name: "SECA Tree",
+      value: payload.retained_source_count - sources.size, children,
+      meta: { experimentalLayoutWeights: true, secaV2Mass: payload.retained_source_count } } };
 }

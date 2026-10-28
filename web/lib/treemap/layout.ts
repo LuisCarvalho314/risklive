@@ -78,7 +78,16 @@ export function computeLayout(
       if (node.depth === 2) return tileFromName(tuning.tileAlgorithmTopic);
       return tileFromName(tuning.tileAlgorithmLeaf);
     })();
-    algo(node, x0, y0, x1, y1);
+    if (node.data.meta?.secaV2Mass !== undefined) {
+      // All D3 tilers must see a fully allocated child budget within a smaller
+      // rectangle. Binary otherwise fills the parent even with local mass;
+      // slice/dice would reserve that mass a second time without the proxy.
+      const childMass = (node.children ?? []).reduce((sum: number, child: any) => sum + child.value, 0);
+      const coverage = node.value > 0 ? clamp(childMass / node.value, 0, 1) : 0;
+      algo({ ...node, value: childMass }, x0, y0, x0 + (x1 - x0) * coverage, y1);
+    } else {
+      algo(node, x0, y0, x1, y1);
+    }
   };
 
   const layout = treemap<TreemapNode>()
@@ -147,8 +156,12 @@ export function computeLayout(
     return ((a.value ?? 0) - (b.value ?? 0)) * direction;
   };
 
-  let rootNode = hierarchy(root)
-    .sum((node: TreemapNode) => node.meta?.experimentalLayoutWeights && node.children?.length ? 0 : (typeof node.value === "number" ? node.value : 1))
+  const rootNode = hierarchy(root)
+    .sum((node: TreemapNode) => {
+      if (node.meta?.secaV2Mass !== undefined) return node.value ?? 0;
+      if (node.meta?.experimentalLayoutWeights && node.children?.length) return 0;
+      return typeof node.value === "number" ? node.value : 1;
+    })
     .sort(sortComparator);
   const mapped = layout(rootNode);
 

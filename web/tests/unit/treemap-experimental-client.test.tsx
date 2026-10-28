@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TreemapExperimentalClient } from "@/components/newsmap/treemap-experimental-client";
 
+const mounts = vi.hoisted(() => ({ count: 0 }));
+
 vi.mock("@/components/newsmap/treemap-client", () => ({
   TreemapClient: ({
     data,
@@ -22,11 +24,14 @@ vi.mock("@/components/newsmap/treemap-client", () => ({
     compactControls?: boolean;
     singleHierarchyColor?: boolean;
     controlHint?: string;
-  }) => (
-    <div data-testid="mock-treemap" data-single-color={String(singleHierarchyColor ?? false)}>
+  }) => {
+    const [mount] = React.useState(() => ++mounts.count);
+    return (
+    <div data-mount={mount} data-testid="mock-treemap" data-single-color={String(singleHierarchyColor ?? false)}>
       {data?.name ?? "unknown"}|{String(weightModeOverride ?? "")}|{String(data?.children?.[0]?.value ?? data?.value ?? "")}|{String(compactControls ?? false)}|{controlHint ?? ""}
     </div>
-  ),
+  );
+  },
 }));
 
 const mountedRoots: Array<{ root: Root; container: HTMLDivElement }> = [];
@@ -39,6 +44,7 @@ function renderIntoDom(node: React.ReactNode) {
     root.render(node);
   });
   mountedRoots.push({ root, container });
+  return root;
 }
 
 afterEach(() => {
@@ -215,4 +221,21 @@ it("shows an empty V2 model without a stale fallback tree", () => {
   expect(screen.queryByRole("status")).not.toBeInTheDocument();
   expect(screen.getByTestId("mock-treemap")).toHaveTextContent("SECALight V2");
   expect(screen.queryByText("Old dashboard")).not.toBeInTheDocument();
+});
+
+it("keeps the treemap mounted across V2 batches and mode transitions", () => {
+  const fallbackTree = { name: "Fallback" };
+  const v2 = { mode: "v2" as const, batch: 2, day: "2026-10-28", retainedSourceCount: 1,
+    tree: { id: "root::newsmap", name: "V2", children: [{ name: "topic", value: 1 }] }, decisions: [] };
+  const root = renderIntoDom(<TreemapExperimentalClient fallbackTree={fallbackTree} timelineResult={v2} />);
+  const initialMount = screen.getByTestId("mock-treemap").getAttribute("data-mount");
+  for (const result of [
+    { ...v2, batch: 3 },
+    { mode: "fallback" as const, reason: "invalid" },
+    { mode: "timeline" as const, selectedKey: "30d" as const, timelines: {} },
+    v2,
+  ]) {
+    flushSync(() => root.render(<TreemapExperimentalClient fallbackTree={fallbackTree} timelineResult={result} />));
+    expect(screen.getByTestId("mock-treemap")).toHaveAttribute("data-mount", initialMount);
+  }
 });

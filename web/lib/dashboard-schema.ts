@@ -58,6 +58,8 @@ export type TreemapNode = {
       isUrl?: boolean;
     }>;
     experimentalLayoutWeights?: boolean;
+    /** V2-only allocated source mass, including mass outside child scopes. */
+    secaV2Mass?: number;
     experimentalMetricProvenance?: "seca_actual" | "legacy_proxy" | "unavailable";
     experimentalTriggerState?: "triggered" | "evaluated_not_triggered" | "not_evaluated";
     experimentalMetrics?: {
