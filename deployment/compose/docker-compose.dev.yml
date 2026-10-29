@@ -1,0 +1,40 @@
+# Layer after prod + smoke; Compose >= 2.24.4.
+name: risklive-dev
+services:
+  app:
+    restart: "no"
+    cpus: 1.0
+    mem_limit: 2g
+    environment:
+      RISKLIVE_ENVIRONMENT: development
+      RISKLIVE_EXTERNAL_APIS_ENABLED: "false"
+      DISABLE_SCHEDULER: "true"
+  web:
+    restart: "no"
+    cpus: 0.5
+    mem_limit: 768m
+    environment:
+      RISKLIVE_EXTERNAL_APIS_ENABLED: "false"
+      LIWAN_ENABLED: "false"
+      ANALYTICS_TEST_MODE: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+  scheduler:
+    profiles: !override [development-scheduler-forbidden]
+    entrypoint: ["/bin/sh", "-c", "echo 'Development scheduler forbidden' >&2; exit 1"]
+    restart: "no"
+    environment:
+      RISKLIVE_ENVIRONMENT: development
+      RISKLIVE_EXTERNAL_APIS_ENABLED: "false"
+  liwan:
+    profiles: !override [development-analytics-forbidden]
+    entrypoint: ["/bin/sh", "-c", "exit 1"]
+  caddy:
+    restart: "no"
+    cpus: 0.25
+    mem_limit: 128m
+    environment:
+      CADDY_SITE_ADDRESS: http://:80
+      LIWAN_ENABLED: "false"
+    networks: !override
+      - internal
+      - smoke_edge

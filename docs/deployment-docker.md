@@ -1,5 +1,8 @@
 # Docker deployment
 
+For a persistent offline-first stack beside production, see the
+[on-demand development guide](development-docker.md).
+
 The only supported container deployment uses `docker/Dockerfile.app`,
 `docker/Dockerfile.web`, `deployment/compose/docker-compose.prod.yml`, and
 `deployment/caddy/Caddyfile.prod`. The old root Dockerfile/Compose files and

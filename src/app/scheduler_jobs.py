@@ -1,12 +1,15 @@
 """Canonical schedule shared by the host/server, dedicated scheduler, and ops UI."""
 
 import json
+import os
 from pathlib import Path
 
 SCHEDULE = json.loads(Path(__file__).with_name("schedules.json").read_text())
 
 
 def register_jobs(scheduler, app=None) -> None:
+    if os.getenv("RISKLIVE_ENVIRONMENT") == "development":
+        raise RuntimeError("Scheduling is forbidden in development")
     from app import server
 
     cfg = server.get_config()

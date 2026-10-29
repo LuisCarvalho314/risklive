@@ -1,0 +1,12 @@
+# Used ONLY for a disposable `run --no-deps app COMMAND` by dev.sh.
+services:
+  app:
+    env_file: !override
+      - ${RISKLIVE_DEV_LIVE_ENV_FILE:?Set a separate development live credential file}
+    environment:
+      RISKLIVE_EXTERNAL_APIS_ENABLED: "true"
+    networks: !override
+      - dev_live
+networks:
+  dev_live:
+    driver: bridge

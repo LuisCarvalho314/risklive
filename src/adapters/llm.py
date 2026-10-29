@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import time
+from contextlib import asynccontextmanager
 
-from pydantic_ai.models.openai import OpenAIChatModel
+from adapters.external_policy import require_external_api, audit_request
+
+from pydantic_ai.models.openai import OpenAIChatModel as BaseOpenAIChatModel
 from pydantic_ai.providers.azure import AzureProvider
 
 from config.settings import get_settings
@@ -14,7 +17,30 @@ from utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+class OpenAIChatModel(BaseOpenAIChatModel):
+    async def request(self, *args, **kwargs):
+        require_external_api("azure_openai", "chat")
+        audit_request("azure_openai", "chat")
+        response = await super().request(*args, **kwargs)
+        # Separate completion record; request count was already recorded above.
+        usage = response.usage
+        logger.info("provider_usage provider=azure_openai operation=chat input_tokens=%s output_tokens=%s",
+                    usage.input_tokens, usage.output_tokens)
+        return response
+
+    @asynccontextmanager
+    async def request_stream(self, *args, **kwargs):
+        require_external_api("azure_openai", "chat_stream")
+        audit_request("azure_openai", "chat_stream")
+        async with super().request_stream(*args, **kwargs) as response:
+            yield response
+            usage = response.usage()
+            logger.info("provider_usage provider=azure_openai operation=chat_stream input_tokens=%s output_tokens=%s",
+                        usage.input_tokens, usage.output_tokens)
+
+
 def build_model(model_name: str = "gpt-4o") -> OpenAIChatModel:
+    require_external_api("azure_openai", "build_model")
     started = time.perf_counter()
     model_config = get_settings().azure_openai_config
     azure_endpoint = model_config.api_base

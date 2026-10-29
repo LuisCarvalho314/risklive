@@ -7,6 +7,7 @@ import time
 from typing import Iterable, List
 
 from valyu import Valyu
+from adapters.external_policy import require_external_api, audit_request
 
 from config.settings import get_valyu_config
 from models.errors import ConfigError, ExternalServiceError
@@ -55,6 +56,7 @@ def fetch_news(
     market: str = "GB",
     reference_now_utc: datetime | None = None,
 ) -> List[Article]:
+    require_external_api("valyu", "search")
     started = time.perf_counter()
     logger.info(
         "fetch_news_start",
@@ -100,9 +102,11 @@ def fetch_news(
         if not query:
             continue
 
-        logger.debug("Valyu search query=%r", query)
+
         query_started = time.perf_counter()
         try:
+            require_external_api("valyu", "search")
+            audit_request("valyu", "search")
             resp = client.search(
                 query,
                 search_type="news",
@@ -129,7 +133,7 @@ def fetch_news(
             )
             raise ExternalServiceError(
                 "Valyu search request failed",
-                details={"query": query, "exception": exc.__class__.__name__},
+                details={"exception": exc.__class__.__name__},
                 retryable=True,
             ) from exc
         if not resp or not resp.success:
@@ -144,7 +148,6 @@ def fetch_news(
                     "duration_ms": int((time.perf_counter() - query_started) * 1000),
                 },
             )
-            # logger.warning("Valyu search failed query=%r", query)
             continue
 
         logger.info(
@@ -196,7 +199,6 @@ def fetch_news(
                 "operation": "fetch_news",
                 "stage": "fetch",
                 "status": "ok",
-                "query": query,
                 "output_rows": len(resp.results),
                 "valyu_rows_with_price": query_priced_rows,
                 "valyu_price_sum_usd": round(query_price_usd, 8),
