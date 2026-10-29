@@ -1,0 +1,65 @@
+name: Development controls
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Development lifecycle operation
+        type: choice
+        options: [start, stop, redeploy, status]
+        required: true
+      candidate_run_id:
+        description: Successful CI run ID (required for start/redeploy)
+        type: string
+        default: ''
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  eligible:
+    runs-on: ubuntu-24.04
+    outputs:
+      deploy: ${{ steps.check.outputs.deploy }}
+    steps:
+      - name: Select trusted push candidates only
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          AUTO_ENABLED: ${{ vars.RISKLIVE_DEV_AUTODEPLOY }}
+          DEV_BRANCH: ${{ vars.RISKLIVE_DEVELOPMENT_BRANCH }}
+          RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          eligible = os.environ['EVENT_NAME'] == 'workflow_dispatch'
+          if not eligible:
+              eligible = (os.environ['AUTO_ENABLED'] == 'true' and bool(os.environ['DEV_BRANCH'])
+                          and os.environ['RUN_BRANCH'] == os.environ['DEV_BRANCH']
+                          and os.environ['RUN_REPOSITORY'] == 'LuisCarvalho314/risklive'
+                          and os.environ['RUN_EVENT'] == 'push' and os.environ['RUN_CONCLUSION'] == 'success')
+              if eligible:
+                  result = json.loads(subprocess.check_output(['gh', 'api',
+                      'repos/LuisCarvalho314/risklive/actions/runs/' + os.environ['RUN_ID'] + '/artifacts']))
+                  eligible = any(a['name'] == 'risklive-candidate' and not a['expired'] for a in result['artifacts'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('deploy=' + str(eligible).lower() + '\n')
+          PY
+  development:
+    needs: eligible
+    if: needs.eligible.outputs.deploy == 'true'
+    # Pin this to the reviewed infrastructure commit during activation.
+    uses: LuisCarvalho314/risklive-infra/.github/workflows/development.yml@feat/cicd-integration
+    with:
+      action: ${{ github.event_name == 'workflow_run' && 'update' || inputs.action }}
+      candidate_run_id: ${{ github.event_name == 'workflow_run' && format('{0}', github.event.workflow_run.id) || inputs.candidate_run_id }}
+      config_revision: ${{ vars.RISKLIVE_INFRA_REVISION }}
