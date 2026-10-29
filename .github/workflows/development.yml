@@ -58,7 +58,7 @@ jobs:
     needs: eligible
     if: needs.eligible.outputs.deploy == 'true'
     # Reviewed infrastructure controller; update this pin and host policies together.
-    uses: LuisCarvalho314/risklive-infra/.github/workflows/development.yml@f135008be493c1520fe2e9851c9af3063adf257c
+    uses: LuisCarvalho314/risklive-infra/.github/workflows/development.yml@92c7082386e1dd82195b02b6113dd7c39b1ad0e7
     with:
       action: ${{ github.event_name == 'workflow_run' && 'update' || inputs.action }}
       candidate_run_id: ${{ github.event_name == 'workflow_run' && format('{0}', github.event.workflow_run.id) || inputs.candidate_run_id }}
