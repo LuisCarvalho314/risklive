@@ -12,7 +12,7 @@ versions needed for rollback. Never use retention cleanup on deployed digests.
 
 Publication is disabled until repository variable `GHCR_PUBLICATION_ENABLED` is
 `true`. The publish job runs only on trusted pushes to `main` or
-`DEVELOPMENT_BRANCH` (default `develop`), after all test jobs. Configure protected
+`RISKLIVE_DEVELOPMENT_BRANCH` (default `develop`), after all test jobs. Configure protected
 branches and the `registry-publishing` GitHub environment before activation.
 Only this job receives `packages: write`; PR container jobs have read permissions
 and receive no publication token. No PAT is needed for CI publication.

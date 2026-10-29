@@ -57,8 +57,8 @@ jobs:
   development:
     needs: eligible
     if: needs.eligible.outputs.deploy == 'true'
-    # Pin this to the reviewed infrastructure commit during activation.
-    uses: LuisCarvalho314/risklive-infra/.github/workflows/development.yml@feat/cicd-integration
+    # Reviewed infrastructure controller; update this pin and host policies together.
+    uses: LuisCarvalho314/risklive-infra/.github/workflows/development.yml@f135008be493c1520fe2e9851c9af3063adf257c
     with:
       action: ${{ github.event_name == 'workflow_run' && 'update' || inputs.action }}
       candidate_run_id: ${{ github.event_name == 'workflow_run' && format('{0}', github.event.workflow_run.id) || inputs.candidate_run_id }}

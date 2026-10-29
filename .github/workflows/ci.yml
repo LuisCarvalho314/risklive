@@ -121,7 +121,7 @@ jobs:
   containers:
     name: Build and scan containers
     needs: [seca, backend, frontend]
-    if: github.event_name != 'push' || vars.GHCR_PUBLICATION_ENABLED != 'true' || (github.ref_name != 'main' && github.ref_name != (vars.DEVELOPMENT_BRANCH || 'develop'))
+    if: github.event_name != 'push' || vars.GHCR_PUBLICATION_ENABLED != 'true' || (github.ref_name != 'main' && github.ref_name != (vars.RISKLIVE_DEVELOPMENT_BRANCH || 'develop'))
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -134,7 +134,7 @@ jobs:
   publish:
     name: Publish private candidate
     needs: [seca, backend, frontend]
-    if: github.event_name == 'push' && github.repository == 'LuisCarvalho314/risklive' && vars.GHCR_PUBLICATION_ENABLED == 'true' && (github.ref_name == 'main' || github.ref_name == (vars.DEVELOPMENT_BRANCH || 'develop'))
+    if: github.event_name == 'push' && github.repository == 'LuisCarvalho314/risklive' && vars.GHCR_PUBLICATION_ENABLED == 'true' && (github.ref_name == 'main' || github.ref_name == (vars.RISKLIVE_DEVELOPMENT_BRANCH || 'develop'))
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     environment: registry-publishing
