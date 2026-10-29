@@ -1,6 +1,6 @@
 # Reproducible SECA build inputs
 
-Source gitlink: `experimental`, commit `a03e2ba3385d328a10eacbf584c57cddc6f40a62`.
+Source gitlink: `experimental`, commit `1631655ad64e43e00c54cba05c6a6fc859e1bcee`.
 `SOURCE.sha256` covers the copied workspace and crate files. Docker verifies
 these before compiling. The former timeline-many patch is now part of the
 Rust repository; it must not be applied twice.
@@ -22,6 +22,6 @@ locked dependency changes if needed. Run core, CLI and isolated stream checks.
 A successful offline core/example build does not establish a passing complete
 CLI/container build.
 
-The current Rust commit is local: publication was attempted but blocked by
-shell DNS resolution and GitHub connector HTTP 403. Publish that commit to the
-Rust repository before sharing a parent commit that depends on its gitlink.
+V2 uses the separate `experimental-v2` gitlink and `docker/seca-v2` lock/hash inputs.
+Do not replace the Light pin with V2's source: its legacy CLI uses incompatible
+schema-4 model state. See [image publication](../../docs/cicd/image-publication.md).

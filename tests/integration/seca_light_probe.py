@@ -9,6 +9,7 @@ Never runs fetch/LLM/scheduler.
 from __future__ import annotations
 
 import csv
+from datetime import UTC, datetime
 import json
 import os
 from pathlib import Path
@@ -28,6 +29,16 @@ def main():
     binary = Path(sys.argv[1]).resolve()
     if not binary.is_file():
         raise SystemExit("Pass the built realtime-seca-core example/update binary")
+    # Bootstrap fixtures and later updates must share the same logical day.
+    # Otherwise wall-clock drift expires the historical baseline from 3d/7d
+    # manifests and makes a correct rolling window fail this replay probe.
+    class ProbeClock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            fixed = cls(2026, 10, 6, 12, tzinfo=UTC)
+            return fixed.astimezone(tz) if tz is not None else fixed.replace(tzinfo=None)
+
+    seca_timeline.datetime = ProbeClock
     with tempfile.TemporaryDirectory(prefix="seca-light-probe-") as temporary:
         root = Path(temporary)
         wrapper = root / "cli"

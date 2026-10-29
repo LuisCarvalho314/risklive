@@ -1,0 +1,42 @@
+name: Build and scan candidate images
+description: Build both images from this checkout and scan the exact local images before any push.
+runs:
+  using: composite
+  steps:
+    - name: Verify source and pinned SECA contents
+      shell: bash
+      run: |
+        test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+        test "$(git -C experimental rev-parse HEAD)" = "$(cat docker/seca/SOURCE_REVISION)"
+        (cd experimental && sha256sum --check ../docker/seca/SOURCE.sha256)
+        test "$(git -C experimental-v2 rev-parse HEAD)" = "$(cat docker/seca-v2/SOURCE_REVISION)"
+        (cd experimental-v2 && sha256sum --check ../docker/seca-v2/SOURCE.sha256)
+    - name: Build app and web with source provenance
+      shell: bash
+      run: |
+        for component in app web; do
+          docker build --file "docker/Dockerfile.$component" \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.risklive.seca.revision=$(cat docker/seca/SOURCE_REVISION)" \
+            --label "org.risklive.seca-v2.revision=$(cat docker/seca-v2/SOURCE_REVISION)" \
+            --tag "risklive-$component:ci" .
+        done
+    - name: Scan app image
+      uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+      with:
+        image-ref: risklive-app:ci
+        format: table
+        exit-code: '1'
+        severity: HIGH,CRITICAL
+        ignore-unfixed: false
+        scanners: vuln
+    - name: Scan web image
+      uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+      with:
+        image-ref: risklive-web:ci
+        format: table
+        exit-code: '1'
+        severity: HIGH,CRITICAL
+        ignore-unfixed: false
+        scanners: vuln

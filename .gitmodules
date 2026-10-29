@@ -1,3 +1,6 @@
 [submodule "experimental"]
 	path = experimental
 	url = https://github.com/LuisCarvalho314/RealtimeSECA.git
+[submodule "experimental-v2"]
+	path = experimental-v2
+	url = https://github.com/LuisCarvalho314/RealtimeSECA.git

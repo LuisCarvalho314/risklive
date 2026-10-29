@@ -3,10 +3,8 @@ name: CI
 on:
   pull_request:
   push:
-    branches:
-      - main
-      - develop
-      - 'dev/**'
+    branches: ['**']
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,6 +35,14 @@ jobs:
         run: |
           cargo +1.92.0 test --release --locked -p realtime-seca-core -p realtime-seca-cli --jobs 2
           cargo +1.92.0 build --release --locked -p realtime-seca-cli --jobs 2
+      - name: Verify, test and build independently pinned SECA V2
+        run: |
+          test "$(git -C experimental-v2 rev-parse HEAD)" = "$(cat docker/seca-v2/SOURCE_REVISION)"
+          (cd experimental-v2 && sha256sum --check ../docker/seca-v2/SOURCE.sha256)
+          cp docker/seca-v2/Cargo.lock experimental-v2/Cargo.lock
+          cd experimental-v2
+          cargo +1.92.0 test --release --locked -p realtime-seca-v2 --jobs 2
+          cargo +1.92.0 build --release --locked -p realtime-seca-v2 --bins --jobs 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -47,8 +53,14 @@ jobs:
         run: uv sync --locked --group dev
       - name: Verify persistent stream and deterministic replay with the production CLI
         run: uv run --frozen --no-sync python tests/integration/seca_light_probe.py experimental/target/release/realtime-seca-cli --production-converter
-      - name: Build the production app image without deploying
-        run: docker build --file docker/Dockerfile.app --tag risklive:ci-seca .
+      - name: Test real SECA V2 integration and crash recovery
+        env:
+          PYTHONPATH: src
+          RISKLIVE_SECA_CLI: ${{ github.workspace }}/experimental/target/release/realtime-seca-cli
+          RISKLIVE_SECA_V2_CLI: ${{ github.workspace }}/experimental-v2/target/release/seca-v2-cli
+        # This suite MUST run outside the broad suite's subprocess guard;
+        # otherwise all real CLI/crash-recovery tests silently skip.
+        run: uv run --frozen --no-sync pytest --confcutdir=tests/integration --no-cov -p no:cacheprovider tests/integration/test_seca_v2.py
 
   backend:
     runs-on: ubuntu-24.04
@@ -70,8 +82,14 @@ jobs:
       - name: Run isolated backend tests
         # The full test tree is repository-reproducible and isolated from
         # operational services, production state, and external APIs.
-        run: uv run --frozen --no-sync pytest -p no:cacheprovider --no-cov tests
+        run: uv run --frozen --no-sync pytest -p no:cacheprovider --no-cov tests --ignore=tests/deployment/test_liwan.py
 
+      - name: Validate isolated Compose and optional local proxy routing
+        # Liwan starts local subprocesses/listeners and cannot run inside the
+        # Python unit suite audit guard. Compose config never starts containers.
+        run: uv run --frozen --no-sync pytest --confcutdir=tests/deployment --no-cov tests/deployment/test_liwan.py
+      - name: Test publication privacy and metadata gates offline
+        run: python -m unittest discover -s scripts/ci/tests -v
 
   frontend:
     runs-on: ubuntu-24.04
@@ -99,3 +117,57 @@ jobs:
         run: pnpm test
       - name: Build Next.js
         run: pnpm build
+
+  containers:
+    name: Build and scan containers
+    needs: [seca, backend, frontend]
+    if: github.event_name != 'push' || vars.GHCR_PUBLICATION_ENABLED != 'true' || (github.ref_name != 'main' && github.ref_name != (vars.DEVELOPMENT_BRANCH || 'develop'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/build-candidate
+
+  publish:
+    name: Publish private candidate
+    needs: [seca, backend, frontend]
+    if: github.event_name == 'push' && github.repository == 'LuisCarvalho314/risklive' && vars.GHCR_PUBLICATION_ENABLED == 'true' && (github.ref_name == 'main' || github.ref_name == (vars.DEVELOPMENT_BRANCH || 'develop'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    environment: registry-publishing
+    concurrency:
+      group: private-candidate-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: true
+          ref: ${{ github.sha }}
+      - name: Confirm existing packages are private and deny anonymous pulls
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/ci/package_privacy.py
+      - uses: ./.github/actions/build-candidate
+      - name: Recheck privacy immediately before publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/ci/package_privacy.py
+      - name: Publish the scanned images and capture immutable digests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/publish.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: risklive-candidate
+          path: candidate.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Report candidate
+        run: cat candidate.json >> "$GITHUB_STEP_SUMMARY"

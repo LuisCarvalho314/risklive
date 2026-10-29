@@ -12,6 +12,18 @@ RUN cargo test --release --locked -p realtime-seca-core -p realtime-seca-cli --j
  && cargo build --release --locked -p realtime-seca-cli --jobs 2 \
  && install -m 0755 target/release/realtime-seca-cli /usr/local/bin/realtime-seca-cli
 
+# V2 is a separate pin: upgrading the legacy CLI would invalidate Light schema-3 state.
+FROM rust:1.92.0-bookworm@sha256:e90e846de4124376164ddfbaab4b0774c7bdeef5e738866295e5a90a34a307a2 AS seca-v2-builder
+WORKDIR /build/seca
+COPY experimental-v2/Cargo.toml ./Cargo.toml
+COPY experimental-v2/crates ./crates
+COPY docker/seca-v2/SOURCE.sha256 /tmp/SOURCE.sha256
+RUN sha256sum --check /tmp/SOURCE.sha256
+COPY docker/seca-v2/Cargo.lock ./Cargo.lock
+RUN cargo test --release --locked -p realtime-seca-v2 --jobs 2 \
+ && cargo build --release --locked -p realtime-seca-v2 --bins --jobs 2 \
+ && install -m 0755 target/release/seca-v2-cli /usr/local/bin/seca-v2-cli
+
 FROM python:3.11-slim
 
 LABEL org.risklive.seca.source-revision="1631655ad64e43e00c54cba05c6a6fc859e1bcee" \
@@ -35,6 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata \
  && rm -rf /var/lib/apt/lists/*
 
+COPY --from=seca-v2-builder /usr/local/bin/seca-v2-cli /usr/local/bin/seca-v2-cli
 COPY --from=uv /uv /usr/local/bin/uv
 COPY --from=seca-builder /usr/local/bin/realtime-seca-cli /usr/local/bin/realtime-seca-cli
 
